@@ -1126,20 +1126,19 @@ const WelcomeModal = ({ onClose }) => {
 
                         <section>
                             <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
-                                <Lightbulb size={18} className="text-blue-500" /> 💡 推荐工作流 (最省力方案)
+                                💡 推荐工作流
                             </h3>
                             <div className="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
                                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                    读完论文后，向 AI 索取一份 Markdown 核心总结。
-                                    <b>一键粘贴进来</b>，配上评分和 Ideas，记录从此不再是负担。
+                                    配合 AI 阅读并总结论文，读完后再生成一份 Markdown 笔记直接<b>粘贴进来</b>。配上评分和 Ideas，科研记录从此变轻松。
                                 </p>
                             </div>
                         </section>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><Star size={12} /> 追踪不遗忘</div>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">记录评分与读完时间，永远清楚最近看了什么。</p>
+                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><ListFilter size={12} /> 管理说明</div>
+                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed"><b>管理模式</b>下可恢复备份、调整顺序或新增文件夹。鼠标<b>悬停在文献卡片上</b>可进行移动、删除或重命名。</p>
                             </div>
                             <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
                                 <div className="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><Globe size={12} /> 个人隐私</div>
