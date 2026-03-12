@@ -204,17 +204,18 @@ const App = () => {
     const mainContentRef = useRef(null);
     // 默认数据
     const defaultCategories = useMemo(() => [
-        { id: '1', name: '大语言模型 (LLMs)', parentId: null },
-        { id: '2', name: '推理优化 (Inference)', parentId: '1' },
-        { id: '3', name: '模型量化 (Quantization)', parentId: '2' },
+        { id: '1', name: '人工智能核心 (Core AI)', parentId: null },
+        { id: '2', name: '深度学习架构 (DL Architectures)', parentId: '1' },
+        { id: '3', name: '注意力机制 (Attention)', parentId: '2' },
     ], []);
     const defaultPapers = useMemo(() => [
         {
-            id: 'p1', categoryId: '2', title: 'Attention Is All You Need', venue: 'NeurIPS 2017', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
+            id: 'p1', categoryId: '3', title: 'Attention Is All You Need', venue: 'NeurIPS 2017', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
             problem: 'RNN/CNN 难以并行计算。\n\n**核心公式：**\n$$ Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V $$',
             method: '提出 Transformer 架构。',
             results: 'WMT-14 SOTA。', thoughts: 'LLM 基石。',
-            status: 'read', isStarred: true, starNote: '必读经典'
+            status: 'read', isStarred: true, starNote: '必读经典',
+            rating: 10, ratedDate: new Date().toISOString(), tags: ['Machine Learning']
         }
     ], []);
 
