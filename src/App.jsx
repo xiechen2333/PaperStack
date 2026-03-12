@@ -605,6 +605,25 @@ const App = () => {
         return sortPapers(res);
     }, [papers, showFavoritesOnly, activeTag, deferredSearchQuery, sortPapers]);
 
+    // --- 说明导览状态 ---
+    const [showWelcome, setShowWelcome] = useState(false);
+
+    useEffect(() => {
+        // 检查是否是第一次进入
+        const checkFirstTime = async () => {
+            const hasSeen = await localforage.getItem('hasSeenWelcomeV1');
+            if (!hasSeen) {
+                setShowWelcome(true);
+            }
+        };
+        if (isDataLoaded) checkFirstTime();
+    }, [isDataLoaded]);
+
+    const handleCloseWelcome = async () => {
+        setShowWelcome(false);
+        await localforage.setItem('hasSeenWelcomeV1', true);
+    };
+
     // --- 早退: 极简加载 (避免骨架屏导致 Sidebar 布局突变闪烁) ---
     if (!isDataLoaded) {
         return (
@@ -761,7 +780,13 @@ const App = () => {
             {/* 侧边栏 */}
             <div className={`${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0'} flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20`}>
                 <div className="p-5 border-b border-slate-50 dark:border-slate-800/50 flex items-center gap-3 min-w-[320px]">
-                    <div className="bg-slate-800 text-white p-2.5 rounded-lg shadow-md"> <BookOpen size={22} strokeWidth={2.5} /> </div>
+                    <div 
+                        onClick={() => setShowWelcome(true)}
+                        className="bg-slate-800 text-white p-2.5 rounded-lg shadow-md cursor-pointer hover:bg-blue-600 transition-colors active:scale-95"
+                        title="查看功能指南"
+                    > 
+                        <BookOpen size={22} strokeWidth={2.5} /> 
+                    </div>
                     <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">PaperStack <span className="text-[11px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-bold border border-blue-100 dark:border-blue-800/50">PRO</span></h1>
                 </div>
                 <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-[320px]">
@@ -1066,6 +1091,80 @@ const App = () => {
                     categoryName={categories.find(c => c.id === activeCategoryId)?.name || "未分类"}
                 />
             )}
+
+            {/* 欢迎导览 Modal */}
+            {showWelcome && <WelcomeModal onClose={handleCloseWelcome} />}
+        </div>
+    );
+};
+
+// --- 组件: WelcomeModal (欢迎导览) ---
+const WelcomeModal = ({ onClose }) => {
+    return (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+                <div className="bg-blue-600 p-10 text-white flex flex-col justify-between md:w-56 shrink-0 font-sans">
+                    <div>
+                        <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                            <BookOpen size={28} />
+                        </div>
+                        <h2 className="text-2xl font-black tracking-tight leading-tight">欢迎使用<br/>PaperStack</h2>
+                    </div>
+                    <div className="text-blue-100/60 text-xs font-bold uppercase tracking-widest mt-10">AI Powered Insight</div>
+                </div>
+                <div className="flex-1 p-10 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/30">
+                    <div className="space-y-8">
+                        <section>
+                            <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
+                                <Zap size={18} className="text-amber-500" /> 工具定位与初衷
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-300 text-[15px] leading-relaxed">
+                                PaperStack 不是替代 Zotero 的文献管理器，而是其<b>最佳辅助</b>——帮你把阅读灵感、打分和思绪，转化为清晰的记录。
+                            </p>
+                        </section>
+
+                        <section>
+                            <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
+                                <Lightbulb size={18} className="text-blue-500" /> 💡 推荐工作流 (最省力方案)
+                            </h3>
+                            <div className="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                    读完论文后，向 AI 索取一份 Markdown 核心总结。
+                                    <b>一键粘贴进来</b>，配上评分和 Ideas，记录从此不再是负担。
+                                </p>
+                            </div>
+                        </section>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><Star size={12} /> 追踪不遗忘</div>
+                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">记录评分与读完时间，永远清楚最近看了什么。</p>
+                            </div>
+                            <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                                <div className="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><Globe size={12} /> 个人隐私</div>
+                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">数据仅存本地浏览器。请养成定时<b>导出备份 (JSON)</b> 的好习惯。</p>
+                            </div>
+                        </div>
+
+                        <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <a 
+                                href="https://github.com/xiechen2333/PaperStack/blob/main/README.md" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 text-sm font-bold flex items-center gap-1.5 hover:underline decoration-2 underline-offset-4"
+                            >
+                                <ExternalLink size={16} /> 查看完整 GitHub 文档
+                            </a>
+                            <button 
+                                onClick={onClose}
+                                className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-2xl hover:bg-slate-800 dark:hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/10 active:scale-95"
+                            >
+                                我知道了，开始使用
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
