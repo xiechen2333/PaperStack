@@ -1,0 +1,2452 @@
+{
+  "version": "2.0",
+  "timestamp": "2026-01-19T13:43:29.805Z",
+  "categories": [
+    {
+      "id": "1767408883891",
+      "name": "Backbones",
+      "parentId": null
+    },
+    {
+      "id": "1767408901049",
+      "name": "Misinformation Analysis",
+      "parentId": null
+    },
+    {
+      "id": "1767409703917",
+      "name": "Fake News Detection",
+      "parentId": "1767408901049"
+    },
+    {
+      "id": "1767409607373",
+      "name": "Rumor Detection",
+      "parentId": "1767408901049"
+    },
+    {
+      "id": "1767409634827",
+      "name": "Supervised Methods",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767409640769",
+      "name": "Multi-modal Methods",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767409648130",
+      "name": "Joint Stance & Rumor Detection",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767409625797",
+      "name": "Fact-check & Fact Verification",
+      "parentId": "1767408901049"
+    },
+    {
+      "id": "1767409656213",
+      "name": "Supervised Methods",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767409661221",
+      "name": "LLM Based Methods",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767409666521",
+      "name": "Multi-hop Fact Verification",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767409681425",
+      "name": "Previously Fact-check",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767409685254",
+      "name": "New Datasets",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767860131264",
+      "name": "通用内容融合方法",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767409790799",
+      "name": "Text-only Methods",
+      "parentId": "1767409778330"
+    },
+    {
+      "id": "1767409914042",
+      "name": "Multi-modal Methods",
+      "parentId": "1767409778330"
+    },
+    {
+      "id": "1767860233090",
+      "name": "注意力机制应用",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767415230200",
+      "name": "Supervised Learning",
+      "parentId": "1767409790799"
+    },
+    {
+      "id": "1767415257343",
+      "name": "Domain Adaptation",
+      "parentId": "1767409790799"
+    },
+    {
+      "id": "1767415413317",
+      "name": "Knowledge base-based",
+      "parentId": "1767409790799"
+    },
+    {
+      "id": "1767415418042",
+      "name": "Machine-generated News Detection",
+      "parentId": "1767409790799"
+    },
+    {
+      "id": "1767415423159",
+      "name": "Evidence-aware Methods",
+      "parentId": "1767409790799"
+    },
+    {
+      "id": "1767420000001",
+      "name": "Multimodal Methods",
+      "parentId": "1767409625797"
+    },
+    {
+      "id": "1767420000002",
+      "name": "with Unreliable Propagations",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767420000003",
+      "name": "with Temporal Features",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767420000004",
+      "name": "with User Profile",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767420000005",
+      "name": "with Data Augmentation",
+      "parentId": "1767409607373"
+    },
+    {
+      "id": "1767418918329",
+      "name": "Survey",
+      "parentId": "1767408901049"
+    },
+    {
+      "id": "1768455875739",
+      "name": "单模态虚假信息分析",
+      "parentId": null
+    },
+    {
+      "id": "1767860240336",
+      "name": "基于图的交互",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767860247438",
+      "name": "社交网络信息",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767860252094",
+      "name": "知识增强",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767409778330",
+      "name": "Context-based",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767410007218",
+      "name": "Social Media-based",
+      "parentId": "1767409703917"
+    },
+    {
+      "id": "1767860257596",
+      "name": "早期融合",
+      "parentId": "1767860131264"
+    },
+    {
+      "id": "1767860264384",
+      "name": "中期融合",
+      "parentId": "1767860131264"
+    },
+    {
+      "id": "1767860268773",
+      "name": "后期融合",
+      "parentId": "1767860131264"
+    },
+    {
+      "id": "1767860319348",
+      "name": "前 Transformer 时代",
+      "parentId": "1767860233090"
+    },
+    {
+      "id": "1767860326423",
+      "name": "跨模态 Transformer",
+      "parentId": "1767860233090"
+    },
+    {
+      "id": "1767860348855",
+      "name": "传播网络",
+      "parentId": "1767860247438"
+    },
+    {
+      "id": "1767860355565",
+      "name": "基于时间的融合",
+      "parentId": "1767860247438"
+    },
+    {
+      "id": "1767860361396",
+      "name": "外部知识库",
+      "parentId": "1767860252094"
+    },
+    {
+      "id": "1767860366266",
+      "name": "跨模态大模型推理",
+      "parentId": "1767860252094"
+    },
+    {
+      "id": "1767439741110",
+      "name": "待分类",
+      "parentId": null
+    },
+    {
+      "id": "1768455883095",
+      "name": "图像领域",
+      "parentId": "1768455875739"
+    },
+    {
+      "id": "1768455887538",
+      "name": "文字领域",
+      "parentId": "1768455875739"
+    },
+    {
+      "id": "1768808167984",
+      "name": "Out-of-Context（移花接木）",
+      "parentId": "1767409703917"
+    }
+  ],
+  "papers": [
+    {
+      "title": "Bad Actor, Good Advisor: Exploring the Role of Large Language Models in Fake News Detection",
+      "venue": "AAAI",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2309.12247",
+      "problem": "• 0. SLM 的认知局限性： 传统的微调小模型（SLM，如 BERT）主要依赖有限的预训练语料，缺乏对现实世界背景的深刻理解和常识，在面对需要广泛外部知识的新闻时往往捉襟见肘 。\n• 1. LLM 的“偏科”表现： 实证研究发现，复杂的 LLM（如 GPT-3.5）虽然能生成类似人类的、多视角的分析理由，但在最终真假判断上，表现反而不如微调后的 BERT 。例如 BERT 的 F1 值比 GPT-3.5 高出 9.0% 。\n• 2. 症结所在： 这种差距归因于 LLM 无法正确选择和整合其生成的理由以得出正确结论 。\n• 3. 核心洞察： LLM 不适合直接作为“法官”（Actor）替代 SLM，但非常适合作为提供多视角分析的“军师”（Advisor）。",
+      "method": "\t1. 总体架构 (ARG Network)：提出了自适应理性指导网络（ARG），核心思想是建立大小模型协作机制，让 SLM 有选择性地汲取 LLM 的分析见解。\n\t2. 多视角“消化”：利用提示工程让 LLM 从文本描述（风格/情感）和常识（逻辑合理性）两个视角分析新闻，提取非结构化知识。\n\t3. 大小模型深度协同：将非结构化文本转化为高价值特征：\n\t• 双向交叉注意力 (Dual Cross-Attention)：强制新闻特征 X 与理由特征 R 交互对齐，实现语义空间的深度融合。\n\t• LLM 判断预测器 (LLM Judgment Predictor)：辅助任务，强迫 SLM 理解 LLM 的倾向性。\n\t• 理由有用性评估器 (Rationale Usefulness Evaluator)：这是一个门控机制，评估理由的价值权重 w_t，屏蔽 LLM 的胡编乱造。\n蒸馏与脱机运行 (ARG-D)：ARG-D 不再查询 LLM，而是训练一个小模型去模仿 ARG 在“读完理由后的大脑活动”（特征向量 f_cls），实现了“状态模拟”而非“文本生成”。",
+      "results": "\t1. 务实的角色重构：论文没有盲目追求“大模型万能论”，而是通过扎实的实证研究提出了 Bad Actor, Good Advisor 这一精准定位。这种将 LLM 视为“特征提取器”而非“决策器”的思路，为解决幻觉问题提供了新范式。\n\t2. 巧妙的架构设计：ARG 网络的设计逻辑严密，特别是有用性评估器的引入，从机制上承认并处理了 LLM 的噪声问题，比简单的特征拼接高明得多。\n\t3. 落地价值极高：通过 ARG-D (蒸馏) 的设计，解决了大模型推理成本高、速度慢的工业痛点。这种 Teacher-Student 模式让小模型继承了大模型的“思维方式”，而无需承担大模型的算力负担。\n资源贡献：作者构建并开源了基于 GPT-3.5 的中英文假新闻检测理由数据集，为后续研究提供了有价值的资源。",
+      "thoughts": "\t1. 价值肯定： 论文没有盲目吹捧 LLM，而是揭示了其在特定任务中的短板，并提出了一种巧妙的“大模型辅助小模型”的架构。它应对了假新闻造假过程的复杂性（创作者可能操纵风格、事实或常识），满足了理想检测器所需的对线索的微妙感觉和对现实背景的深刻理解。\n=====================ARG 模型四大核心缺陷总结======================\n1. 评判标准偏见：有用性标签定义的逻辑错位\n\t• 模块： 有用性评估器 (Rationale Usefulness Evaluator)\n\t• 做法： 论文设定：只要大模型最后猜对了结果，它给出的理由就是“有用的”。\n\t• 问题： 混淆了“运气”和“真实贡献”。\n\t\t○ 瞎猫碰死耗子： 大模型胡言乱语（理由是垃圾），但二分类蒙对了结果。模型会错误地学习并奖励这种噪音。\n\t\t○ 良币被逐： 大模型分析极其精准，但最后决策手抖判错了。模型会错误地判定该高质量理由为“无用”并将其丢弃。\n\t• 后果： 评估器的筛选机制不可信，导致模型在“该听谁的”这个问题上发生混乱。\n\t• 改进思路： 使用“性能增益”作为指标。比较“加入理由后小模型的损失值 (Loss) 下降了多少”，降得越多说明理由越有用。\n2. 学习目标错误：辅助任务导致的噪音内化\n\t• 模块： 编码器/预测器 (Encoder/Predictor)\n\t• 做法： 设置辅助任务，强迫小模型去预测大模型的判断标签。\n\t• 问题： 目标源头的污染。\n\t\t○ 论文承认大模型是“坏执行者”（有幻觉），却强迫小模型去模仿它的判断。\n\t\t○ 当理由文本（客观）与大模型的判断（幻觉偏见）矛盾时，小模型为了降低损失，被迫扭曲自己的语义理解。\n\t• 后果： 小模型不仅学到了理由的知识，还继承了大模型的偏见和错误判断逻辑，特征空间被污染。\n\t• 改进思路： 去除预测任务，改为“文本重构”。只要小模型能还原出理由说了什么即可，不需要去预测大模型判对还是判错。\n\t核心辨析（1与2的区别）：\n\t\t○ 缺陷1（评估器）： 是筛选层面的错。导致该用的特征没用，不该用的用了（权重分错了）。\n\t\t○ 缺陷2（预测器）： 是学习层面的错。导致特征提取本身就是歪的（脑子学坏了）。\n3. 物理机制失效：平均池化导致的信号稀释\n\t• 模块： 池化层 (Pooling Layer)\n\t• 做法： 使用平均池化 (AvgPool) 将交互后的矩阵压缩成一个向量。\n\t• 问题： 统计学上的“大数定律”失效。\n\t\t○ 狙击手困境： 对于“长新闻 + 短关键理由”的样本，大量不相关的背景词向量（分母）会稀释掉那一个关键的实锤证据（分子）。\n\t\t○ 各向异性： BERT 向量天然挤在一起，不相关的噪音并不能像理论上那样通过平均互相抵消。\n\t• 后果： 局部高价值的“实锤”证据在平均过程中变得微弱，模型容易漏检精准的疑点。\n\t• 改进思路： 使用注意力池化 (Attention Pooling) 或最大池化 (Max Pooling)，只抓重点，不搞平权。\n4. 决策逻辑简陋：特征融合的线性瓶颈\n\t• 模块： 聚合器 (Feature Aggregator)\n\t• 做法： 将新闻、文本理由、常识理由的向量进行简单的加权相加。\n\t• 问题： 无法处理非线性逻辑（异或逻辑）。\n\t\t○ 简单的加法隐含假设了特征之间是独立的，忽略了特征间的交叉验证。\n\t\t○ 它无法理解“如果 A 成立 且 B 不成立，则结论为 C”这种组合逻辑。\n\t• 后果： 模型只具备信号的累加能力，不具备真正的逻辑推理能力，难以应对复杂的造谣手段。\n\t• 改进思路： 使用门控融合或多层感知机 (MLP)，将特征拼接后由神经网络自动学习复杂的非线性组合关系。",
+      "status": "read",
+      "starNote": "提出了一种巧妙的“大模型辅助小模型”的架构",
+      "isStarred": true,
+      "rating": 8,
+      "ratedDate": "2026-01-14T04:03:14.583Z",
+      "id": "1767410085913",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Learn over Past, Evolve for Future: Forecasting Temporal Trends for Fake News Detection",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2306.14728",
+      "status": "todo",
+      "id": "1767410106853",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Faking Fake News for Real Fake News Detection: Propaganda-loaded Training Data Generation",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2203.05386",
+      "status": "todo",
+      "id": "1767410140732",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Zoom Out and Observe: News Environment Perception for Fake News Detection",
+      "venue": "ACL",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2203.10885.pdf",
+      "status": "todo",
+      "id": "1767410156816",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "A Coarse-to-fine Cascaded Evidence-Distillation Neural Network for Explainable Fake News Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2209.14642.pdf",
+      "status": "todo",
+      "id": "1767410330111",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Demystifying Neural Fake News via Linguistic Feature-Based Interpretation",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.573.pdf",
+      "status": "todo",
+      "id": "1767410489582",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Generalizing to the Future: Mitigating Entity Bias in Fake News Detection",
+      "venue": "SIGIR",
+      "year": "2022",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3477495.3531816",
+      "status": "todo",
+      "id": "1767410535423",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Early Detection of Fake News with Multi-source Weak Social Supervision",
+      "venue": "ECML",
+      "year": "2021",
+      "link": "http://www.cs.iit.edu/~kshu/files/ecml_pkdd_mwss.pdf",
+      "status": "todo",
+      "id": "1767410553965",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Mining Dual Emotion for Fake News Detection",
+      "venue": "WWW",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3442381.3450004",
+      "status": "todo",
+      "id": "1767411605103",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Fake News Detection via NLP is Vulnerable to Adversarial Attacks",
+      "venue": "ICCART",
+      "year": "2019",
+      "link": "https://arxiv.org/ftp/arxiv/papers/1901/1901.09657.pdf",
+      "status": "todo",
+      "id": "1767411629780",
+      "categoryId": "1767415230200"
+    },
+    {
+      "title": "Improving Fake News Detection of Influential Domain via Domain-and Instance-Level Transfer",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2209.08902.pdf",
+      "status": "todo",
+      "id": "1767415278810",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "Domain Adaptive Fake News Detection via Reinforcement Learning",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2202.08159.pdf",
+      "status": "todo",
+      "id": "1767415294848",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "Memory-Guided Multi-View Multi-Domain Fake News Detection",
+      "venue": "TKDE",
+      "year": "2022",
+      "link": "https://ieeexplore.ieee.org/document/9802916",
+      "status": "todo",
+      "id": "1767415308975",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "Characterizing Multi-Domain False News and Underlying User Effects on Chinese Weibo",
+      "venue": "IPM",
+      "year": "2022",
+      "link": "https://www.sciencedirect.com/science/article/pii/S0306457322000784?via%3Dihub",
+      "status": "todo",
+      "id": "1767415327607",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "FuDFEND: Fuzzy-domain for Multi-domain Fake News Detection",
+      "venue": "ArXiv",
+      "year": "2022",
+      "link": "https://arxiv.org/ftp/arxiv/papers/2205/2205.03778.pdf",
+      "status": "todo",
+      "id": "1767415352253",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "MDFEND: Multi-domain Fake News Detection",
+      "venue": "CIKM",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2201.00987.pdf",
+      "status": "todo",
+      "id": "1767415370494",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "DAFD: Domain Adaptation Framework for Fake News Detection",
+      "venue": "ICONIP",
+      "year": "2021",
+      "link": "http://www.cs.iit.edu/~kshu/files/DAFD_ICONIP.pdf",
+      "status": "todo",
+      "id": "1767415391928",
+      "categoryId": "1767415257343"
+    },
+    {
+      "title": "Fake News Detection via Knowledgeable Prompt Learning",
+      "venue": "IPM",
+      "year": "2022",
+      "link": "https://www.sciencedirect.com/science/article/pii/S030645732200139X",
+      "status": "todo",
+      "id": "1767415536896",
+      "categoryId": "1767415413317"
+    },
+    {
+      "title": "KAN: Knowledge-aware Attention Network for Fake News Detection",
+      "venue": "AAAI",
+      "year": "2021",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/16080",
+      "status": "todo",
+      "id": "1767415552646",
+      "categoryId": "1767415413317"
+    },
+    {
+      "title": "Compare to The Knowledge: Graph Neural Fake News Detection with External Knowledge",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.62.pdf",
+      "status": "todo",
+      "id": "1767415566325",
+      "categoryId": "1767415413317"
+    },
+    {
+      "title": "Can LLM-Generated Misinformation Be Detected?",
+      "venue": "ICLR",
+      "year": "2024",
+      "link": "https://openreview.net/pdf?id=ccxD4mtkTU",
+      "status": "read",
+      "id": "1767415649708",
+      "categoryId": "1767415418042",
+      "starNote": "这也能发顶会？“研究检测器的必要性”",
+      "isStarred": true,
+      "problem": "===============痛点==============\n1、现有的虚假信息检测机制（无论是人类审核还是机器检测器）可能无法有效识别 LLM 生成的内容。如果 LLM 生成的假消息比人类写的更难识别，那么现有的防御体系将面临巨大挑战 。\n2、乏系统的实证研究来证明“LLM 生成的假消息确实比人类写的更难检测（危害更大）”。\n===============出发点==============\n“LLM 生成的虚假信息是否比人类撰写的虚假信息造成更大的危害？”\n1、如果在语义内容相同的情况下，LLM 生成的版本更难被人类和机器检测出来，这就证明 LLM 赋予了信息更具欺骗性的风格（Style）。\n2、从计算视角出发，将“危害”转化为“检测难度”来衡量 。\n3、先建立分类体系（Taxonomy），搞清楚 LLM 是如何生成假消息的（如幻觉、任意生成、重写/仿写）\n4、进行大量实证实验，让“人类”和“检测器”分别去识别“人写的假消息”和“LLM 写的假消息” 。",
+      "method": "==========1. 构建了 LLM 生成虚假信息的分类体系 (Taxonomy)==========\n作者从五个维度系统地对 LLM 生成的虚假信息进行了分类和特征描述 ：\n\t• 类型 (Types): 包括假新闻、谣言、阴谋论、诱导性点击（Clickbait）等 。\n\t• 领域 (Domains): 涵盖医疗、政治、科学、金融等 。\n\t• 来源 (Sources): 这是一个关键的分类创新，作者将其分为三类 ：\n\t\t○ 幻觉生成 (Hallucination Generation, HG): 无意生成，源于 LLM 自身缺陷 。\n\t\t○ 任意生成 (Arbitrary Misinformation Generation, AMG): 恶意用户有意让 LLM 凭空捏造 。\n\t\t○ 可控生成 (Controllable Misinformation Generation, CMG): 最具隐蔽性的方式，利用 LLM 对现有信息进行重写、仿写或扩写 。\n\t• 意图 (Intents): 分为无意（Unintentional）和有意（Intentional） 。\n\t• 错误 (Errors): 包括完全捏造、信息过时、断章取义等 。\n==========2、提出并验证了三种现实世界中利用 LLM 生成虚假信息的具体方法 ==========\nRQ1每种方法叫AI生成了一百次，除了第二类的指定生成成功率很低，另外俩100%成功\n\t• 幻觉新闻生成 : 模拟普通用户无意中触发模型幻觉 。（原文解释说：由于模型缺乏最新信息，在被要求写新闻时，它大概率会生成包含虚假日期、姓名、地址等细节的文本 ，再加以人工验证得到）\n\t• 任意生成（无中生有） : 模拟恶意用户直接指令模型生成特定领域或类型的假消息 。\n\t• 可控生成 (拿假新闻润色): 这是方法上的重点，作者设计了具体的 Prompt 策略来操纵信息 ：\n\t\t○ 仿写 (Paraphrase): 改变措辞但保留原意，以隐藏作者身份 。\n\t\t○ 重写 (Rewriting): 改变风格（如使其更严肃、更具说服力）以增加欺骗性 。\n\t\t○ 开放式生成 (Open-ended): 基于给定的误导性句子进行扩写 。\n\t\t○ 信息篡改 (Information Manipulation): 将真实信息篡改为包含特定错误的虚假信息 。\n    --论文明确指出，这种攻击是正交于以前的越狱技术的 。即当你把恶意内容（谣言）作为“素材”喂给模型，然后让它执行一个良性任务（比如“润色”、“重写”）时，模型的防御机制会完全失效 。哪怕是最基础的‘润色’功能，都能被用来成功地洗白谣言，而且目前的模型对此毫无抵抗力。\n==========3.构建了一个名为 LLMFake 的数据集。==========\n\t• 选取了三个真实世界的人类虚假信息数据集：Politifact（政治）、Gossipcop（娱乐）、CoAID（医疗）。\n\t• 生成模型： 动用了 7 个主流 LLM 模型，包括闭源的 ChatGPT（GPT-3.5）和开源的 Llama2（7b/13b/70b）、Vicuna（7b/13b/33b）。\n   • 生产方式： 利用 RQ1 中验证过的几种 Prompt（如重写、仿写、扩写、篡改等），对上述数据集中的非事实部分进行批量生成 。\n\t-------风格与语义分析-----\n   • 对于 HG, AMG 和 Manipulation，它们生成的假消息语义明显不同于人类写的原始假消息（因为一个是瞎编的，一个是把真改假的）。\n   •仅针对 CMG 中的三类（Paraphrase, Rewriting, Open-ended）使用 T-SNE 可视化语义嵌入的重叠情况，并使用词云分析高频词差异，从而从计算角度证明 LLM 生成的内容在保持语义的同时改变了风格 \n   （对于 text-embedding-ada-002，无论你输入的是一句话还是一整段假新闻，它输出的永远是一个固定长度的向量（通常是 1536 维））\n==========4.评估框架：多维度的检测难度分析==========\n作者采用了一种全面的评估方法来量化检测难度：\n\t• 人类评估 (Human Evaluation): 招募人类评估员，对比其在检测“人类撰写”与“LLM 生成”假消息时的成功率 。\n\t• 检测器评估 (Detector Evaluation): 使用零样本设置（Zero-shot setting）下的 LLM（如 GPT-4）作为检测器，模拟现实场景中缺乏训练数据的挑战 。\n。",
+      "results": "• 人类评估 (Human Evaluation): 越完美的“文笔”越难防\n\t• 做法： 找真人做“真假二选一”测试。\n\t• 结果： 人类防线失守。\n\t\t○ 看不穿幻觉： 人类对 AI 瞎编的“幻觉新闻”检测成功率极低（仅 9.6%），基本被牵着鼻子走。\n\t\t○ 比人写更难防： 同样内容的假消息，经过 AI 润色（重写/扩写）后，人类的识别成功率从原版的 40% 显著下降到了 20% 左右。\n• 检测器评估 (Detector Evaluation): 魔法打败不了魔法\n\t• 做法： 让 BERT（微调版）和 GPT-4（零样本版）去当法官。\n\t• 结果： 机器防线也崩了。\n\t\t○ 传统模型失效： BERT 面对 AI 润色后的假消息，准确率大幅下滑（掉至接近瞎猜的 50%）。\n\t\t○ 大模型互盲： 即使是 GPT-4，检测 AI 产生的“幻觉”时成功率也仅为 0%-10%，且无法有效识别同类模型生成的假消息。\n",
+      "thoughts": "1. 核心不足 (Limitations)\n\t• 实验设计的“手工作坊”气：\n\t\t○ 样本量过小： 人类评估仅招募了 10 人，且主要针对英语环境，结论的统计学效力（尽管有 P 值）和普适性在更大规模人群中存疑。\n\t\t○ 技术深度浅： 无论是生成（写 Prompt）还是检测（调 API），技术含量较低。缺乏对 LLM 内部机制（如 Attention 权重、Logits 分布）的深度探究，只停留在黑盒测试层面。\n\t• 检测场景过于理想化：\n\t\t○ RQ3 中使用的是 Zero-shot（零样本） 设置。在现实攻防中，防御者可能会专门收集 AI 假新闻来微调模型（Few-shot 或 Fine-tuning），那时的防御效果可能会比论文中展示的要好。作者可能为了突出“威胁”而选择了最弱的防御设定。\n\t• 缺乏实质性解决方案：\n\t\t○ 论文止步于“发现问题”，提出的防御建议（水印、Prompt 过滤）多为老生常谈，缺乏具体的算法创新或落地方案。\n2. 未来展望 (Future Directions)\n\t• 从“黑盒”到“白盒”的取证：\n\t\t○ 未来的研究不应只看 Output，而应去挖掘 LLM 生成假消息时的内部指纹。例如，AI 生成的文本在困惑度（Perplexity）或特定 Token 的概率分布上是否与人类不同？这是开发强力检测器的关键。\n\t• 对抗性防御 (Adversarial Defense)：\n\t\t○ 既然“润色”能绕过防御，那么防御者能否在训练阶段加入“抗润色”样本？或者开发一种针对“写作风格”的解离算法，还原文本的原始语义？\n\t• 多模态虚假信息 (Multimodal Misinformation)：\n\t\t○ 这篇论文只讲了文本。现在的 GPT-4o 和 Sora 已经能生成图文并茂甚至视频类的假消息。多模态内容的检测难度将呈指数级上升，是下一个顶会的热点方向。"
+    },
+    {
+      "title": "Automatic Detection of Entity-Manipulated Text Using Factual Knowledge",
+      "venue": "ACL",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.acl-short.10.pdf",
+      "status": "todo",
+      "id": "1767415667389",
+      "categoryId": "1767415418042"
+    },
+    {
+      "title": "Threat Scenarios and Best Practices for Neural Fake News Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.106.pdf",
+      "status": "todo",
+      "id": "1767415682200",
+      "categoryId": "1767415418042"
+    },
+    {
+      "title": "The Limitations of Stylometry for Detecting Machine-Generated Fake News",
+      "venue": "CL",
+      "year": "2020",
+      "link": "https://watermark.silverchair.com/coli_a_00380.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAq4wggKqBgkqhkiG9w0BBwagggKbMIIClwIBADCCApAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMxz9Xg1SndcEbQDYRAgEQgIICYezKOBSVkeblU0UiMgQBFTxwWxvVxyHMsoZNjebxXy_s7hVI8uyU1oxQJ0CFP1zIZd65qql15yVtv5CEq3RHl7TKSCYtFPWhMF4t-1jQaugAnyONxxeNuzPqHSrswxpjDG8HveRLQUiwoftHtfwjc0xUKG7pgHOpjXTWslc2XcQLv4HZ_krec_fLwygsTymj7jkzhn2v2aZdrpNXXzInEajuZA6bNeVhOfUmH2RaKMeRtrvVgXz6hiGn-zvZq2bcBWdHRueLpJY2vakrzJnQf42CghuRVvzxP2Hj-qfBfb08YnQI3lwmbERyn4GiKxAfQzyEoX_tkY8nqwpOm8t5wA-tTHW_AYKXQsoQMp1j2Q8wShdDRVQMnGyWLgxNR5WOJTgTvmcnr6D1tQTJhd_ilxUPCvNd8RnD4fU_7jWXeeEDtb5hQi45zKVUp9SropLnacTuOiQN4xY1saSH8EQCdNHJ79X9QZ2Ii7NGZrVm4ZCVcpN4DqHgR3WFeHPKZrTyT_6fluW-Mc69SpuIhu7nRLgavhAbyC8UAHS_Krk6vhch1GWIMPXeWyfo66jNJ_jZUUY8lEnoNfsfuyARpqb9x0IEseo_5WeHpR2SrQpWGlWxWBO8Twwi0nJgp9nlv4Ig7a4LAG66UXxRbzQs0kXENqOJM_qRVCIAKF_JDgKhXnk8Xoq15o-3fTdUeYlv-7mS_4XpA0f8l9nVRmq2GMwiNe41JuA1yV5nggN91T6bEC7mq9Vnc9x9B6uXji2tOT6TD7cmh-2XQl7CIbBvRfyLJpieHR0vFBydp9mnHXVuTT8v1Q",
+      "status": "todo",
+      "id": "1767415867907",
+      "categoryId": "1767415418042"
+    },
+    {
+      "title": "MUSER: A MUlti-Step Evidence Retrieval Enhancement Framework for Fake News Detection",
+      "venue": "KDD",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3580305.3599873",
+      "status": "todo",
+      "id": "1767415589184",
+      "categoryId": "1767415423159"
+    },
+    {
+      "title": "Bias Mitigation for Evidence-aware Fake News Detection by Causal Intervention",
+      "venue": "SIGIR",
+      "year": "2022",
+      "link": "https://web.archive.org/web/20220712063219id_/https://dl.acm.org/doi/pdf/10.1145/3477495.3531850",
+      "status": "todo",
+      "id": "1767415926786",
+      "categoryId": "1767415423159"
+    },
+    {
+      "title": "Evidence-aware Fake News Detection with Graph Neural Networks",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3485447.3512122",
+      "status": "todo",
+      "id": "1767415941073",
+      "categoryId": "1767415423159"
+    },
+    {
+      "title": "Automatic Fake News Detection: Are Models Learning to Reason?",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2105.07698.pdf",
+      "status": "todo",
+      "id": "1767415957225",
+      "categoryId": "1767415423159"
+    },
+    {
+      "title": "Integrating Pattern-and Fact-based Fake News Detection via Model Preference Learning",
+      "venue": "CIKM",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2109.11333.pdf",
+      "status": "todo",
+      "id": "1767415976049",
+      "categoryId": "1767415423159"
+    },
+    {
+      "title": "SNIFFER: Multimodal Large Language Model for Explainable Out-of-Context Misinformation Detection",
+      "venue": "CVPR",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2403.03170.pdf",
+      "status": "todo",
+      "id": "1767417249092",
+      "categoryId": "1767409914042",
+      "starNote": "Lv et al. (2025) 重点推荐：CVPR 2024 代表作，基于多模态 LLM 的可解释性检测，极大提升了模型的可信度 。",
+      "isStarred": true
+    },
+    {
+      "title": "FakeNewsGPT4: Advancing Multimodal Fake News Detection through Knowledge-Augmented LVLMs",
+      "venue": "Arxiv",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2403.01988.pdf",
+      "status": "todo",
+      "id": "1767417429804",
+      "categoryId": "1767409914042",
+      "starNote": "Lv et al. (2025) 趋势相关：符合综述提到的“基于知识增强的多模态 LLM”技术路线 。",
+      "isStarred": true
+    },
+    {
+      "title": "LEMMA: Towards LVLM-Enhanced Multimodal Misinformation Detection with External Knowledge",
+      "venue": "Arxiv",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2402.11943.pdf",
+      "status": "todo",
+      "id": "1767417458516",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Two Heads Are Better Than One: Improving Fake News Video Detection by Correlating with Neighbors",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2306.05241",
+      "status": "todo",
+      "id": "1767417472563",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "FakeSV: A Multimodal Benchmark with Rich Social Context for Fake News Detection on Short Video Platforms",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/download/26689/26461",
+      "status": "read",
+      "id": "1767417503862",
+      "categoryId": "1767409914042",
+      "starNote": "DataSet：由辟谣消息出发，反向寻找短视频，并且提取字幕等信息构建多模态数据集",
+      "isStarred": true,
+      "problem": "- 旧地图找不到新大陆（数据集稀缺）。 现有的视频假新闻数据集大多基于传统的长视频平台（如 YouTube）或社交媒体（Twitter/Facebook），数据量小（通常仅几百条），且缺乏针对“短视频”（Short Video）特性的数据 。\n- 信息利用不全（多模态缺失）。 以往的数据集往往只提供视频本身，缺乏社会语境（Social Context）。但在短视频平台上，用户评论（群众的眼睛是雪亮的）和发布者画像（账号可信度）是判断真假的重要辅助线索，这些信息在以往的研究中常被忽略 。",
+      "method": "A. 数据构建 (Dataset Construction) —— 核心苦力活\n流程非常严谨，是一个从“官方辟谣”到“平台抓取”的逆向工程 ：\n锁定目标： 爬取事实核查网站（Fact-checking sites）的辟谣文章，提取关键词，生成 854 个事件查询词 。\n全网搜集： 在抖音（Douyin）和快手（Kuaishou）上搜索这些事件，爬取视频、前100条评论、发布者公开信息 。\n人工清洗： 人工观看 11,603 个视频，最终筛选并标注出 1,827 个假新闻、1,827 个真新闻和 1,884 个辟谣视频，组成了 FakeSV 数据集 。\nC. 模型构建 (SV-FEND) —— 缝合基线\n设计了一个利用所有 6 种模态信息的模型 ：\n- 特征提取：文本（标题+字幕）：BERT  图像（关键帧）：VGG19 动作（视频片段）：C3D 音频：VGGish  评论 & 用户：BERT \n- 融合策略：先用 Cross-Modal Transformer 让文本与音频、图像交互 。最后用 Self-Attention 将内容特征与社会语境（评论/用户）一锅炖，输出真假概率 。",
+      "results": "基建扎实： 数据集构建流程规范，人工标注保证了质量，为该领域的后续研究提供了一把很好的“铲子”（Benchmark）。\n分析详尽： 数据分析部分很有洞察力，验证了“假新闻画质差”、“评论区有线索”等直觉。\n时间分割：引入了更具挑战性的按时间切分（Temporal Split）。这一设计模拟了“用过去数据训练、抓未来假新闻”的真实业务场景，且实验结果（81%准确率）反直觉地证明了模型具有极强的抗干扰能力和实用价值，揭示了假新闻“素材复用、换皮重发”的深层规律。",
+      "thoughts": "1、模型设计较为粗糙： SV-FEND 本质上是现有成熟模型（BERT, VGG, Transformer）的堆叠拼接。它没有针对数据分析中发现的痛点（如“画质差”或“评论噪声”）设计专门的模块（如频域分析或去噪机制）。\n2、“文本为王”的尴尬： 实验显示，仅用文本就能达到 76.8% 的准确率，引入视频和评论只提升了 2.5% 。这说明数据集中的假新闻大多比较低级（标题党、一眼假），多模态的真正潜力没有完全释放。\n3、评论利用率低： 消融实验显示评论模态的作用最小 ，这暗示了模型未能有效处理评论区的噪声，简单的 Self-Attention 机制在稀疏数据下被噪声干扰了。\n4、移花接木：对于视频是真的，文本描述也是符合画面的，但整个事件的定义是假的。作者表示无法分辨。（比如：把“反恐演习”说成“真实暴乱”）。\n-----------------展望(纯AI生成，未讨论思考)----------------\nA. 针对数据特性的架构改进：\n\t• 频域检测（Frequency Domain）： 针对“画质差”这一特征，引入频域分支（如 DCT/FFT）来专门捕捉剪辑和深度伪造痕迹，而不是只用 RGB 像素。\n\t• 引导注意力（Guided Attention）： 针对评论区噪声，设计 Co-Attention 机制，强制用视频内容去“查询/过滤”评论，只保留有逻辑冲突的评论，解决 Self-Attention 的噪声抱团问题。\nB. 提升任务难度与逻辑性：\n\t• 逻辑不一致性检测（Inconsistency Detection）： 重点攻克那些“画质清晰、标题正常”但“图文不符”的高级假新闻。使用对比学习（Contrastive Learning）来捕捉模态间的逻辑矛盾。\nC. 拓展应用场景（论文作者建议）：\n\t• 传播干预： 利用数据集中的辟谣视频，研究如何自动推荐辟谣内容给看过假新闻的用户 。\n\t• 假新闻演化： 通过视频相似度分析，追踪假新闻是如何通过“二次剪辑”进化的 。\n"
+    },
+    {
+      "title": "Cross-modal Contrastive Learning for Multimodal Fake News Detection",
+      "venue": "MM",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3581783.3613850",
+      "status": "todo",
+      "id": "1767417523945",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Combating Online Misinformation Videos: Characterization, Detection, and Future Directions",
+      "venue": "MM",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3581783.3612426",
+      "status": "todo",
+      "id": "1767417542354",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Causal Intervention and Counterfactual Reasoning for Multi-modal Fake News Detection",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.acl-long.37.pdf",
+      "status": "todo",
+      "id": "1767417553783",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Bootstrapping Multi-view Representations for Fake News Detection",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://openreview.net/pdf?id=tS2AkSDLYZ",
+      "status": "todo",
+      "id": "1767417577446",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "See How You Read? Multi-Reading Habits Fusion Reasoning for Multi-Modal Fake News Detection",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/download/26609/26381",
+      "status": "todo",
+      "id": "1767417590806",
+      "categoryId": "1767409914042",
+      "starNote": "Lv et al. (2025) 提及：虽然准确率一般(0.907)，但作为 Cross-modality Attention 的代表作被引用 。",
+      "isStarred": false
+    },
+    {
+      "title": "COSMOS: Catching Out-of-Context Misinformation with Self-Supervised Learning",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2101.06278",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "reading",
+      "starNote": "在同一个 Out-of-Context命题下，用完全不同的机制方法构建了全新数据集，和NewsCLIPpings交相辉映，数据集是不是更有用另说，但是构建数据集的方法一样很优雅，在LLM时代可以提供灵感",
+      "isStarred": true,
+      "rating": 9,
+      "ratedDate": "2026-01-19T08:31:16.473Z",
+      "id": "1767417633105",
+      "categoryId": "1768808167984"
+    },
+    {
+      "title": "Causal Inference for Leveraging Image-text Matching Bias in Multi-modal Fake News Detection",
+      "venue": "IEEE-TKDE",
+      "year": "2022",
+      "link": "https://ieeexplore.ieee.org/abstract/document/9996587",
+      "status": "todo",
+      "id": "1767417646659",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Cross-modal Ambiguity Learning for Multimodal Fake News Detection",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://web.archive.org/web/20220428130656id_/https://dl.acm.org/doi/pdf/10.1145/3485447.3511968",
+      "status": "todo",
+      "id": "1767417662749",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "A Duo-generative Approach to Explainable Multimodal COVID-19 Misinformation Detection",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://web.archive.org/web/20220503034453id_/https://dl.acm.org/doi/pdf/10.1145/3485447.3512257",
+      "status": "todo",
+      "id": "1767417686794",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "InfoSurgeon: Cross-Media Fine-grained Information Consistency Checking for Fake News Detection",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.133.pdf",
+      "status": "todo",
+      "id": "1767417703219",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "MCAN:Multimodal Fusion with Co-Attention Networks for Fake News Detection",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.findings-acl.226.pdf",
+      "problem": "1. 论文“身份卡”与锐评\n\t• 身份卡：ACL-IJCNLP 2021 (Findings)。\n\t\t○ 含金量：ACL 是自然语言处理领域的顶级会议 (Top-Tier)。被收录在 Findings 中，意味着文章在技术稳健性和科学性上达到了顶会门槛，但在“惊艳程度”或“主要会议议程契合度”上可能略逊一筹，或者纯粹是因为顶会接收率限制而溢出。依然是值得一读的高质量工作。\n\t• 自研摘要：\n\t\t○ 社交媒体上的假新闻往往“图文并茂”。传统方法要么只看文本，要么简单把图文特征拼起来（Concatenation），就像把两个不熟的人硬绑在一起，没交流。而且，大家都只看图“长什么样”（语义），忽略了图“是不是P的”（物理频域痕迹）。这篇文章提出了 MCAN 模型，模仿人类“看图-读文-再看图”的反复交互认知过程，利用**共注意力机制（Co-Attention）**深度融合文本、图片语义和图片频域三方特征，在微博和推特数据集上效果显著 。\n\t• 星级锐评：⭐ 7.5 / 10\n\t• 审稿人锐评：\n\t\t○ 优点：这是一篇非常标准的“A+B+C”式顶会论文。A是Transformer里的Attention机制，B是多模态融合痛点，C是频域分析（图像取证领域的经典Trick）。作者很聪明，没有只做简单的图文对齐，而是引入了频域 (Frequency Domain) 信息 ，这在当年的假新闻检测中是一个很好的加分项，因为它触及了“篡改检测”的本质，而不仅仅是语义不符。\n\t\t○ 局限：从方法论上讲，Co-Attention 也就是 Cross-Attention 的变体，在 VQA（视觉问答）领域已经被玩得比较成熟了（如 VilBERT 等）。这篇文章的创新更多在于组合式应用而非架构的底层发明。它属于“真·工程创新”和“问题驱动型研究”，而非纯粹的理论突破。",
+      "method": "- 图片频域特征Rf:先用 DCT (离散余弦变换) 把图片从像素域转为频域，然后设计了一个自定义的 CNN 网络（照搬了经典的 Inception V3 模块（GoogleNet 的核心组件））来处理这些频域系数 。假新闻图片往往经过重压缩 (Re-compression) 或篡改 (Tampering)。这些操作会在频域留下周期性的伪影（Artifacts），这是物理层面的“指纹” 。作者引入这一路，就是为了抓这个“物理证据”。\n      ----------\n     >提取 64 个频段的分量（对应低频到高频）,每个频段被采样为一个长度为 250 的向量。最终将这 64 个向量堆叠成一个64x250的矩阵，记为H_F (一张“频谱图”，横轴是采样点，纵轴是不同的频率分量。)\n     >基础特征提取 (The Stem)：连续三个卷积层 + 一个最大池化层 。卷积核的高度是 1宽度是 3，只在水平方向（即每个频段的向量内部）进行滑动卷积，而不跨越频段（垂直方向），不混淆不同频率的信息。同时第一层用了 32 个不同的卷积核，把输入变成了 32 通道，第二层就是64个32维输入1维输出的卷积核，最终在第三层变到128维——128x64x244，不填充从250变到244\n     >然后经过* 局部 *maxpooling，实现了数据的压缩降维。就是取每一行(244方向)的一小块区域，看看这部分有没有上一步卷积想要的特征，比如这五格里面有一个值是1，就证明这块区域里面有猫咪，就输出一个1，代表这块区域，相当于得到一个糊的特征图，实现了信息压缩降维（244—>122）。\n      ----------\n     >参照深度学习领域大名鼎鼎的 Inception 模块（倒数第二代，即 V3 版本），进行“Split-Transform-Merge”（拆分-变换-合并），背后的核心思想是 “多尺度并行处理”。核心哲学就是为了解决这个问题：“我不知道特征到底有多大。”\n     >分路进行降维+（空间特征提取” + “升维/恢复维度）等操作，从不同尺度上提取特征，最后在维度上拼接得到256维向量\n     >进行*全局*maxpooling（不管你哪个通道有我想要的特征，代表这张图在这个位置有没有我想要的特征）+1x1卷积进行信息压缩降维\n-----------------------------------------------------------------------------------------------------\n- 整个模块由 4 个相同的Co-Attention Layer（共注意力层） 堆叠而成，分为两个阶段：\n阶段 1：视觉内部“清洗” (Layer 1 & 2)：先搞定图片本身。 在看文字之前，先确认这张图是“真图”还是“P图”。如果频域全是噪点，那这张图的内容（空间域）再真实也是废的。这层输出的是一个**“经过伪造检测的视觉特征”**。\n阶段 2：图文跨模态“对齐” (Layer 3 & 4):让“综合视觉特征”和“文本特征”互查。看看文字说的东西，图里有没有？图里有的东西，文字提没提？Layer 4把 Layer 3 的结果拿来，再次引入原始文本特征进行修正 。\n\n作者包装：直观上，人们在阅读图文新闻时，往往是先看图像再阅读文字，这个过程可能会重复多次，不断地融合图像和文字信息。",
+      "results": "ICDM 2019 (Qi et al.) 是“挖井人”。 它发现了“频域”这个金矿，证明了它在假新闻检测里极其有效。这篇文章是硬核的技术创新。\nACL 2021 (Wu et al.) 是“精装修”。 它引用了 ICDM 2019 的核心发现（频域有效），然后：\n\t1. 引入 BERT：把文本能力拉满（符合 NLP 顶会要求）。\n\t2. 引入 Co-Attention：把融合手段拉满（显得技术更先进）。\n\t3. 讲了认知故事：把“多特征融合”包装成了“仿生认知过程”。\n----\n• ICDM 2019 证明了“频域特征”对判断图片真假很有用。\n• ACL 2021 实际上回答了一个新问题：“当图片看起来没问题（像素域正常），但其实被 P 过（频域异常）时，文本能起到什么作用？”\n\t• 通过 Co-Attention，模型学会了在文本描述很惊悚（比如“突发爆炸”）时，去疯狂查询图片的“频域特征”。如果频域显示有 P 图痕迹，立刻判定为假。这种跨模态的联动机制，是 2019 年那篇纯视觉文章没做到的。\n\n\n",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "显式引入了图像在频域上的分析，成功地嫁接到了多模态假新闻检测任务里。这种跨界组合+时间较早，用简洁的模块组合发到了顶会",
+      "isStarred": true,
+      "rating": 8,
+      "ratedDate": "2026-01-15T05:20:43.371Z",
+      "id": "1767421714088",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Edited Media Understanding Frames: Reasoning About the Intents and Implications of Visual Disinformation",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.158.pdf",
+      "status": "todo",
+      "id": "1767421714089",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Using Topic Modeling and Adversarial Neural Networks for Fake News Video Detection",
+      "venue": "CIKM",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3459637.3482212",
+      "status": "todo",
+      "id": "1767421714090",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Supervised Contrastive Learning for Multimodal Unreliable News Detection in COVID-19 Pandemic",
+      "venue": "CIKM",
+      "year": "2021",
+      "link": "https://arxiv.org/ftp/arxiv/papers/2109/2109.01850.pdf",
+      "status": "todo",
+      "id": "1767421714091",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Multimodal Emergent Fake News Detection via Meta Neural Process Networks",
+      "venue": "KDD",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3447548.3467153",
+      "status": "todo",
+      "id": "1767421714092",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Detecting Fake News by Exploring the Consistency of Multimodal Data",
+      "venue": "IPM",
+      "year": "2021",
+      "link": "https://www.sciencedirect.com/science/article/abs/pii/S0306457321001060",
+      "status": "todo",
+      "id": "1767421714093",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Improving Fake News Detection by Using an Entity-enhanced Framework to Fuse Diverse Multimodal Clues",
+      "venue": "MM",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2108.10509.pdf",
+      "status": "todo",
+      "id": "1767421714094",
+      "categoryId": "1767409914042",
+      "starNote": "Lv et al. (2025) 提及：EMAF (Li et al. 2021) 在 Twitter/Weibo 数据集上性能表现优异，属于基于实体的检测方法 。",
+      "isStarred": true
+    },
+    {
+      "title": "Hierarchical Multi-modal Contextual Attention Network for Fake News Detection",
+      "venue": "SIGIR",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3404835.3462871",
+      "status": "todo",
+      "id": "1767421714095",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "Detecting Cross-Modal Inconsistency to Defend Against Neural Fake News",
+      "venue": "EMNLP",
+      "year": "2020",
+      "link": "https://arxiv.org/pdf/2009.07698.pdf",
+      "status": "todo",
+      "id": "1767421714096",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "SAFE: Similarity-Aware Multi-Modal Fake News Detection",
+      "venue": "PAKDD",
+      "year": "2020",
+      "link": "https://link.springer.com/chapter/10.1007/978-3-030-47436-2_27",
+      "status": "todo",
+      "id": "1767421714097",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "MVAE: Multimodal Variational Autoencoder for Fake News Detection",
+      "venue": "WWW",
+      "year": "2019",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3308558.3313552",
+      "problem": "1. 论文“身份卡”与锐评\n\t• 论文标题：MVAE: Multimodal Variational Autoencoder for Fake News Detection \n\t• 作者团队：Dhruv Khattar, Jaipal Singh Goud, Manish Gupta, Vasudeva Varma (印度海得拉巴国际信息技术研究所，其中Manish Gupta也是微软的研究员) \n\t• 发表会议：The Web Conference 2019 (WWW '19) \n📝 自研摘要\n传统的假新闻检测模型往往只是把文本和图像特征提取出来，做个简单的拼接或注意力加权就扔进分类器。这种做法忽略了一个本质问题：假新闻的图文之间往往存在微妙的“错位”或强相关性。本文提出了一种**MVAE（多模态变分自编码器）**架构，它不只为了“分类”，还为了“重建”。通过强迫模型从一个共享的潜变量（Latent Variable）中还原出原始的文本和图像，模型被迫学习到两种模态之间深层的、本质的联合分布。这种“生成+分类”的联合训练，显著提升了假新闻检测的准确率。\n⭐ 星级锐评：7.5 / 10\n\t• 创新性：7分。将VAE引入多模态分类任务在当时是很棒的直觉，虽然组件基础，但思路清晰。\n\t• 完整性：8分。故事圆满，涵盖了编解码、分类、对比实验，逻辑闭环。\n\t• 时效性：6分（以当前视角）。Bi-LSTM和VGG-19已是时代的眼泪，但方法论可迁移。\n👨‍🏫 审稿人锐评\n这篇文章是一篇非常标准的“动机驱动型”论文，含金量中上。\n\t1. 非伪命题：它切中了一个痛点——现有的多模态模型缺乏显式的目标函数来发现模态间的相关性 。\n\t2. 真创新 vs 堆代码：这不是简单的堆代码。作者引入变分自编码器（VAE）作为正则化手段，这不是为了刷榜而魔改，而是基于“如果能理解并重建数据，就能更好地分类数据”这一深刻的机器学习直觉。\n\t3. 弱点：视觉部分直接冻结了 VGG 参数 ，这在算力受限的当时可以理解，但限制了模型捕捉“图像篡改”痕迹（如PS痕迹）的能力，因为它只学到了高层语义。\n",
+      "method": "- 主要的方法采用了VAE思路，即对特征向量进行降维压缩再复原，用复原差距区衡量模型，文章还将降维过的向量送进两层全连接层作为副任务去预测新闻真假。\n- 图像使用预训练的 VGG-19 网络，冻结参数；文本使用Bi-LSTM捕捉上下文信息进行编码。将图文向量各自过一个全连接层之后拼接\n- 对向量采用VAE模型的计算，过一个全连接层映射成两个参数，VAE 确实还在做降维（为了提取特征），但它抛弃了“死板的向量坐标”，转而学习特征的“概率范围”。它把现实世界乱七八糟的数据分布，强行规整成了整齐划一的正态分布。\n-解码器的图像部分，并没有反向VGG解码，而是和编码部分对称，过两个全连接层，对比VGG编码的向量。\n- 但文字部分却进行了语言重构，一个向量怎么变成一句话：\n模型首先把这个核心向量 R_m复制到句子的每一个位置上，再跑一遍Bi-LSTM，然后LSTM每一步的词向量都过一个全连接+softmax成为一个词表的概率分布，去和原句的词表向量[0,1,0,0,..,0]计算交叉熵作为损失",
+      "results": "- 在一个较早的时间点，使用双模态VAE解决了该领域的图文语义对齐问题",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 8,
+      "ratedDate": "2026-01-14T12:21:14.734Z",
+      "id": "1767421714098",
+      "categoryId": "1767409914042"
+    },
+    {
+      "title": "EANN: Event Adversarial Neural Networks for Multi-Modal Fake News Detection",
+      "venue": "KDD",
+      "year": "2018",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3219819.3219903",
+      "status": "todo",
+      "id": "1767421714099",
+      "categoryId": "1767409914042",
+      "starNote": "Lv et al. (2025) 评价：作为“Seminal work”开创了对抗性学习的先河，但性能已不如最新模型 。",
+      "isStarred": false
+    },
+    {
+      "title": "HG-SL: Jointly Learning of Global and Local User Spreading Behavior for Fake News Early Detection",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://www.atailab.cn/seminar2023Spring/pdf/2023_AAAI_Jointly%20Learning%20of%20Global%20and%20Local%20User%20Spreading%20Behavior%20for%20Fake%20News%20Early%20Detection.pdf",
+      "status": "todo",
+      "id": "1767421714100",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "DECOR: Degree-Corrected Social Graph Refinement for Fake News Detection",
+      "venue": "KDD",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3580305.3599298",
+      "status": "todo",
+      "id": "1767421714101",
+      "categoryId": "1767410007218",
+      "starNote": "Lv et al. (2025) 推荐：在社交图谱修正方面的重要工作，通过计算共同参与度减少边缘噪声 。",
+      "isStarred": true
+    },
+    {
+      "title": "Attacking Fake News Detectors via Manipulating News Social Engagement",
+      "venue": "WWW",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2302.07363",
+      "status": "todo",
+      "id": "1767421714102",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Towards Fine-Grained Reasoning for Fake News Detection",
+      "venue": "AAAI",
+      "year": "2022",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/20517",
+      "status": "todo",
+      "id": "1767421714103",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Tackling Fake News Detection by Continually Improving Social Context Representations using Graph Neural Networks",
+      "venue": "ACL",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.acl-long.97.pdf",
+      "status": "todo",
+      "id": "1767421714104",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Uncertainty-aware Propagation Structure Reconstruction for Fake News Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.243.pdf",
+      "status": "todo",
+      "id": "1767421714105",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "A Unified Propagation Forest-based Framework for Fake News Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.244.pdf",
+      "status": "todo",
+      "id": "1767421714106",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Topology imbalance and Relation inauthenticity aware Hierarchical Graph Attention Networks for Fake News Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.415.pdf",
+      "status": "todo",
+      "id": "1767421714107",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Reinforcement Subgraph Reasoning for Fake News Detection",
+      "venue": "KDD",
+      "year": "2022",
+      "link": "https://www.microsoft.com/en-us/research/uploads/prod/2022/05/KDD2022_FakeNewsDetection_camera_ready.pdf",
+      "status": "todo",
+      "id": "1767421714108",
+      "categoryId": "1767410007218",
+      "starNote": "Lv et al. (2025) 推荐：SureFact (Yang et al. 2022) 使用强化子图推理来捕捉关键知识，抗噪能力强 。",
+      "isStarred": true
+    },
+    {
+      "title": "Divide-and-Conquer: Post-User Interaction Network for Fake News Detection on Social Media",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://www.atailab.cn/seminar2022fall/pdf/2022_WWW_Divide-and-Conquer_Post-User%20Interaction%20Network%20for%20Fake%20News%20Detection%20on%20Social%20Media.pdf",
+      "status": "todo",
+      "id": "1767421714109",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Causal Understanding of Fake News Dissemination on Social Media",
+      "venue": "KDD",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2010.10580.pdf",
+      "status": "todo",
+      "id": "1767421714110",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "User Preference-aware Fake News Detection",
+      "venue": "SIGIR",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3404835.3462990",
+      "status": "todo",
+      "id": "1767421714111",
+      "categoryId": "1767410007218"
+    },
+    {
+      "title": "Towards LLM-based Fact Verification on News Claims with a Hierarchical Step-by-Step Prompting Method",
+      "venue": "AACL",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2310.00305",
+      "status": "todo",
+      "id": "1767421714112",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Read it Twice: Towards Faithfully Interpretable Fact Verification by Revisiting Evidence",
+      "venue": "SIGIR",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3539618.3592049",
+      "status": "todo",
+      "id": "1767421714113",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "DECKER: Double Check with Heterogeneous Knowledge for Commonsense Fact Verification",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.findings-acl.752",
+      "status": "todo",
+      "id": "1767421714114",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Counterfactual Debiasing for Fact Verification",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.acl-long.374.pdf",
+      "status": "todo",
+      "id": "1767421714115",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Fact-Checking Complex Claims with Program-Guided Reasoning",
+      "venue": "ACL",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2305.12744",
+      "status": "todo",
+      "id": "1767421714116",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Synthetic Disinformation Attacks on Automated Fact Verification Systems",
+      "venue": "AAAI",
+      "year": "2022",
+      "link": "https://www.aaai.org/AAAI22Papers/AAAI-11986.DuY.pdf",
+      "status": "todo",
+      "id": "1767421714117",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "LOREN: Logic-Regularized Reasoning for Interpretable Fact Verification",
+      "venue": "AAAI",
+      "year": "2022",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/21291",
+      "status": "todo",
+      "id": "1767421714118",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "GERE: Generative Evidence Retrieval for Fact Verification",
+      "venue": "SIGIR",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2204.05511.pdf",
+      "status": "todo",
+      "id": "1767421714119",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "EvidenceNet: Evidence Fusion Network for Fact Verification",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3485447.3512135",
+      "status": "todo",
+      "id": "1767421714120",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Zero-shot Fact Verification by Claim Generation",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2105.14682.pdf",
+      "status": "todo",
+      "id": "1767421714121",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Unified Dual-view Cognitive Model for Interpretable Claim Verification",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2105.09567.pdf",
+      "status": "todo",
+      "id": "1767421714122",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Topic-Aware Evidence Reasoning and Stance-Aware Aggregation for Fact Verification",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2106.01191.pdf",
+      "status": "todo",
+      "id": "1767421714123",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Structurizing Misinformation Stories via Rationalizing Fact-Checks",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.51.pdf",
+      "status": "todo",
+      "id": "1767421714124",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Exploring Listwise Evidence Reasoning with T5 for Fact Verification",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-short.51.pdf",
+      "status": "todo",
+      "id": "1767421714125",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Evidence-based Factual Error Correction",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.256.pdf",
+      "status": "todo",
+      "id": "1767421714126",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Strong and Light Baseline Models for Fact-Checking Joint Inference",
+      "venue": "ACL Findings",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.findings-acl.426.pdf",
+      "status": "todo",
+      "id": "1767421714127",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "A Multi-Level Attention Model for Evidence-Based Fact Checking",
+      "venue": "ACL Findings",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2106.00950.pdf",
+      "status": "todo",
+      "id": "1767421714128",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "CrossAug: A Contrastive Data Augmentation Method for Debiasing Fact Verification Models",
+      "venue": "CIKM",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2109.15107.pdf",
+      "status": "todo",
+      "id": "1767421714129",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Students Who Study Together Learn Better: On the Importance of Collective Knowledge Distillation for Domain Transfer in Fact Verification",
+      "venue": "EMNLP",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.emnlp-main.558.pdf?ref=https://githubhelp.com",
+      "status": "todo",
+      "id": "1767421714130",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "Towards Few-Shot Fact-Checking via Perplexity",
+      "venue": "NAACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2103.09535.pdf",
+      "status": "todo",
+      "id": "1767421714131",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "How Robust are Fact Checking Systems on Colloquial Claims?",
+      "venue": "NAACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.naacl-main.121.pdf",
+      "status": "todo",
+      "id": "1767421714132",
+      "categoryId": "1767409656213"
+    },
+    {
+      "title": "JustiLM: Few-shot Justification Generation for Explainable Fact-Checking of Real-world Claims",
+      "venue": "TACL",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2401.08026.pdf",
+      "status": "todo",
+      "id": "1767421714133",
+      "categoryId": "1767409661221"
+    },
+    {
+      "title": "Can LLMs Produce Faithful Explanations For Fact-checking? Towards Faithful Explainable Fact-Checking via Multi-Agent Debate",
+      "venue": "Arxiv",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2402.07401",
+      "status": "todo",
+      "id": "1767421714134",
+      "categoryId": "1767409661221"
+    },
+    {
+      "title": "Explainable Claim Verification via Knowledge-Grounded Reasoning with Large Language Models",
+      "venue": "EMNLP Findings",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.findings-emnlp.416.pdf",
+      "status": "todo",
+      "id": "1767421714135",
+      "categoryId": "1767409661221"
+    },
+    {
+      "title": "Are Large Language Models Good Fact Checkers: A Preliminary Study",
+      "venue": "Arxiv",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2311.17355",
+      "status": "todo",
+      "id": "1767421714136",
+      "categoryId": "1767409661221"
+    },
+    {
+      "title": "Multimodal Large Language Models to Support Real-World Fact-Checking",
+      "venue": "Arxiv",
+      "year": "2024",
+      "link": "https://arxiv.org/pdf/2403.03627",
+      "status": "todo",
+      "id": "1767421714137",
+      "categoryId": "1767420000001"
+    },
+    {
+      "title": "ECENet: Explainable and Context-Enhanced Network for Multi-modal Fact Verification",
+      "venue": "MM",
+      "year": "2023",
+      "link": "https://doi.org/10.1145/3581783.3612183",
+      "status": "todo",
+      "id": "1767421714138",
+      "categoryId": "1767420000001"
+    },
+    {
+      "title": "Exploring Faithful Rationale for Multi-Hop Fact Verification via Salience-Aware Graph Learning",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/26591/26363",
+      "status": "todo",
+      "id": "1767421714139",
+      "categoryId": "1767409666521"
+    },
+    {
+      "title": "EXPLAIN, EDIT, GENERATE: Rationale-Sensitive Counterfactual Data Augmentation for Multi-hop Fact Verification",
+      "venue": "EMNLP",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.emnlp-main.826.pdf",
+      "status": "todo",
+      "id": "1767421714140",
+      "categoryId": "1767409666521"
+    },
+    {
+      "title": "Consistent Multi-Granular Rationale Extraction for Explainable Multi-hop Fact Verification",
+      "venue": "Arxiv",
+      "year": "2023",
+      "link": "https://arxiv.org/pdf/2305.09400",
+      "status": "todo",
+      "id": "1767421714141",
+      "categoryId": "1767409666521"
+    },
+    {
+      "title": "The Role of Context in Detecting Previously Fact-Checked Claims",
+      "venue": "NAACL",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2104.07423.pdf",
+      "status": "todo",
+      "id": "1767421714142",
+      "categoryId": "1767409681425"
+    },
+    {
+      "title": "Article Reranking by Memory-Enhanced Key Sentence Matching for Detecting Previously Fact-Checked Claims",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2112.10322.pdf",
+      "status": "todo",
+      "id": "1767421714143",
+      "categoryId": "1767409681425"
+    },
+    {
+      "title": "Claim Matching Beyond English to Scale Global Fact-Checking",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2106.00853.pdf",
+      "status": "todo",
+      "id": "1767421714144",
+      "categoryId": "1767409681425"
+    },
+    {
+      "title": "That is a Known Lie: Detecting Previously Fact-Checked Claims",
+      "venue": "ACL",
+      "year": "2020",
+      "link": "https://arxiv.org/pdf/2005.06058.pdf",
+      "status": "todo",
+      "id": "1767421714145",
+      "categoryId": "1767409681425"
+    },
+    {
+      "title": "Where Are the Facts? Searching for Fact-checked Information to Alleviate the Spread of Fake News",
+      "venue": "EMNLP",
+      "year": "2020",
+      "link": "https://arxiv.org/pdf/2010.03159.pdf",
+      "status": "todo",
+      "id": "1767421714146",
+      "categoryId": "1767409681425"
+    },
+    {
+      "title": "FAVIQ: FAct Verification from Information-seeking Questions",
+      "venue": "ACL",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2107.02153.pdf",
+      "status": "todo",
+      "id": "1767421714147",
+      "categoryId": "1767409685254"
+    },
+    {
+      "title": "Misinfo Reaction Frames: Reasoning about Readers’ Reactions to News Headlines",
+      "venue": "ACL",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2104.08790.pdf",
+      "status": "todo",
+      "id": "1767421714148",
+      "categoryId": "1767409685254"
+    },
+    {
+      "title": "COVID-Fact: Fact Extraction and Verification of Real-World Claims on COVID-19 Pandemic",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://arxiv.org/pdf/2106.03794.pdf",
+      "status": "todo",
+      "id": "1767421714149",
+      "categoryId": "1767409685254"
+    },
+    {
+      "title": "Rumor Detection with Diverse Counterfactual Evidence",
+      "venue": "KDD",
+      "year": "2023",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3580305.3599494",
+      "status": "todo",
+      "id": "1767421714150",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Zero-Shot Rumor Detection with Propagation Structure via Prompt Learning",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/25651/25423",
+      "status": "todo",
+      "id": "1767421714151",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "DDGCN: Dual Dynamic Graph Convolutional Networks for Rumor Detection on Social Media",
+      "venue": "AAAI",
+      "year": "2022",
+      "link": "https://www.aaai.org/AAAI22Papers/AAAI-6370.SunM.pdf",
+      "status": "todo",
+      "id": "1767421714152",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "A Progressive Framework for Role-Aware Rumor Resolution",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.242.pdf",
+      "status": "todo",
+      "id": "1767421714153",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Social Bot-Aware Graph Neural Network for Early Rumor Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.580.pdf",
+      "status": "todo",
+      "id": "1767421714154",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Detect Rumors in Microblog Posts for Low-Resource Domains via Adversarial Contrastive Learning",
+      "venue": "NAACL",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2204.08143.pdf",
+      "status": "todo",
+      "id": "1767421714155",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Rumor Detection on Social Media with Graph Adversarial Contrastive Learning",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://web.archive.org/web/20220505023214id_/https://dl.acm.org/doi/pdf/10.1145/3485447.3511999",
+      "status": "todo",
+      "id": "1767421714156",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Detecting False Rumors from Retweet Dynamics on Social Media",
+      "venue": "WWW",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2201.13103.pdf",
+      "status": "todo",
+      "id": "1767421714157",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Adversary-Aware Rumor Detection",
+      "venue": "ACL Findings",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.findings-acl.118.pdf",
+      "status": "todo",
+      "id": "1767421714158",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Meet The Truth: Leverage Objective Facts and Subjective Views for Interpretable Rumor Detection",
+      "venue": "ACL Findings",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.findings-acl.63.pdf",
+      "status": "todo",
+      "id": "1767421714159",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Rumor Detection on Twitter with Claim-Guided Hierarchical Graph Attention Networks",
+      "venue": "EMNLP",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.emnlp-main.786.pdf?ref=https://githubhelp.com",
+      "status": "todo",
+      "id": "1767421714160",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "STANKER: Stacking Network based on Level-grained Attention-masked BERT for Rumor Detection on Social Media",
+      "venue": "EMNLP",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.emnlp-main.269.pdf",
+      "status": "todo",
+      "id": "1767421714161",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks",
+      "venue": "AAAI",
+      "year": "2020",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/5393",
+      "status": "todo",
+      "id": "1767421714162",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Debunking Rumors on Twitter with Tree Transformer",
+      "venue": "COLING",
+      "year": "2020",
+      "link": "https://aclanthology.org/2020.coling-main.476.pdf?ref=https://githubhelp.com",
+      "status": "todo",
+      "id": "1767421714163",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Rumor Detection on Twitter with Tree-structured Recursive Neural Networks",
+      "venue": "ACL",
+      "year": "2018",
+      "link": "https://aclanthology.org/P18-1184.pdf",
+      "status": "todo",
+      "id": "1767421714164",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Early Detection of Fake News on Social Media Through Propagation Path Classification with Recurrent and Convolutional Networks",
+      "venue": "PPC | AAAI",
+      "year": "2018",
+      "link": "https://dl.acm.org/doi/abs/10.5555/3504035.3504079",
+      "status": "todo",
+      "id": "1767421714165",
+      "categoryId": "1767409634827"
+    },
+    {
+      "title": "Towards Propagation Uncertainty: Edge-enhanced Bayesian Graph Convolutional Networks for Rumor Detection",
+      "venue": "ACL",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.acl-long.297.pdf",
+      "status": "todo",
+      "id": "1767421714166",
+      "categoryId": "1767420000002"
+    },
+    {
+      "title": "Interpretable Rumor Detection in Microblogs by Attending to User Interactions",
+      "venue": "AAAI",
+      "year": "2020",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/6405",
+      "status": "todo",
+      "id": "1767421714167",
+      "categoryId": "1767420000002"
+    },
+    {
+      "title": "Continually Detection, Rapidly React: Unseen Rumors Detection based on Continual Prompt-Tuning",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.268.pdf",
+      "status": "todo",
+      "id": "1767421714168",
+      "categoryId": "1767420000003"
+    },
+    {
+      "title": "Early Rumor Detection Using Neural Hawkes Process with a New Benchmark Dataset",
+      "venue": "NAACL",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.naacl-main.302.pdf",
+      "status": "todo",
+      "id": "1767421714169",
+      "categoryId": "1767420000003"
+    },
+    {
+      "title": "Rumor Detection with Field of Linear and Non-Linear Propagation",
+      "venue": "WWW",
+      "year": "2021",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3442381.3450016",
+      "status": "todo",
+      "id": "1767421714170",
+      "categoryId": "1767420000003"
+    },
+    {
+      "title": "A State-independent and Time-evolving Network for Early Rumor Detection in Social Media",
+      "venue": "EMNLP",
+      "year": "2020",
+      "link": "https://aclanthology.org/2020.emnlp-main.727.pdf",
+      "status": "todo",
+      "id": "1767421714171",
+      "categoryId": "1767420000003"
+    },
+    {
+      "title": "DUCK: Rumour Detection on Social Media by Modelling User and Comment Propagation Networks",
+      "venue": "NAACL",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.naacl-main.364.pdf",
+      "status": "todo",
+      "id": "1767421714172",
+      "categoryId": "1767420000004"
+    },
+    {
+      "title": "Rumor Detection on Social Media with Event Augmentations",
+      "venue": "SIGIR ShortPaper",
+      "year": "2021",
+      "link": "https://www.researchgate.net/profile/Zhenyu-He-5/publication/353188656_Rumor_Detection_on_Social_Media_with_Event_Augmentations/links/62e8f9a83c0ea87887765e3d/Rumor-Detection-on-Social-Media-with-Event-Augmentations.pdf",
+      "status": "todo",
+      "id": "1767421714173",
+      "categoryId": "1767420000005"
+    },
+    {
+      "title": "Data Augmentation for Rumor Detection using Context-sensitive Neural Language Model with Large-scale Credibility",
+      "venue": "ICLR",
+      "year": "2019",
+      "link": "https://openreview.net/pdf?id=SyxCysRNdV",
+      "status": "todo",
+      "id": "1767421714174",
+      "categoryId": "1767420000005"
+    },
+    {
+      "title": "MFAN: Multi-modal Feature-enhanced Attention Networks for Rumor Detection",
+      "venue": "IJCAI",
+      "year": "2022",
+      "link": "https://www.ijcai.org/proceedings/2022/0335.pdf",
+      "status": "todo",
+      "id": "1767421714175",
+      "categoryId": "1767409640769"
+    },
+    {
+      "title": "Inconsistency Matters: A Knowledge-guided Dual-inconsistency Network for Multi-modal Rumor Detection",
+      "venue": "EMNLP",
+      "year": "2021",
+      "link": "https://aclanthology.org/2021.findings-emnlp.122.pdf",
+      "status": "todo",
+      "id": "1767421714176",
+      "categoryId": "1767409640769"
+    },
+    {
+      "title": "Multi-modal Knowledge-aware Event Memory Network for Social Media Rumor Detection",
+      "venue": "MM",
+      "year": "2019",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3343031.3350850",
+      "status": "todo",
+      "id": "1767421714177",
+      "categoryId": "1767409640769"
+    },
+    {
+      "title": "Multimodal Fusion with Recurrent Neural Networks for Rumor Detection on Microblogs",
+      "venue": "MM",
+      "year": "2017",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3123266.3123454",
+      "status": "todo",
+      "id": "1767421714178",
+      "categoryId": "1767409640769"
+    },
+    {
+      "title": "A Weakly Supervised Propagation Model for Rumor Verification and Stance Detection with Multiple Instance Learning",
+      "venue": "SIGIR",
+      "year": "2022",
+      "link": "https://arxiv.org/pdf/2204.02626.pdf",
+      "status": "todo",
+      "id": "1767421714179",
+      "categoryId": "1767409648130"
+    },
+    {
+      "title": "Rumor Detection By Exploiting User Credibility Information, Attention and Multi-task Learning",
+      "venue": "ACL ShortPaper",
+      "year": "2019",
+      "link": "https://aclanthology.org/P19-1113.pdf",
+      "status": "todo",
+      "id": "1767421714180",
+      "categoryId": "1767409648130"
+    },
+    {
+      "title": "All-in-one: Multi-task Learning for Rumour Verification",
+      "venue": "COLING",
+      "year": "2018",
+      "link": "https://arxiv.org/pdf/1806.03713.pdf",
+      "status": "todo",
+      "id": "1767421714181",
+      "categoryId": "1767409648130"
+    },
+    {
+      "title": "Detect Rumor and Stance Jointly by Neural Multi-task Learning",
+      "venue": "WWW",
+      "year": "2018",
+      "link": "https://dl.acm.org/doi/pdf/10.1145/3184558.3188729",
+      "status": "todo",
+      "id": "1767421714182",
+      "categoryId": "1767409648130"
+    },
+    {
+      "title": "Multi-modal fake news detection: A comprehensive survey on deep learning technology, advances, and challenges",
+      "venue": "Journal of King Saud University - Computer and Information Sciences",
+      "year": "2025",
+      "link": "https://link.springer.com/article/10.1007/s44443-025-00317-7",
+      "status": "reading",
+      "id": "1767411444206",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "1. 基于一般内容的融合 (General Content-based Fusion) \n这是最基础的框架，侧重于特征向量的结合阶段。\n\t• 早期融合 (Early Fusion)：在特征提取初期直接拼接多模态特征，操作简单，但特征交互较浅 。\n\t• 中间融合 (Intermediate Fusion)：在特征提取的过程中进行融合，允许模型在学习表示的同时进行交互 。\n\t• 晚期融合 (Late Fusion)：决策级融合。各模态模型独立输出结果，最后通过投票或加权整合决策，易忽略模态间的深层联系 。\n2. 注意力机制的应用 (Application of Attention Mechanism) \n核心在于利用注意力权重解决跨模态信息的对齐与筛选。\n\t• Transformer 前时代 (Transformer Pre-era)：基于传统 RNN/CNN 引入注意力机制（如 att-RNN），用于捕捉文本关键词与图像的关联 。\n\t• 跨模态 Transformer (Cross-Modality Transformers)：利用 Transformer 的并行计算能力，通过自注意力 (Self-Attention) 和协同注意力 (Co-Attention) 实现图文特征的深度对齐与交互 。\n3. 基于图的交互 (Graph-based Interactions) \n侧重于语义层面的内容理解（注意与社交图区分）。\n\t• 核心机制：提取新闻内容中的实体（如人名、地名）作为节点构建图，将特征融合提升至“语义实体对齐”层面 。\n\t• 作用：通过实体链接或场景图，检测不同模态间是否存在逻辑冲突（如“图文不符”） 。\n4. 社会情境建模 (Social Context Modeling) \n跳出新闻内容，分析信息在社交平台上的传播环境。\n\t• 传播网络 (Propagation Networks)：利用图神经网络 (GNN) 建模转发结构和用户连接，捕捉真假新闻在传播拓扑上的差异 。\n\t• 基于时序的融合 (Temporal-based Fusion)：关注传播过程的时间依赖性，利用时序模型分析谣言随时间演变的动态特征 。\n5. 知识增强 (Knowledge Enhancement) \n引入模型训练数据之外的“外脑”辅助判断。\n\t• 外部知识库 (External Knowledge Bases)：引入知识图谱、维基百科等结构化事实，用于事实核查和实体验证 。\n\t• 跨模态 LLM 推理 (Cross-Modal LLM Reasoning)：利用大语言模型 (LLM) 的逻辑与常识。包括少样本推理（分析逻辑漏洞）和生成式验证（如将图像转文字后进行比对） 。\n=======================================\n• 内容融合： 普遍低算力、低准确，唯“跨模型混合”实现高准且快，适合基础检测，但在处理复杂逻辑时有上限 。\n• 慢速方案： 混合 Transformer 与 LLM 是唯二慢速案例。前者虽慢但准度封顶；后者算力极重，准确率却仅中等 。\n• 高准梯队： 外部知识、跨模型混合、图交互、混合 Transformer 稳居高准四杰。除混合 Transformer 外，其余三项均兼顾高精度与高响应速度 。\n• 社交建模： 传播图/时序数据门槛最高，但实际检测效果与算力收益仅为中等，性价比有限 \n",
+      "results": "================特征提取================= \n文本模态 ： 预训练语言模型（BERT 及其变体 RoBERTa, ALBERT）、大语言模型（GPT), 用于捕捉包含句法和语义关系的上下文词嵌入特征 。\n视觉模态 ： VGG-19, ResNet, EfficientNet-B0 ； Vision Transformers (ViT)、CLIP, BLIP, BLIP-2, InstructBLIP, GPT-4V ；3D-CNNs(视频用) 。\n音频模态： 1D-CNNs, ResNet-1D ,提取时序声学特征，这是视频造假检测的补充 。\n社交网络： 图神经网络 (GNNs) ；动态传播图 。 将社交关系（节点和边）转化为低维向量嵌入，编码结构和位置信息 。\n>跨领域特征对齐 (Cross-domain feature alignment) ： 旨在解决不同模态间的特征不匹配问题，将异构特征映射到共享的语义空间，以便更有效地融合 \n       - 实体级对齐： 利用 BERT 提取文本实体，配合 Faster RCNN 提取图像实体，进行特征匹配 。\n       - 跨模态加权残差网络： 提取图像显著区域与文本语义词的细粒度特征 。\n=============注意力机制与Transformer=============\n> Transformer前时代\n (RNNs/CNNs) 类似于“手电筒”。利用注意力机制对图像区域或文本关键词进行单向加权 (Highlight)，辅助 LSTM 处理序列数据。\n\t• 短板： 串行计算速度慢，且无法捕捉长距离依赖。\n> Transformer时代 (Table 3 四大流派) \n引入自注意力(SA)与协同注意力(CA)，实现像素级与字符级的并行深度交互。\n\t• 基础替换流 (Basic SA-Trans)： 用 Transformer (SA) 替代 RNN 进行特征提取，解决了梯度爆炸问题。\n\t\t○  缺乏跨模态交互 (各跑各的)，且不如 CNN 擅长捕捉局部细节。\n\t• 深度交互流 (Hierarchical CA)： 疯狂堆叠多层协同注意力(CA) 模块，强行实现图文特征的深层对齐。\n\t\t○  网络结构过深，导致显存消耗巨大 (Large memory)。\n\t• 拟人认知流 (Cognitive/Reasoning)： 引入“人类阅读顺序”或“逻辑推理”机制，追求模型的可解释性 (如解释矛盾点)。\n\t\t○  推理逻辑复杂，导致实时性差 (Poor real-time) 且难以对齐。\n\t• 特训范式流 (New Paradigms)： 引入对比学习或图文匹配(ITM) 等预训练任务，改变学习方式以提升效率。\n\t\t○ 多任务权重冲突，导致对超参数极度敏感 (Sensitive)，难以调参。\n=============基于图的交互 (Graph-based Interactions)=============\n核心理念 抛弃简单的特征拼接，转向 “语义级实体对齐”。通过构建关系图，像侦探一样比对“文本里的实体”和“图片里的实体”是否一致 。 \n• 优势： 具有很强的可解释性（能指出具体是哪个实体对不上）。\n主要做法 ：\n    >增强对齐 (Refined Matching)： 不光比对名字，还引入属性和注意力机制，解决同名异义或模糊匹配不准的问题 。\n    >动态构图 (Dynamic Adaptation)： 针对突发新闻，利用强化学习自适应探索节点，生成“小而精”的子图，解决传统静态图谱更新滞后的问题 。\n    >场景特化 (Scene Context)： 专门针对 地点、天气、季节 等环境实体建模，量化计算图文背景的一致性分数 。\n    >外挂知识 (External Linking)： 将新闻实体链接到维基百科或百度API，引入外部事实进行“三元组”验证 。\n====================社会环境建模 (Social Context Modeling)===================== \n核心逻辑：不看“内容假不假”，看“传播像不像”。针对 空间（结构）和 时间（节奏）两大维度建模 。\n一、 空间派：传播网络 (Propagation Networks) 利用 GNN 建模传播结构，核心痛点是消除社交网络中的 “噪音”（如僵尸粉、无效转发）。\n\t• 去噪增强流 (Denoising): 利用 强化学习 (筛选子图)、对比学习 (正负样本对比) 或 边修正 技术清洗无效节点与连接 。\n\t\t○ 抗干扰能力强 (Good resistance)，但计算复杂度高 。\n\t• 用户画像流 (User Credibility): 认为“谁发的”更重要。将发布者的信誉、影响力、账号寿命等特征融入图节点 。\n\t\t○ 特征融合全面，但极其消耗内存 (Large memory) 。\n二、 时间派：时序融合 (Temporal-based Fusion) 捕捉假新闻随时间变化的动态特征（如爆发式 vs 平缓传播）。\n\t• 动态切片流 (Time Blocks): 将传播过程切分为固定时间窗口，给不同时段（通常是最新消息）分配更高权重 。\n\t\t○ 能处理细粒度特征，但切片间隔难以选择 (Interval size selection) 。\n\t• 时序记忆流 (Temporal Memory): 利用 RNN 或记忆模块“记住”传播轨迹并更新节点状态，解决早期数据稀疏问题 。\n\t\t○ 对稀疏数据友好，但解释性差且容易过拟合 (Proneness to overfitting) 。\n====================知识增强方法 (Knowledge Enhancement)===================== \n\t\t核心逻辑： 引入训练数据之外的“外援”。一是 外部知识库（提供事实），二是 LLM（提供逻辑与常识）。\n\t\t一、 外部知识库派 (External Knowledge-based)\n\t\t利用维基百科、知识图谱 (KG) 或 Web API 辅助验证，解决“瞎编乱造”的问题。\n\t\t\t• 知识检索与构建 (Retrieval & Construction):\n\t\t\t\t○ 做法: 从新闻中提取实体，去wiki等爬取背景知识 ，或构建专门的谣言知识图谱 。也有利用百度翻译API进行数据增强 。\n\t\t\t\t○ Table 5评价: 显著提升了可解释性 ，能告诉用户新闻违背了哪些事实。但外部知识更新不及时且引入了大量噪音，数据清洗困难 。\n\t\t二、 LLM推理增强派 (LLM Reasoning Enhancement)\n\t\t利用大语言模型的通用知识和逻辑能力，从“特征提取”转向“智能推理”。\n\t\t\t• 少样本推理流 (Few-shot Reasoning):\n\t\t\t\t○ 做法: 利用 Prompt 工程引导 LLM 寻找逻辑漏洞。\n\t\t\t\t○ 如：检测图文逻辑矛盾 ，甚至让 LLM 扮演正反方进行辩论来挖掘深层冲突 。\n\t\t\t\t○ Table 5评价: 具备强大的观点多样性和泛化能力，能处理没见过的新型假新闻。但可能产生幻觉 ，且推理成本高 。\n\t\t\t• 生成式验证流 (Generative Verification):\n\t\t\t\t○ 做法: 让 LLM 扮演“专业核查员”。常用 图像转文本 (Image-to-text) 技术将图片内容翻译成文字，再与标题比对语义一致性 \n\t\t\t\t○ Table 5 评价: 实现了端到端训练，应用场景广。但容易丢失图像细节，且在特定领域能力偏弱 。\n",
+      "thoughts": "============优点=============\n1、横向列出了许多综述，以详细表格列出了每篇综述涉及的内容；构建近五年论文发表数以及词云等趋势可视化\n2、对领域研究技术，分别按时间纵向列出了20-25年代表作以及涉及技术；横向分为五大类并且进一步细分提供了思维导图\n3、对思维导图的分类进行了详尽的指标对比，延伸到后面的具体讲解时也有每类间研究的指标对比表格\n4、对领域数据集进行了介绍(包括被使用率)，以及对应Ranking和采用方法\n============缺点============\n1、对于虚假新闻任务定义为有监督的二分类任务问题，数学上容易给出表示，但在实际应用中可能过于简化\n2、对各类模型的对比并没有复现做实验，对于比如计算资源时间大不大等指标，不懂怎么给出来的\n3、对于音频视频模态的关注不够，整体的研究都是图文多，引导风向到LLM上（虽然也可能是学界的整体趋势）",
+      "starNote": "必读综述：全面的多模态假新闻检测综述，分类对比清晰 。",
+      "isStarred": true
+    },
+    {
+      "title": "A Comprehensive Survey on Multimodal Fake News Detection: Techniques, Challenges, and Future",
+      "venue": "ArXiv",
+      "year": "2024",
+      "link": "https://arxiv.org/abs/2402.04163",
+      "status": "todo",
+      "id": "1767411444202",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "A Review of Automatic Fake News Detection: From Traditional Methods to Large Language Models",
+      "venue": "Future Internet (MDPI)",
+      "year": "2025",
+      "link": "https://doi.org/10.3390/fi17100435",
+      "status": "read",
+      "id": "1767411444203",
+      "categoryId": "1767418918329",
+      "problem": "A. 基于分析视角的分类 (Analytical Perspectives)\n作者将检测方法分为四个主要视角 ：\n\t1. 基于知识/事实核查 (Knowledge-based): 通过收集外部数据（如知识图谱、专家验证）来验证声明的真实性。这通常涉及将待测内容与已知事实进行匹配 。\n\t2. 基于内容风格 (Content Style Analysis): 分析内容的语言特征，如写作风格、情感色彩、标点符号使用等，以识别欺骗性的模式（例如不仅分析文本，也分析图像的连贯性）。\n\t3. 基于来源可靠性 (Source Reliability): 评估发布者、媒体机构或账号的可信度，而不是直接分析内容本身 。\n\t4. 基于传播路径 (Content Propagation): 研究新闻在社交网络中的传播结构（如级联图），基于“假新闻传播模式与真新闻不同”的假设进行检测 。",
+      "method": "B. 基于计算技术的分类 (Computational Approaches)\n作者根据算法的发展阶段和技术架构，将其分为三代 ：\n\t1. 前深度学习/传统机器学习 (Pre-Deep Learning):\n\t\t○ 主要依赖手工提取特征。\n\t\t○ 包括：支持向量机 (SVM) 、朴素贝叶斯 (Naïve Bayes) 、逻辑回归 (Logistic Regression) 、决策树 (Decision Tree) 和随机森林 (Random Forest) 。\n\t2. 深度学习模型 (Deep Learning Models):\n\t\t○ 能够自动提取分层特征，适合处理非结构化数据。\n\t\t○ 序列模型： 循环神经网络 (RNN)、长短期记忆网络 (LSTM)、双向 LSTM (Bi-LSTM) 。\n\t\t○ 特征提取： 卷积神经网络 (CNN) 。\n\t\t○ 结构模型： 基于图的模型 (Graph-Based) 用于分析传播网络 。\n\t\t○ 预训练模型： 基于 Transformer 的架构（如 BERT, RoBERTa），这是深度学习类中的主流 。\n\t3. 大语言模型技术 (Large Language Models, LLMs):\n\t\t○ 最新的研究方向，LLM 既是检测工具也是造假工具。\n\t\t○ 数据生成 (Data Generation): 利用 LLM 生成合成假新闻或对抗样本来训练检测器 。\n\t\t○ 文本分类 (Text Classification): 微调 LLM（如 LLaMA, GPT-4）直接进行真假分类 。\n\t\t○ 事实核查 (Fact-Checking): 利用 LLM 分解复杂声明并检索证据进行验证 。\n\t\t○ 上下文调查 (Contextual Investigation): 分析语义和逻辑一致性 。\n\t\t○ 虚假档案识别 (Fake Profile Identification): 识别由 LLM 生成的虚假用户资料 。\n====================社会环境建模 (Social Context Modeling)=====================\n 核心逻辑：不看“内容假不假”，看“传播像不像”。针对 空间（结构）和 时间（节奏）两大维度建模 。\n一、 空间派：传播网络 (Propagation Networks) 利用 GNN 建模传播结构，核心痛点是消除社交网络中的 “噪音”（如僵尸粉、无效转发）。\n\t• 去噪增强流 (Denoising): 利用 强化学习 (筛选子图)、对比学习 (正负样本对比) 或 边修正 技术清洗无效节点与连接 。\n\t\t○ 评价: 抗干扰能力强 (Good resistance)，但计算复杂度高 。\n\t• 用户画像流 (User Credibility): 认为“谁发的”更重要。将发布者的信誉、影响力、账号寿命等特征融入图节点 。\n\t\t○ 评价: 特征融合全面，但极其消耗内存 (Large memory) 。\n二、 时间派：时序融合 (Temporal-based Fusion) 捕捉假新闻随时间变化的动态特征（如爆发式 vs 平缓传播）。\n\t• 动态切片流 (Time Blocks): 将传播过程切分为固定时间窗口，给不同时段（通常是最新消息）分配更高权重 。\n\t\t○ 评价: 能处理细粒度特征，但切片间隔难以选择 (Interval size selection) 。\n\t• 时序记忆流 (Temporal Memory): 利用 RNN 或记忆模块“记住”传播轨迹并更新节点状态，解决早期数据稀疏问题 。\n\t\t○ 评价: 对稀疏数据友好，但解释性差且容易过拟合 (Proneness to overfitting) 。\n====================知识增强方法 (Knowledge Enhancement)=====================\n核心逻辑： 引入训练数据之外的“外援”。一是 外部知识库（提供事实），二是 LLM（提供逻辑与常识）。\n一、 外部知识库派 (External Knowledge-based)\n利用维基百科、知识图谱 (KG) 或 Web API 辅助验证，解决“瞎编乱造”的问题。\n   >知识检索与构建 (Retrieval & Construction):\n做法: 从新闻中提取实体，去维基百科/DBpedia 爬取背景知识 ，或构建专门的谣言知识图谱 。也有利用百度翻译API进行数据增强 。\nTable 5 评价: 显著提升了 可解释性 (Strong interpretability)，能告诉用户新闻违背了哪些事实。但外部知识 更新不及时 (Not timely) 且引入了大量 噪音 (Noise)，数据清洗困难 。\n二、 LLM推理增强派 (LLM Reasoning Enhancement)\n利用大语言模型的通用知识和逻辑能力，从“特征提取”转向“智能推理”。\n   >少样本推理流 (Few-shot Reasoning):\n做法: 利用 Prompt 工程引导 LLM 寻找逻辑漏洞。例如：检测图文逻辑矛盾 ，甚至让 LLM 扮演正反方进行 辩论 (Debate simulation) 来挖掘深层冲突 。\nTable 5 评价: 具备强大的 观点多样性 (Diversity of viewpoints) 和泛化能力，能处理没见过的新型假新闻。但可能产生 幻觉 (Generate wrong viewpoints)，且推理成本高 。\n   >生成式验证流 (Generative Verification):\n做法: 让 LLM 扮演“专业核查员”。常用 图像转文本 (Image-to-text) 技术将图片内容翻译成文字，再与标题比对语义一致性 。\nTable 5 评价: 实现了端到端训练，应用场景广。但容易丢失图像细节 (Lose details)，且在特定领域能力偏弱 。",
+      "results": "[基础框架] - Advances in Neural Information Processing Systems (NeurIPS)：[53] 提出 Transformer 架构与注意力机制，所有现代 LLM 的底层技术基石 。\n[对抗防御] - 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (SIGKDD)：[74] 提出 SheepDog 模型，专门解决 LLM 赋能的风格攻击，提升检测稳健性 。\n[逻辑引导] - AAAI Conference on Artificial Intelligence (AAAI)：[84] 提出 ARG 框架，使 LLM 在检测决策中充当小模型的自适应论据引导者 。\n[无监督检测] - AAAI Conference on Artificial Intelligence (AAAI)：[22] 提出 GAMC，利用图自动编码器与掩码技术在无标签环境下进行谣言检测 。\n[挑战综述] - 2024 SIAM International Conference on Data Mining (SDM)：[69] 深入探讨了 LLM 时代假新闻检测在跨域泛化等方面的演进挑战 。\n[阶梯核查] - arXiv (高引质量预测)：[81] 提出 HiSS（分层步进提示）方法，提供清晰的推理路径，是解决黑盒判别不可信的关键路径 。",
+      "thoughts": "拼盘感重： 文章呈现出典型的“定义+贴引文+报分”套路，对基础算法（如 SVM/CNN）的介绍过于冗长，存在凑字数嫌疑 。\n准确率虚高： 引用的多项传统研究宣称准确率达 99%，这在现实对抗中极不真实，多反映了数据集过于单一或标签泄露，作者未进行深度批判 。\n引用门槛不一： 作者将顶级会议 (KDD/AAAI) 与低质量或非分级期刊（如 MDPI, IEEE Access）混为一谈，降低了综述的整体权威性 。\n核心价值： 尽管存在上述缺陷，其整理的 Table 1 (31 个数据集索引) 仍是目前该领域最全面的实验地图，具有极强的导航手册属性 。",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "A Survey on Automated Fact-Checking",
+      "venue": "TACL",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.tacl-1.11/",
+      "status": "todo",
+      "id": "1767411444204",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "A Survey on Multimodal Disinformation Detection",
+      "venue": "COLING",
+      "year": "2022",
+      "link": "https://aclanthology.org/2022.coling-1.576/",
+      "status": "todo",
+      "id": "1767411444205",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "A comprehensive survey of multimodal fake news detection techniques: advances, challenges, and opportunities",
+      "venue": "International Journal of Multimedia Information Retrieval",
+      "year": "2023",
+      "link": "https://doi.org/10.1007/s13735-023-00296-3",
+      "status": "todo",
+      "id": "1767411444201",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "Multi-modal Misinformation Detection: Approaches, Challenges and Opportunities",
+      "venue": "ArXiv",
+      "year": "2024",
+      "link": "https://arxiv.org/abs/2203.13883",
+      "status": "todo",
+      "id": "1767411444207",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "Sustainable Development of Information Dissemination: A Review of Current Fake News Detection Research and Practice",
+      "venue": "Systems (MDPI)",
+      "year": "2023",
+      "link": "https://doi.org/10.3390/systems11090458",
+      "status": "todo",
+      "id": "1767411444208",
+      "categoryId": "1767418918329",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "starNote": "",
+      "isStarred": false
+    },
+    {
+      "title": "Fake News in Sheep’s Clothing: Robust Fake News Detection Against LLM-Empowered Style Attacks",
+      "venue": "SIGKDD",
+      "year": "2024",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "Lv et al. (2025) 重点推荐：解决了 LLM 重写新闻风格带来的“风格攻击”问题，对构建鲁棒系统至关重要 。",
+      "isStarred": true,
+      "id": "1767439767566",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "GAMC: An Unsupervised Method for Fake News Detection Using Graph Autoencoder with Masking",
+      "venue": "AAAI",
+      "year": "2024",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "Lv et al. (2025) 推荐：无监督检测方法代表作，在抗噪声干扰方面表现良好 。",
+      "isStarred": true,
+      "id": "1767439812935",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "Disinformation detection: An evolving challenge in the age of llms",
+      "venue": "SDM",
+      "year": "2024",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767439838951",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "MegaFake: A Theory-Driven Dataset of Fake News Generated by Large Language Models",
+      "venue": "arXiv",
+      "year": "2024",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767440084079",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "venue": "NAACL-HLT",
+      "year": "2019",
+      "link": "https://aclanthology.org/N19-1423/",
+      "problem": "• 研究背景：语言模型预训练已被证明对提高自然语言处理（NLP）任务有效。当时主要有两种策略：\n\t• 基于特征（Feature-based）：如 ELMo，使用任务特定的架构，将预训练表示作为附加特征 。\n\t• 微调（Fine-tuning）：如 OpenAI GPT，引入极少的任务特定参数，通过微调所有预训练参数来训练下游任务 。\n• 存在问题：现有技术（特别是微调方法）受到单向性的限制。标准语言模型是单向的（如 GPT 从左到右），这限制了模型在预训练期间的架构选择 。\n• 具体痛点：单向架构对于句子级任务是次优的，对于需要结合双向上下文的 Token 级任务（如问答 SQuAD）甚至是极其有害的 。\n• 论文目标：提出 BERT（来自 Transformers 的双向编码器表示），通过使用“遮罩语言模型”（MLM）预训练目标来缓解单向性约束，实现深度的双向表示 。",
+      "method": "• 模型架构：\n\t• 采用多层双向 Transformer 编码器 。\n\t• 发布了两种规模：BERT_BASE (L=12, H=768, A=12, 110M 参数) 和 BERT_LARGE (L=24, H=1024, A=16, 340M 参数) 。\n• 输入表示：\n\t• 可以明确地表示单个句子或一对句子（如 <Question, Answer>）。\n\t• 使用 WordPiece 嵌入（30k 词汇表）。\n\t• 特殊标记：第一个 Token 总是 [CLS]（用于分类任务的聚合表示）；句子对之间用 [SEP] 分隔 。\n\t• 嵌入求和：输入表示 = Token Embeddings + Segment Embeddings + Position Embeddings 。\n• 预训练任务 (Pre-training)：\n\t1. Task #1: Masked LM (MLM)：\n\t\t○ 随机遮罩输入 Token 的 15%，然后预测这些被遮罩的词 。\n\t\t○ 遮罩策略：为了缓解预训练与微调的不匹配（微调时无 [MASK]），在选中的 15% Token 中：80% 替换为 [MASK]，10% 替换为随机词，10% 保持不变 。\n\t2. Task #2: Next Sentence Prediction (NSP)：\n\t\t○ 二分类任务，预测句子 B 是否是句子 A 的下一句 。\n\t\t○ 训练数据中 50% 是真实的下一句（IsNext），50% 是语料库中的随机句子（NotNext）。\n\t\t○ 目的：学习句子间的关系，这对 QA 和 NLI 任务至关重要 。\n• 微调 (Fine-tuning)：\n\t• 只需将特定任务的输入和输出插入 BERT，并端到端微调所有参数 。\n\t• 相比预训练，微调成本非常低 。",
+      "results": "",
+      "thoughts": "",
+      "status": "reading",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767597111031",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "Conditional Prompt Learning for Vision-Language Models",
+      "venue": "CVPR",
+      "year": "2022",
+      "link": "https://openaccess.thecvf.com/content/CVPR2022/html/Zhou_Conditional_Prompt_Learning_for_Vision-Language_Models_CVPR_2022_paper.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767597297538",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "CLIP：Learning Transferable Visual Models From Natural Language Supervision",
+      "venue": "ICML",
+      "year": "2021",
+      "link": "https://proceedings.mlr.press/v139/radford21a.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767597404476",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "How Contextual are Contextualized Word Representations? Comparing the Geometry of BERT, ELMo, and GPT-2 Embeddings",
+      "venue": "EMNLP",
+      "year": "2019",
+      "link": "https://arxiv.org/abs/1909.00512",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767760955869",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
+      "venue": "EMNLP",
+      "year": "2019",
+      "link": "https://arxiv.org/abs/1908.10084",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767770918423",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "Hierarchical Attention Networks for Document Classification",
+      "venue": "NAACL",
+      "year": "2016",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767770998746",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "ARG: Bad actor, good advisor: exploring the role of large language models in fake news detection",
+      "venue": "AAAI",
+      "year": "2024",
+      "link": "https://doi.org/10.1609/aaai.v38i20.30214",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767860392127",
+      "categoryId": "1767860366266"
+    },
+    {
+      "title": "att-RNN: Multimodal fusion with recurrent neural networks for rumor detection on microblogs ",
+      "venue": "ACM-MM",
+      "year": "2017",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3123266.3123454",
+      "problem": "- 当时大多数方法依赖于人工设计的文本特征（如统计特征、情感分数）或视觉特征 。\n- 主要的融合手段是早期融合（特征拼接）或晚期融合（结果平均） 。",
+      "method": "1. 社交融入：全序列广播\n\t• 构建特征：将转发数、@数、#话题数等非文本信息，构建为一个纯数值的统计向量。\n\t• 升维对齐：通过全连接层将该向量从低维（16/18维）强制映射到 32维，隐式实现与词向量的语义对齐并平衡模态权重。\n\t• 广播拼接：将这个 32维的社交向量复制并拼接到句子中每一个词向量后面，使 LSTM 的每个输入单元都变成 64维。\n2. 文本特征提取：LSTM 处理\n\t• 输入序列：将上述拼接好的“文本+社交”序列输入到标准的 LSTM 中。\n\t• 双重输出：\n\t\t○ 留作指导：保留每个时间步的隐藏状态，用于下一步精细化指导图像注意力。\n\t\t○ 留作分类：取所有时间步输出的平均值，以获取全局语义并压缩为固定维度，作为文本与社交上下文的整体特征 (R_TS)。\n3. 图像特征转化：从像素到概念\n\t• 提取特征：图像输入预训练好的 VGG-19 网络。\n\t• 概念压缩：取倒数第二层特征，经过全连接层压缩为 512个视觉神经元。这一步是为了将图像像素转化为高层的语义概念（如“有人群”、“有火灾”），方便后续被文本“按需挑选”。\n4. 神经元注意力：文本“挑选”图像\n\t• 核心逻辑：利用 LSTM 在读每个词时的状态，去给 512个视觉神经元通道打分（计算权重）。\n\t• 降维压缩：通过加权求和，将 512 维的图像特征压缩为一个标量（本质上是计算该词与图像的匹配度）。最终 n个词对应 n 个标量，形成一个n 维的视觉特征序列。\n5. 最终判决：拼接分类\n\t• 多模态融合：将 LSTM 提取的“全局文本特征（平均值）”与经过注意力筛选的“视觉特征序列（n维）”进行拼接。\n二分类：输入分类器（Softmax），计算它是谣言还是非谣言的概率，并端到端地计算损失进行训练。\n\n- Weibo 数据集（自建）：\n来源：谣言来自微博官方辟谣系统（2012-2016），非谣言来自新华社等权威媒体 。\n规模：包含约 9,500 条带图像的微博。经过清洗（去重、去长图/小图）和基于事件的划分（避免同一事件同时出现在训练/测试集中）",
+      "results": "- 作者在文中明确提到，“据我们所知，这是第一项使用神经网络融合多模态特征进行谣言检测的研究” 。\n- 把全局特征（如时间、地理位置、用户信誉度）复制并粘贴到序列的每一个 Token 上，强制模型在处理每一个局部细节时，都被动地考虑到全局语境，增强信号强度。\n- 多模态模型中，信息量大的模态（如文本/高维图像）容易淹没信息量小的模态（如统计数值）。\n-图像在“事实核查”中的不可替代性，消融实验证明去掉图像会导致准确率暴跌 7% 。",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767860918458",
+      "categoryId": "1767860257596"
+    },
+    {
+      "title": "MCNN(早)/CARMN(后): A multimodal fake news detection model based on crossmodal attention residual and multichannel convolutional neural networks ",
+      "venue": "IPM",
+      "year": "2021",
+      "link": "https://www.sciencedirect.com/science/article/pii/S0306457320309304",
+      "problem": "",
+      "method": "用 Word2Vec + VGG 的复古底座，套了一个简化版 Transformer 的壳子（CARN），再用 TextCNN 的多通道技巧（MCN）做特征融合，最后靠发布新数据集（Weibo C——收集自“微博社区管理中心”和“人民日报”）提升了录用概率。",
+      "results": "",
+      "thoughts": "=====================痛点=======================\n1、独特性丧失：在多模态融合任务中，以往的方法（如简单的拼接或早期的注意力机制）往往将文本特征和图像特征强行融合在一起 。这种做法忽略了每种模态（文本 vs 图像）原本的独特性。文本有文本的语法逻辑，图像有图像的视觉模式，强行“合二为一”会导致各自独特的属性丢失，甚至相互干扰 。\n2、融合噪音：社交媒体上的图片和文字并不总是完美匹配的，且两者在特征层级上存在巨大差异。很多假新闻的配图可能完全无关，或者极其模糊。如果盲目融合，这些“坏图片”会产生噪音信息，污染原本清晰的文本特征，导致模型判断失误 。\n=====================直觉=======================\n1、我们不应该把文本变成“文本+图像”的混合物，而应该保留文本的“本体”，只是让图像充当一种“补充剂”或“增强剂”。利用注意力机制 选择性地从图像中提取与文本相关的信息 。利用残差连接将提取到的图像信息加回到原始文本特征上 。\n2、不要把所有鸡蛋放在一个篮子里。同时处理“融合后的文本”和“原始文本”，让神经网络自己去决定哪个特征更重要。同时处理“融合后的文本”和“原始文本”，让神经网络自己去决定哪个特征更重要。",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767861890048",
+      "categoryId": "1767860257596"
+    },
+    {
+      "title": "DAFN：Multi-modal fake news detection on social media with dual attention fusion networks ",
+      "venue": "ISCC",
+      "year": "2021",
+      "link": "https://ieeexplore.ieee.org/abstract/document/9631256",
+      "problem": "",
+      "method": "-使用预训练的 ResNet-50 V2 将输入448x448图片分割为14x14 的区域，得到196个图像特征向量\n- 模型还提取了图像的“实体语义属性”（即图片中的物体/概念标签），作为连接图像和文本的语义桥梁，使用在COCO数据集上训练的ResNet对每张图片进行预测，1000分类取前5，得到新的文本输入[属性1, 属性2, 属性3, 属性4, 属性5] + [新闻标题 + 正文]。\n-用 BERT 将文本与图像属性结合起来进行联合编码，从而获得更强的语义表示， BERT 最后一层所有 Token 的输出保留了序列长度，仅作为编码器使用 。\n- BERT输出的序列再过一个标准的Bi-LSTM，从768降到300维\n- 提出了一个双重注意力机制（DAFN:Dual Attention），同步处理视觉和文本信息，并通过一个共享的“记忆向量”逐步融合特征 ：\n  1.对于图片和文字的两个序列，各取平均得到代表向量，然后每个位置上做乘法得到一个领导（记忆）向量m。\n  2.有了领导之后，以文本队为例，计算亲密度，将领导向量和文本向量都各自过一个全连接层，然后继续按元素乘法，再过一个全连接层压缩为标量，然后一段话就得到很多标量，sofmax映射为权重再对原始的单词向量进行线性组合，得到新的文本代表。\n  3.我们希望得到的图文证据u(k)V(k)第i维在文本里代表猫，在图像里刚好也代表猫，和第一轮一样做按位置乘法，算出一个向量特征，维度数值代表共现内容的强度。\n  4.新一轮的记忆加到上一轮去，反复运算两轮流程得到的向量直接拿去做预测\n  5.图像向量进行压缩对齐维度后，还需要经过一个tanh函数。",
+      "results": "- 拿一个现成的 ResNet，拿一个现成的 BERT，中间用 LSTM缝合起来，送进一个旧的注意力模块中 。\n- 几乎整个架构的灵感都直接来自 2016-2017 年的 VQA（视觉问答）任务，引用 [21] 是 Nam et al. (2016) \"Dual Attention Networks for Multimodal Reasoning and Matching\"。\n- 有提取图像语义的设想不赖，类似于基于图的交互类的，但只有实体没有他们之间的关联。",
+      "thoughts": "- 这是一种离散的、有损的压缩。图片里丰富的信息（光影、氛围、猫的表情、沙发的材质）在变成这 5 个词的一瞬间都丢失了。它只保留了“物体类别” 。",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767862017057",
+      "categoryId": "1767860264384"
+    },
+    {
+      "title": "ARCNN framework for multimodal infodemic detection",
+      "venue": "NN",
+      "year": "2021",
+      "link": "https://doi.org/10.1016/j.neunet.2021.11.006",
+      "problem": "针对 COVID-19 “信息疫情”中多模态数据稀缺的问题，构建了一个高质量数据集，并提出了一种高效的深度学习检测框架 (ARCNN)，通过大量实验确立了“文本+图像”融合的最佳实践。",
+      "method": "- 数据集构建：CovID Dataset\n鉴于当时缺乏包含“文本+图像”的 COVID-19 假新闻数据集，作者从零构建了 CovID 数据集，包含约 3500 条数据。\n多源采集：假新闻来自 Poynter 等事实核查网，真新闻来自官方新闻网和权威 Twitter 账号。\n双版本设计：\nCovID I：混合了长篇新闻文章和社交媒体帖子，用于测试混合语境。\nCovID II：专注于社交媒体推文（Twitter），用于测试非正式短文本语境。\n严格清洗：确保所有样本均包含图像，并进行了人工交叉验证（Strong Annotation）。\n\n- 大规模的“排列组合”实验（10种模型组合 × 5种融合策略\n\t• 最佳融合策略：证明了 加权平均融合 (Weighted-average fusion) 效果最好。通过给文本和图像分配动态权重（如 w_t*P_t + w_i* P_i），模型能更灵活地利用多模态信息。\n\t• 最佳模型组合：确立了 Bi-LSTM + MobileNetV2 是准确率和效率兼顾的“版本答案”，在社交媒体数据集上甚至能达到接近 100% 的准确率。\n\t• 否定了“大即是好”：证明了在假新闻检测任务中，轻量级模型（MobileNetV2）比重型模型（VGG-16）更具优势。\n",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767862162701",
+      "categoryId": "1767860268773",
+      "rating": 6,
+      "ratedDate": "2026-01-14T03:49:42.255Z"
+    },
+    {
+      "title": "EANN：Event adversarial neural networks for multi-modal fake news detection ",
+      "venue": "KDD",
+      "year": "2018",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3219819.321",
+      "problem": "=====================痛点=======================\n\t• 无法应对新发事件 ：现有的深度学习模型虽然在已知数据集上表现出色，但面临一个独特的挑战：无法处理新出现的 或时间紧迫的突发事件，缺乏对新事件的先验知识（没有历史数据） 。\n\t• 过度依赖“事件特有特征” ： 现有模型倾向于捕捉那些仅存在于特定事件中的特征（例如特定的关键词、人名、地名） 这些特征虽然能帮助分类已验证的老事件，但它们在不同事件间不可共享 ，当遇到新事件时，反而损害了检测的准确性 。\n\t• 特征差异难以度量 ：要去除事件特有特征，首先得能衡量出“不同事件的特征分布差异在哪里”。但这在技术上非常困难：\n\t\t○ 高维难题：学习到的特征表示是高维的，简单的度量标准（如均方误差 MSE）无法有效估计这种复杂表示之间的差异 。\n\t\t○ 动态变化：特征表示在训练过程中是不断变化的，要求度量机制必须能动态捕捉变化并始终提供准确的测量 。\n=====================直觉=======================\n\t• 从“特有”转向“共享” ：为了检测未经验证的新帖子，模型不应关注具体的事件细节，而应学习所有事件之间共享的特征  。\n\t\t○ 逻辑：如果一个特征在“地震谣言”和“政治谣言”里都出现（比如某种煽动性的句式或篡改痕迹），那它就是本质特征，可以迁移到未来的新事件中。\n\t• 通过“差异”来定位“特有特征” 那些不可共享的“特有特征”，会导致不同事件的特征分布出现明显差异。因此，我们可以通过测量不同事件帖子之间的分布差异，来反向锁定并剔除这些特有特征 。\n\t• 需要一种“动态度量机制” 既然简单的数学公式（如 MSE）算不准高维特征的差异，我们需要设计一种机制（即后来的事件判别器），它能够：\n\t\t1. 适应高维复杂的特征空间。\n\t\t2.在训练过程中，随着特征的变化，始终如一地精准捕捉并反馈这种差异 。",
+      "method": "一、 方法论\n本研究提出了一个端到端的对抗神经网络框架 EANN (Event Adversarial Neural Networks)，旨在通过对抗训练机制去除不可迁移的“事件特有特征”，从而学习到跨事件共享的通用特征表示 。\n该框架由三个核心组件构成：\n1. 多模态特征提取器 \n该组件负责从原始帖子中提取潜在的高维特征表示，包含文本和视觉两个子模块 ：\n\t• 文本特征提取：采用 Text-CNN 架构。利用不同窗口大小的卷积核处理词嵌入向量，以捕捉不同粒度的局部语义特征。\n\t• 视觉特征提取：利用预训练的 VGG-19 网络提取图像特征，并通过全连接层调整维度 。\n\t• 特征融合：将文本与视觉特征向量进行拼接，形成最终的多模态特征表示。\n2. 假新闻检测器 \n\t• 功能：构建在特征提取器之上的全连接层网络 ,基于融合后的特征，预测帖子为“真”或“假”。\n\t• 优化目标：最小化检测损失 (Detection Loss, L_d)，即最大化真假分类的准确性 。\n3. 事件判别器\n这是实现跨事件泛化的核心组件，旨在辅助学习“事件不变性特征” (Event-invariant features) 。\n\t• 功能：全连接层网络，基于特征 R_F，预测该帖子属于训练集中的哪一个具体事件。\n\t• 对抗机制 (Minimax Game)：模型建立了一个极小极大博弈 。\n\t\t○ 判别器目标：最小化事件分类损失 L_e，试图准确识别事件来源 。\n\t\t○ 提取器目标：最大化事件分类损失 L_e，试图“欺骗”判别器，使提取的特征不包含能暴露事件身份的特有信息 。\n4. 模型整合与训练\n\t• 总损失函数：L_final = L_d - λL_e。其中λ 用于平衡检测任务与对抗任务 。\n\t• 优化算法：采用梯度反转层 (Gradient Reversal Layer, GRL)。在反向传播过程中，GRL 对传递给特征提取器的梯度进行取反操作，位于分类器和特征提取器之间，即猜中任务时对于分类器要奖励，提取器的梯度要反转一下给乘法，从而在无需分步训练的情况下实现端到端的对抗优化 。\n",
+      "results": "• 对抗训练是解决“泛化”问题的有效手段： 针对假新闻检测中“新发事件”缺乏训练数据的问题，EANN 证明了通过对抗学习去除特征中的“事件特有属性”，可以迫使模型学习到跨事件共享的通用特征（Event-invariant Features） 。\n• 多模态融合必不可少： 单靠文本或单靠图像都存在盲区。多模态模型（结合 Text + Image）能够捕捉到更复杂的造谣模式（如“图文不符”），其表现始终优于单模态模型 。\n",
+      "thoughts": "- 2018年的论文，EANN 的核心确实就是剥离内容（事件），保留形式（风格/语气）。大模型已经掌握了这方面的特征，或许通过适当的提示词或微调就可能提取出这些特征，它们不需要对抗训练就能分辨出“正规新闻报道”和“小报风格/钓鱼文”在语气、用词、逻辑结构上的巨大差异。同时对于逻辑漏洞等拥有先验知识，知道“人不能死而复生”，不需要刻意去学。\n- 面临可解释性的问题\n- 如果事件聚类做得不好，或者新事件定义模糊，判别器的指导作用就会失效。\n- 特征提取器的“代差”",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767863263029",
+      "categoryId": "1767860319348"
+    },
+    {
+      "title": "MPFN：Multimodal fake news detection via progressive fusion networks",
+      "venue": "IPM",
+      "year": "2022",
+      "link": "https://doi.org/10.1016/j.ipm.2022.103120",
+      "problem": "",
+      "method": "-痛点：以前的模型只看图的内容（RGB空间），看不出高级的 PS 或 Deepfake 痕迹。\n显式引入离散傅里叶变换 (DFT),不仅仅用幅度谱，还特意提取了 相位谱 (Phase) ，因为相位包含图像的结构语义信息。然后用 VGG19 提取这些频域特征 。\n- 渐进式多级融合策略 (Progressive Fusion):\n Swin Transformer(Shifted Window Transformer) 更像是一个“金字塔”，它像卷积神经网络（CNN）一样，分层级地去理解图片 被用作图像空间域（Spatial Domain）的特征提取器 ，随着层级加深（Stage 1-> Stage 4），特征图的大小（H x W）不断减半，通道数（C）不断翻倍 。\n-作者没有使用常见的 Attention (注意力机制) 来做融合，而是使用了 MLP Mixer 结构 。\n 1、将特征图取平均，压缩成一个值(比如某个通道/卷积核在意的是有没有猫猫，那本来是各个位置的激活强度的，平均之后就是整张图里面猫的出现强度)，然后过一个全连接层，与BERT提取的文本向量对齐\n 2、频域特征+原图特征+Bert特征三路，copy两份之后*横向拼接*构建9x1000的矩阵，过全连接(先对1000维单模态内特征做内部提纯)、转置、再过全连接（3*3个模态内做交互混合），再取平均变成一维向量\n 3、残差方式加到原来的文本向量上。\n- 图片就是类似CNN一样提取越来越高级的特征的，每一级计算出的特征图都做一次mix计算，最后一次直接用mix的结果去预测真假。\n\n这种结构纯粹由全连接层组成，计算效率比 Attention 略高，且证明了在多模态对齐上，简单的线性混合也是有效的。",
+      "results": "- “Progressive Fusion”（渐进式融合）其实在计算机视觉（如 FPN 特征金字塔）中很常见。作者将其迁移到多模态假新闻检测中，包装成了一个新颖的 Story，虽然逻辑自洽，但结构上的新意属于“组合式创新”。\n- MCAN是一篇比他先的ACL论文，同样采用了BERT+VGG+频域( DCT )，本文算是魔改狙击，抛弃了co-attention，引入了自己设计的MLP模块以及多阶段特征图融合。\n-作者声称 DFT 优于 DCT ，并在 Table 4 中给出了数据。但这更像是实验结果倒推的结论，缺乏深层的理论解释为何 DFT 的相位在假新闻检测中比 DCT 的能量集中特性更有效。\n-这是个三塔结构，模型包含 BERT (110M参数) + Swin Transformer (很大) + VGG19 (143M参数)。\n-面对 AI 生成的完美伪造图（频域特征可能完全不同），其鲁棒性存疑。",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 7,
+      "ratedDate": "2026-01-15T04:55:27.786Z",
+      "id": "1767863694104",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "Fakesv: A multimodal benchmark with rich social context for fake news detection on short video platforms ",
+      "venue": "AAAI",
+      "year": "2023",
+      "link": "https://doi.org/10.1609/aaai.v37i12.26689",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767863887552",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "MACCN:Multi-modal adaptive co-attention fusion contrastive learning networks for fake news detection ",
+      "venue": "ICASSP",
+      "year": "2024",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10447435",
+      "problem": "1. 论文“身份卡”与锐评\n\t• 身份卡：\n\t\t○ 会议含金量：ICASSP (CCF-B 类)。这是信号处理领域的顶会。虽然在纯AI/CV/NLP领域不如CVPR或ACL那么“硬”，但在多模态应用和信号分析方向认可度很高。能中ICASSP说明工作扎实，实验完整，但通常理论创新深度不如NeurIPS/ICLR，可能在 ICASSP 是合格的，但在 NeurIPS 看来就是“Engineering”（工程应用）而非“Research”（研究）。\n\t• 自研摘要：\n\t\t○ 现有的虚假新闻检测模型往往只是简单拼接图片和文本特征，忽略了两者深层的交互（比如图文不符才是造假的特征）。这篇论文提出了 MACCN 模型，干了两件事：第一，用自适应协同注意力机制（Co-attention）让文本和图片互相“划重点”；第二，引入对比学习（Contrastive Learning），通过数据增强制造正样本，强制模型拉近同一新闻的不同视角，推远不同新闻，从而学到更鲁棒的特征表示。\n\t• 星级锐评：6.5 / 10\n\t• 审稿人锐评：\n\t\t○ 这是一篇标准的“A+B for C”式论文（Co-Attention + Contrastive Learning for Fake News）。\n\t\t○ 优点：结构非常完整，逻辑自洽。针对多模态融合痛点（简单的拼接无法捕捉跨模态对齐）提出了解决方案，且加入了对比学习这个热门Trick来提点，实验数据（Weibo, Fakeddit）很详实，SOTA（State-of-the-art）刷得不错。\n\t\t○ 缺点/水分：创新点略显“缝合”。Co-attention 在 VQA（视觉问答）领域是老技术了，对比学习也是常规操作。本文胜在将这两个模块在虚假新闻这个特定任务上组合得比较工整，属于工程优化型论文，而非原理颠覆型。",
+      "method": "MACCN 模型采用了双流（Dual-stream）架构，通过串行多模态自适应协同注意力（MAC）模块实现特征的深度交互，并利用对比学习对齐原始视图与增强视图的特征空间，最后通过层级化融合完成假新闻检测 。\n1. 双流数据处理与特征编码 (Dual-Stream Encoding)\n模型并行处理两组数据流，构建用于对比学习的正样本对 。\n\t• 原始流 (Original Stream)：输入原始文本 (t) 与图像 (p)。\n\t• 增强流 (Augmented Stream)：输入经过数据增强（同义词替换、翻转/灰度等）的文本与图像。\n\t• 特征提取：分别使用预训练的 BERT 和 ResNet50 提取文本特征序列 S_t 和图像特征序列 S_p 。\n2. 核心模块：多模态自适应协同注意力 (MAC Module)\n该模块摒弃了 Transformer 中标准的并行 QKV 矩阵乘法，采用基于加性注意力（Additive Attention）的串行交互机制。计算过程分为严格有序的两个步骤 。\nStep 1: 文本引导的图像注意力 (Text-guided Image Attention) 利用原始文本特征作为查询向量，提取图像中与文本语义对齐的视觉特征 。【这里文本是一个向量，图像是nxn个向量】\n\t• 机制：通过单层神经网络（线性变换 + tanh 激活）计算文本特征 S_t 与图像特征 S_p 之间的关联分布 α。\n\t• 计算：将 S_t 与 S_p 映射后相加并激活，经 Softmax 得到权重 α。没有标准意义上的 QKV 矩阵乘法，而是用全连接层充当了投影的角色，用tanh 和加法代替了点积。（实际上是在训练一个小型神经网络去拟合“这两者配不配”的关系）\n\t• 输出：利用权重 α对图像特征 S_p 进行加权求和，得到语义化视觉特征 τ_hat。\nStep 2: 图像引导的文本注意力 (Image-guided Text Attention) 这是串行处理的关键。模型复用 Step 1 的输出 τ_hat（而非原始图像特征）作为查询向量，反向提取文本特征 。\n\t• 机制：利用 t_hat 与原始文本特征 S_t 计算关联分布 β。\n\t• 计算：同样采用加性注意力机制（tanh + Softmax）计算权重。\n\t• 输出：利用权重  β 对文本特征 S_t 进行加权求和，得到经视觉验证的文本特征 τ_bar。\n特征融合 (Feature Fusion) 将 τ_hat 与 τ_bar 进行拼接 ，得到该视图下的最终多模态特征 δ 。\n3. 对比学习模块 (Contrastive Learning)\n该模块通过损失函数约束特征空间的几何结构，不引入额外的推理计算量 。\n\t• 正样本对：原始流输出的特征 δ 与增强流输出的特征 δ'。\n\t• 机制：采用对比损失函数 (Contrastive Loss)，最大化正样本对 (δ, δ') 之间的余弦相似度，同时最小化与 Batch 内其他负样本的相似度 。\n\t• 目的：迫使模型忽略增强操作引入的噪声（如翻转、同义词变化），提取内容本质的不变性特征 。\n4. 联合学习与层级融合 (Joint Learning & AC Fusion)\n为了进一步提升鲁棒性，模型在分类前进行了第二层级的视图融合 。\n\t• AC 模块 (Adaptive Collaborative Attention)：结构与 MAC 模块完全一致，但输入对象变为 δ（原始特征）和 δ'（增强特征）。\n\t• 融合逻辑：通过注意力机制计算两个视图特征的权重，生成包含多视角信息的全局特征 φ 。\n\t• 目标函数：最终损失由交叉熵损失（分类任务）和对比损失（特征对齐）加权求和构成 。",
+      "results": "  • 包装点：\"Adaptive Collaborative Attention\" 这个名字起得很大，但本质上就是 Co-Attention 或者 Bi-Attention 的变体。其数学形式（公式 1-6）与经典的 NLP 注意力机制非常相似。\n\t• 微创新：引入**数据增强（Data Augmentation）**作为构建对比学习正样本对的手段 。这在 CV 领域很常见（如 SimCLR），但在多模态新闻检测中应用得比较恰当，增加了模型的鲁棒性。\n批判性漏洞 (Critical Analysis)\n\t1. 计算成本隐忧：为了做对比学习，模型需要对每个样本进行数据增强，并走一遍完整的 BERT+ResNet 流程。这意味着训练时的显存占用和计算量是普通模型的 2 倍。论文中虽然提到了 Batch Size 为 16 ，但未披露具体的 FLOPs 或训练时长，这在实际落地中可能是个瓶颈。\n\t2. 数据增强的语义风险：对于自然图像分类这没问题，但在新闻领域，翻转或旋转可能会改变语义，方位搞反之类的。这种增强方式在严谨的新闻鉴别中存在引入噪声的风险。\n\t\t○ 缺失：缺少了与近期大模型（LLM-based）或 CLIP-based 方法的对比。2024年的论文如果没有和 CLIP 进行 Zero-shot 或 Finetune 的对比，略显遗憾，因为 CLIP 也就是在做图文对齐，天生适合这个任务。\n",
+      "thoughts": "MACCN 本质上是一个“多模态一致性校验器” + “风格/统计特征分类器”，而不是一个“事实核查器”。\nAI 生成的高级假新闻： 这类新闻通常模仿正规新闻的文风和高质量的图像生成。在特征空间中，它们会落在“真新闻”的簇里。对比学习会强行拉近这则“精致的假新闻”与“真新闻”的距离，反而帮助它逃避检测。",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 6,
+      "ratedDate": "2026-01-15T02:03:03.556Z",
+      "id": "1767863965109",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "MRAN：Multimodal relationship-aware attention network for fake news detection",
+      "venue": "*DSPP",
+      "year": "2023",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10404829",
+      "problem": "📝 自研摘要\n传统的虚假新闻检测往往不仅要看图，还要看文。但现有方法要么是简单的拼接（Concat），要么忽略了文本中“字面意思”与“深层隐喻”的层次关系。这篇论文提出了 MRAN 模型，主要干了两件事：\n\t1. 文本挖掘更深：不只用 BERT 的最后一层，而是把 BERT 的浅层、中层、深层特征分组提取，再用 CNN 聚合，试图抓住从语法到语义的全貌。\n\t2. 关系交互更密：设计了一个“关系感知注意力网络”，在单一模态内部找关联（Self-Attention），在模态之间找线索（Cross-Attention），最后加权融合进行判别。\n⭐ 星级锐评：★★★☆☆ (3/5)\n\t• 创新性: 2.5/5（属于经典模块的积木式组合，核心机制沿用了 Transformer 的标准范式，微创新在于文本编码器的混合结构）。\n\t• 工程价值: 3.5/5（在特定数据集上有效，逻辑闭环完整）。\n\t• 落地难度: 3/5（模型略显厚重，BERT+VGG19+多层Attention，推理成本较高）。\n👨‍🏫 审稿人锐评\n\t“这篇文章是一篇典型的**‘A+B+Interaction’**模式的应用型论文。作者敏锐地发现了文本语义的多层次性（Hierarchical Semantics）在虚假新闻中的重要性，这是一个不错的切入点。\n\t含金量判定：属于**‘良心工程’而非‘硬核理论突破’。作者没有提出新的数学理论，而是通过精心设计的特征工程（Feature Engineering）和注意力机制（Attention Mechanism）**来刷榜。\n\t研究动机：动机成立。虚假新闻确实往往在图文不一致或特定文本语义层级上露出马脚，因此强化这两点的建模是合理的。\n\t槽点：作为2023年的论文，图像特征提取还在用 VGG19 ，这有些‘复古’且低效（通常现在会用 ResNet 或 ViT）。这让人怀疑作者是否只是在旧代码库上进行的修改。”\n",
+      "method": "- 使用bert中间层的语义向量，12层向量均分为前中深三部分，各自加起来得到三组词向量。经过textCNN后得到三个语义特征再拼接起来。\n- 剩下的是先进行图文特征的self-attention更新一下，然后进行标准的co-attention得到两路特征，得到一共四路特征。\n-图图文文自己拼接，变成一路图一路文，再训练一个加权参数，决定图文特征的比例并直接相加，送入分类器。",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 6,
+      "ratedDate": "2026-01-14T03:48:51.058Z",
+      "id": "1767865400947",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "TRIMOON: Two-Round Inconsistency-based Multi-modal fusion Network for fake news detection",
+      "venue": "Information Fusion",
+      "year": "2022",
+      "link": "https://doi.org/10.1016/j.inffus.2022.12.016",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767865501465",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "CLKD-IMRD : Leveraging contrastive learning and knowledge distillation for incomplete modality rumor detection ",
+      "venue": "EMNLP",
+      "year": "2023",
+      "link": "https://aclanthology.org/2023.findings-emnlp.900/",
+      "problem": ".🔍 论文“身份卡”与锐评\n\t• 论文标题: Leveraging Contrastive Learning and Knowledge Distillation for Incomplete Modality Rumor Detection (利用对比学习和知识蒸馏进行不完整模态谣言检测) \n\t• 作者团队: Fan Xu, Pinyun Fu 等 (江西师范大学 & 新加坡资讯通信研究院 A*STAR) \n\t• 发表阵地: EMNLP 2023 (Findings) \n🧠 自研摘要（脱水版）\n\t1. 痛点：现有的多模态谣言检测模型假设数据是完美的（有图有文），但现实社交媒体中常出现“图片加载失败”或用户只发文不发图的情况（即模态缺失），导致强行拼接的模型失效 。\n\t2. 核心方案：设计了一个“师生架构”。老师模型吃这顿豪华餐（图+文+评论，用对比学习拉齐语义），学生模型只能吃简餐（只有文本），通过知识蒸馏（KD），让学生模仿老师的判别逻辑，从而在缺失图片时也能表现出色 。\n\t3. 结果：在微博和Twitter四个数据集上，比EANN、MVAE等基线模型效果更好，证明了这套“富教穷学”的方法有效 。\n⭐ 星级锐评：3.8 / 5.0\n\t• 创新度：★★★☆☆ (组合式创新，SCL+KD+Co-Attention 都是成熟技术，但组合得有逻辑)\n\t• 实用性：★★★★★ (非常针对落地场景，解决丢包/加载失败问题)\n\t• 理论深：★★★☆☆ (数学推导中规中矩，主要是Loss的设计)\n",
+      "method": "- 教师模型是简单、标准的图文交互注意力，编码器采用textCNN和resnet，提取特征后拼接，末端向量一个是分类，一个是强化学习（要求把所有“谣言”的特征拉近，把“谣言”和“非谣言”的特征推远）。\n- 学生模型就是新闻本体和评论用textCNN提取特征拼接，然后经过全连接层后直接输出。在真实分类任务的Loss上，多了一个软目标，就是要求对齐教师模型在该数据上的真假概率判断，用KL散度作为Loss",
+      "results": "作者没有发明新的神经网络层，而是敏锐地抓住了‘Incomplete Modality’（模态缺失）这个极具现实意义的坑。很多SOTA模型一遇到缺图数据直接报错或填零，效果崩塌。这篇文章用对比学习保证特征质量，用知识蒸馏**做模态解耦。它的含金量在于：它承认了现实世界的脏数据问题，并给出了一个低成本的解决方案。 这不是为了刷榜而刷榜，是为了‘能用’。”",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "“这篇文章是典型的‘良心缝合’，它承认了现实世界的脏数据问题，问题简单但提的准，用的模型都极其简单但组合起来非常切题。",
+      "isStarred": true,
+      "id": "1767865600875",
+      "categoryId": "1767860326423",
+      "rating": 8,
+      "ratedDate": "2026-01-14T03:49:07.172Z"
+    },
+    {
+      "title": "TLFND：A multimodal fusion model based on three-level feature matching distance for fake news detection ",
+      "venue": "*Entropy",
+      "year": "2023",
+      "link": "https://www.mdpi.com/1099-4300/25/11/1533",
+      "problem": "• 身份卡：\n\t• 期刊：Entropy (MDPI)\n\t• 档次：JCR Q2，中科院三区（不同细分领域略有差异）。属于开源期刊，发表速度快，但在AI顶级会议（如CVPR, ACL）审稿人眼中，含金量中等偏下，通常被视为“练手”或“毕业达标”类文章。\n• 自研摘要：\n\t• 现有的多模态假新闻检测往往忽略了“标题”与“正文”的不一致性，且通常只处理单张图片。本文提出了 TLFND 模型，做了三件事：1.用 RoBERTa 分别提取标题和正文特征；2.用 VGG-19 + BiLSTM 处理新闻中的多张图片；3. 强行引入了切比雪夫距离（Chebyshev Distance）作为辅助损失函数，把真新闻拉近聚类中心，把假新闻推远，并设计了一个自适应算法来动态调整这几个Loss的权重。\n• 星级锐评：\n\t• 5.5 / 10 星 （作为硕士毕业论文是优秀的，但作为前沿研究则显得陈旧）。\n• 审稿人锐评：\n\t• 优点：工程落地感强。作者敏锐地捕捉到了“多图新闻”和“图文/文文不一致”这两个实际痛点，并且逻辑闭环完整。\n\t• 槽点：技术栈严重的“时代错位”。2023年底发表的论文，视觉部分还在用 VGG-19（2014年的老古董），而没有使用 ResNet 或更主流的 ViT/CLIP。所谓的“切比雪夫距离”创新略显牵强，更多像是为了凑创新点而在数学形式上做的文章。那个“自适应进化算法”本质上是一个基于Loss相对变化率的启发式加权，名字起得比较“大”。",
+      "method": "-使用 RoBERTa 模型而不是传统的 BERT，分别提取新闻标题和正文的特征，即所谓的“两级”文本信息 。\n- 使用 VGG-19 网络提取图像特征，针对一篇新闻可能包含多张图片的情况，模型使用双向长短期记忆网络 (BiLSTM) 来融合多张图片的特征。\n- *三级特征匹配距离*：将标题、正文和融合后的图像特征映射到同一维度空间，计算它们的质心 。首次引入切比雪夫距离来计算特征向量与质心之间的距离，作为子任务计算损失。\n- 自适应进化算法(仅训练trick)：不拼接，而是标题内容图片三路向量分别做预测，加上子任务的损失，一共四路损失，谁的损失和平均损失差值最大，就降低一点最终预测的权重，也没考虑距离差和概率差这两种在数值上的差异。",
+      "results": "3. ⚖️ 创新点与批判性审视\n3.1 硬核创新 vs. 包装\n\t• 客观创新点：\n\t\t○ BiLSTM 融合多图：这是一个很实在的改进。很多假新闻是一组图拼凑的故事，单看一张图看不出问题，把图连起来看（时序/序列特征）才合理。\n\t• 魔改/包装点：\n\t\t○ 切比雪夫距离：虽然消融实验（Table 7）显示它比 Cosine 和 Manhattan 效果好，但在高维语义空间中，使用 L_infty 范数通常是不稳定的。作者并没有给出深层的数学解释，更像是尝试了多种距离后发现这个在这个数据集上效果好，反向找理由。\n\t\t○ 自适应进化损失 (Adaptive Evolutionary Loss)：名字听起来很像遗传算法，但看 Algorithm 1，其实就是根据 Loss 的相对大小做一个加权平均。这是一个常见的 Engineering Trick，称不上“进化算法”。\n3.2 批判性漏洞\n\t1. Backbone 过时（严重）：\n\t\t○ 论文发表于 2023 年 11 月，却使用 VGG-19 (2014) 和 BiLSTM。此时 Vision Transformer (ViT) 已经统治 CV 界，CLIP (2021) 已经是多模态标配。使用 VGG 会导致参数量巨大且提取不到语义级的高层特征。这也是为什么它只能发在 Entropy 而不是 CVPR 的原因。\n\t2. 融合方式简单：\n仅仅是 Feature Concatenation（拼接）。没有使用 Co-Attention（协同注意力机制）或 Cross-Modal Attention。这意味着模型很难捕捉“图文不符”这种细微的讽刺或造假线索，它只是分别看图和文。",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 6,
+      "ratedDate": "2026-01-14T12:32:47.663Z",
+      "id": "1767866920299",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "TieFake：Title-text similarity and emotion-aware fake news detection ",
+      "venue": "*IJCNN",
+      "year": "2021",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10191858",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767867586846",
+      "categoryId": "1767860326423"
+    },
+    {
+      "title": "MLSED：Research on fake news detection method based on multi-level semantic enhancement",
+      "venue": "IJCNN*",
+      "year": "2023",
+      "link": "https://ieeexplore.ieee.org/document/10191341",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869054545",
+      "categoryId": "1767860240336"
+    },
+    {
+      "title": "SGAMF: Sparse gated attention-based multimodal fusion method for fake news detection ",
+      "venue": "IEEE Transactions on Big Data",
+      "year": "2024",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10557137",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869158515",
+      "categoryId": "1767860240336"
+    },
+    {
+      "title": "AKA-Fake：Reinforced Adaptive Knowledge Learning for Multimodal Fake News Detection",
+      "venue": "AAAI",
+      "year": "2024",
+      "link": "https://ojs.aaai.org/index.php/AAAI/article/view/29618",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869273106",
+      "categoryId": "1767860240336"
+    },
+    {
+      "title": "A Multifaceted Reasoning Network for Explainable Fake News Detection",
+      "venue": "IPM",
+      "year": "2024",
+      "link": "https://doi.org/10.1016/j.ipm.2024.103822",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869511459",
+      "categoryId": "1767860240336"
+    },
+    {
+      "title": "SureFact: Reinforcement subgraph reasoning for fake news detection ",
+      "venue": "SIGKDD",
+      "year": "2022",
+      "link": "https://dl.acm.org/doi/abs/10.1145/3534678.3539277",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869818913",
+      "categoryId": "1767860348855"
+    },
+    {
+      "title": "MVFN : Multi-view fusion networks for multimodal fake news detection ",
+      "venue": "ITAIC*",
+      "year": "2023",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10408805",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767869944790",
+      "categoryId": "1767860348855"
+    },
+    {
+      "title": "Temporally evolving graph neural network for fake news detection ",
+      "venue": "IPM",
+      "year": "2021",
+      "link": "https://doi.org/10.1016/j.ipm.2021.102712",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767870041603",
+      "categoryId": "1767860355565"
+    },
+    {
+      "title": "DPSG: dynamic propagation social graphs for multi-modal fake news detection ",
+      "venue": "Information Fusion",
+      "year": "2024",
+      "link": "https://doi.org/10.1016/j.inffus.2024.102595",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767870182855",
+      "categoryId": "1767860355565"
+    },
+    {
+      "title": "TTEC:Multimodal fake news detection through data augmentation-based contrastive learning ",
+      "venue": "Applied Soft Computing",
+      "year": "2023",
+      "link": "https://www.sciencedirect.com/science/article/pii/S1568494623001436",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767871401106",
+      "categoryId": "1767860361396"
+    },
+    {
+      "title": "Multi-modal news event detection with external knowledge",
+      "venue": "IPM",
+      "year": "2024",
+      "link": "https://doi.org/10.1016/j.ipm.2024.103697",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767871833592",
+      "categoryId": "1767860361396"
+    },
+    {
+      "title": " MIN:Multi-level interaction network for multi-modal rumor detection ",
+      "venue": "IJCNN*",
+      "year": "2023",
+      "link": "https://ieeexplore.ieee.org/abstract/document/10191639",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767872161548",
+      "categoryId": "1767860361396"
+    },
+    {
+      "title": "OpEvFake: Unveiling opinion evolution via prompting and diffusion for short video fake news detection ",
+      "venue": "ACL",
+      "year": "2024",
+      "link": "https://aclanthology.org/2024.findings-acl.642/",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767872272482",
+      "categoryId": "1767860366266"
+    },
+    {
+      "title": "MLLMs: Unveiling fake news with adversarial arguments generated by multimodal large language models ",
+      "venue": "COLING",
+      "year": "2025",
+      "link": "https://aclanthology.org/2025.coling-main.526/",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1767872772449",
+      "categoryId": "1767860366266"
+    },
+    {
+      "title": "SNIFFER: Multimodal large language model for explainable out-of-context misinformation detection ",
+      "venue": "CVPR",
+      "year": "2024",
+      "link": "https://openaccess.thecvf.com/content/CVPR2024/html/Qi_SNIFFER_Multimodal_Large_Language_Model_for_Explainable_Out-of-Context_Misinformation_Detection_CVPR_2024_paper.html",
+      "problem": "- 痛点：现有的“图文不符”（Out-of-Context, OOC）检测模型通常只输出真假标签，缺乏可解释性；而通用的 MLLM（如 GPT-4V）虽然能解释，但对新闻领域的细微实体（如具体政客名字）识别能力弱，且容易产生幻觉 。\n- 核心方案：提出了 SNIFFER 框架，基于 InstructBLIP 进行“新闻领域对齐”和“任务特定微调”两阶段训练，并外挂了外部工具（Google 实体识别 + 反向图片搜索）来辅助推理 。\n- 实验结果：在 NewsCLIPpings 数据集上，准确率比原始 MLLM 提升了 40% 以上，且在准确率上超越了 GPT-4V（SNIFFER 86.8% vs GPT-4V 75.5%）。\n\n⭐ 星级锐评：★★★★☆ (4.0/5.0)\n创新性：★★★☆☆ (基于现有架构的工程组合创新)\n实用性：★★★★★ (不仅判别真假，还能给出证据，非常符合内容风控的实际需求)\n写作质量：★★★★☆ (逻辑清晰，图表直观)\n\n🗣️ 大佬直言\n这篇文章是典型的**“系统级胜利”。 很多同学做多模态只会“端到端”硬训，或者在 Attention 机制上做微小的数学改动。但这篇论文告诉你：当你发现通用大模型（InstructBLIP/GPT-4V）在垂直任务上不行时，别急着改模型结构，先改数据和流程。 它没有发明新的 Transformer，而是发明了一套由 GPT-4 辅助的数据生成流水线**，不仅解决了训练数据缺乏解释性标注的问题，还通过引入外部知识库（RAG 的思想）解决了大模型“知识截断”的问题。这不算是“硬核底层创新”，但绝对是**“高含金量的工程落地研究”**，非常值得工业界参考。",
+      "method": "-------------------------------------------------------模型基座-------------------------------------------------\nSNIFFER 的底座其实就是 InstructBLIP，但它的“器官”有动有静。我们可以把它拆解为三个模块：\n\t1. 眼睛（Image Encoder）：使用的是 ViT-G/14。\n\t\t○ 状态：完全冻结（Frozen），不参与任何训练。\n\t\t○ 作用：不管输入什么新闻图片，它只负责把图片变成一堆固定的数学向量（Visual Features）。\n\t2. 大脑皮层（Q-Former）：这是唯一训练的部分。\n\t\t○ 状态：可训练（Trainable）。\n\t\t○ 作用：这是核心。它是一个连接器，负责把“眼睛”看到的视觉向量，翻译成“嘴巴”（LLM）能听懂的语言提示（Soft Prompts）。\n\t\t○ 关键点：所有的微调（Stage 1 和 Stage 2），调的全是 Q-Former 的参数，别的都不动。这大大降低了显存需求 。\n\t3. 嘴巴（LLM）：使用的是 Vicuna-13B。\n\t\t○ 状态：完全冻结（Frozen）。\n作用：它拥有通用的推理能力。它接收 Q-Former 传来的“翻译后的图片特征”和我们输入的“文本指令”，然后生成人话（判决和解释）。\n----------------------------------------------创新点1：训练流程---------------------------------------------------\n1. 第一阶段：治好“脸盲症”（News Domain Alignment）\n\t- 问题：通用的 InstructBLIP 看到一张拜登的照片，只会说“一个穿着西装的老人”。这对新闻打假没用，我们需要它认出这是“拜登”。 怎么做：\n\t• 数据来源：NewsCLIPpings 数据集中的真实图文对（约 37 万对）。\n\t• 输入：一张新闻图片。\n\t• 指令（Prompt）：利用 ChatGPT4 生成了 11 种不同的问法，核心意思都是“简要描述这张图” 。\n\t• 训练目标：强迫 Q-Former 输出的特征能让 LLM 准确复述出原始的新闻标题（Caption）。\n\t• 结果：经过这一步，模型把视觉特征（老人脸）和新闻实体（拜登这个名字）对齐了 。\n2. 第二阶段：学会“逻辑找茬”（Task-Specific Tuning）\n\t- 痛点（重点看这里）：我们手里的 OOC（断章取义）数据集只有标签（这张图是假的），但没有解释（为什么假？）。没有解释数据，就没法训练模型输出解释。\n\t- 具体步骤：利用纯文本 GPT-4 凭空“造”出解释数据/构建教师数据集——>再微调InstructBLIP(Qformer)\n\t- 假设我们有一个样本：\n\t• 假新闻标题 (cap_1)：“奥巴马在宣战。”\n\t• 图片 (img_2)：（实际是一张奥巴马在吃汉堡的图）\n\t• 图片的真实标题 (cap_2)：“奥巴马正在享用午餐。”\n\t1. 作者把 cap_1（假文本）和cap_2（真文本）这两个纯文本扔给 GPT-4 。\n\t2. Prompt GPT-4：“虽然你看不到图片，但我告诉你，cap_2 是图片的真实描述，cap_1 是错误的描述。请你像一个侦探一样，告诉我 cap_1和图片（也就是 cap_2）哪里冲突了？” 。\n\t3. GPT-4 推理：“文本1说是‘宣战’，文本2说是‘吃午餐’。动作不一致。”\n\t4. 生成数据：GPT-4 输出了一个完美的解释：“No, the image is wrongly used... The action in caption is declaring war, but the action in image is eating lunch.” 。 \n\t5. 最终训练： 拿着这些 GPT-4 生成的“判决+解释”文本，去微调 SNIFFER 的 Q-Former。这样模型就学会了：看到图文不符时，该用什么样的句式和逻辑去解释它 。\n----------------------------------------------创新点2：（推理流程）信息核查---------------------------------------------------\n第一步：内部核查（Internal Checking）——“我看出来了”\n\t• 输入：可疑图片 + 可疑标题。\n\t• 外挂插件：调用 Google Entity Detection API。这一步是作弊级的辅助，直接把图里的人名（如 \"Harry Thomas Jr\"）识别出来，变成文本 。\n\t• 模型动作：Q-Former 结合图片特征和识别出的人名实体，让 LLM 判断图文是否一致。\n\t• 输出：初步判断1（例如：“图片里的人和文中的名字对不上”）。\n第二步：外部核查（External Checking）——“我搜到了”\n\t• 动作：拿着图片去搜索引擎做反向搜索（Reverse Image Search） 。\n\t• 获取证据：找到这张图最早出现的网页，把网页里的正文抠出来，作为“证据文本（Evidence）” 。\n\t• 模型动作：把“可疑标题”和“证据文本”一起喂给 LLM（这次只用文本能力，不看图）。让 LLM 判断：证据支持标题吗？ 。\n\t• 输出：初步判断2（例如：“网上的旧新闻说这张图是2010年的，不支持现在的标题”）。\n第三步：综合推理（Composed Reasoning）——“这是结论”\n\t• 动作：把“初步判断1”和“初步判断2”的文本结果，全部塞回给 LLM 。\n\t• 指令：综合内部和外部的发现，给我一个最终结论。\n\t• 最终输出：“这是假新闻。一方面，图里的人是A不是B；另一方面，检索发现这张图是旧图。” 。\n",
+      "results": "----------------------------------------创新----------------------------------------\n- 虽然模型架构基于InstructBLIP没有魔改，但其核心价值在于数据工程和推理流程的设计。它解决了一个通用MLLM（多模态大模型）最尴尬的问题：虽然认识“男人”，但不认识“具体的某个参议员”。\n- 属于流程创新。它巧妙地利用了纯文本的GPT-4来构造“多模态”的训练数据（这一点非常聪明），避开了昂贵的人工标注。",
+      "thoughts": "总结一下Table2消融实验：\nrow（1、2）：什么都不动以及进行stage1的新闻领域对齐几乎没用，原始大模型全判真，纯瞎猜，正确率50%左右\nrow3：引入Stage 2 (OOC tuning)，蒸馏GPT4V的推理能力，Table3中的数据对比一下，单靠这个学生就比老师牛，证明了在封闭数据集上，针对性微调（SFT） > 通用大模型 Zero-shot。\nrow4 ：然后在OOC这之上提供查询的图片实体，对虚假的检测率提升不少，对真的也有一丁点提升，整体已经追平完整模型\nrow5： 训练stage2+1，微乎其微的提升，+1几乎没用\nrow6：row4加上stage1（只缺谷歌识图搜文），就这一点微乎其微的提升，已经让模型完全追上完全体，只是这个偏向于判真，加上联网搜索信息哪个亲需要判假\nrow7：最神秘的一行，作者设计的东西什么都不要，什么都不调，就拿原始的瞎猜模型，聊天的时候多几行联网搜索证据，就能达到几乎追上完整模型的性能(判假爆杀一切，判真的还不赖，要是能再减少点误杀真新闻，就可以推翻作者的研究了)\n\n总之Stage1就是个小提升可以忽略，但1、只用蒸馏推理知识的方式微调模型 2、或者多给一点识图找到的新闻标题与网页文本，都能达到完整模型9成的效果。同时缺少OOC+evidence的组合，即抛弃实体识别只要新闻原文。\n- 整体模型可以说是：\n1.微调模型可以做到很好，略微倾向于判真，而且在删去在线搜索功能，情况下不用10%数据进行训练，也能从75%总正确率起跳\n2.用原始模型啥都不创新，帮模型百度一下，基本上看搜索信息效果也很好，只是对于噪声影响倾向于判假，在真新闻上掉点比较严重，并且**但是作者说只有六成的新闻能搜索到外部证据**，可能搜不到、搜到垃圾就判假的策略也有用 ，文章的主题还是如何在特定任务下微调大模型\n3.在微调模型上引入百度原文的影响不大只是改变倾向，但反过来看在仅原文的情况下，让LLM不再瞎猜而是有一定的理解能力，就是本文模型的效果了。\n4.但是从题意出发，从解释性这一点上，我们又不能说单靠搜索文本然后变成向量去做一个深度学习输出一个概率，又很好地避免了这个“搜答案”的问题",
+      "status": "read",
+      "starNote": "用微调大模型+超大模型教学实现：可解释的OOC（Out-of-Context，图文不符/张冠李戴）检测",
+      "isStarred": true,
+      "rating": 7,
+      "ratedDate": "2026-01-14T12:42:54.014Z",
+      "id": "1767873055623",
+      "categoryId": "1768808167984"
+    },
+    {
+      "title": "提示词_VER0.1",
+      "venue": "",
+      "year": "2026",
+      "link": "",
+      "problem": "# Role: 资深AI科研导师 (多模态与内容安全方向)\n## Task\n作为一名在AI顶级会议（CVPR, ACL, NeurIPS等）有多年审稿经验的资深研究员，请你带我深度研读上传的论文。你的目标是：像在组会上给同行或学生授课一样，剥离表象，拆解出论文的底层逻辑与科研价值。\n##  Input Requirements\n- 请仔细阅读全文，包括正文、数学公式、实验图表及附录。\n##  Output Format & Content\n### 1.  论文“身份卡”与锐评\n- **身份卡**：一句话讲一下发表会议/期刊含金量(以防是水文啥的)。\n- **自研摘要**：请不要完全参考原文摘要，基于你对全文的理解，简单给出一个总结摘要\n- **星级锐评**：给文章打 1-10 星。\n- **审稿人**：请给出一段作为审稿人的“锐评”。如果是顶会请说出文章为什么是，如果是一般的或者是水刊也指出其为什么水，比如评价其含金量、研究动机是否伪命题、是“真创新”还是“堆代码/刷榜单”。\n### 2. 🛠️ 核心工作与方法论拆解（回答的主体部分）\n- **整体工作&逻辑脉络**：先讲完整地清楚这篇文章主要干了什么主要工作。\n\t然后精炼描述工作架构，包括清楚要做什么，做了什么计算、数据的变化流动等等。要求：但必须与论文中的【计算公式】严格对齐，公式不是必要的，但不要遗漏关键的逻辑链路。\n- **视觉化解读**：请解释论文中的核心图表（如 Figure 1 的流程或 Table 的对比），说明它们证明了什么核心观点。\n- **生僻概念通解**：此点不是必要的，以防对很多基础技术进行重复介绍，遇到论文中实在是生僻或复杂的概念，请先给出专业定义，再通过一个【生活化类比】进行解释。\n\n### 3. ⚖️ 创新点与批判性审视\n- **硬核创新**：指出哪些是“客观创新点”（如结构重组、损失函数改进），哪些是作者为了中稿而包装的“魔改点”。\n- **前作关联**：指出该方法是否是某些经典方法（如 CLIP, Transformer, BERT）的变体或延伸。\n- **批判性漏洞**：\n  - 实验数据是否有偏见（例如：虚假新闻数据是否过旧）？\n  - 计算成本（FLOPs/显存占用）是否过高，难以落地？\n  - 鲁棒性：在噪声、对抗样本或跨域场景下是否会失效？\n  - 指标分析：哪些指标提升最明显？这揭示了该模型在处理什么问题上特别有效？\n\n### 4. 💡 思考、展望与复用\n- **学到什么**：这篇论文中真正我们值得学习的思路，作者真正有创意投入了精力的，有哪些是可以迁移到其他AI领域的？\n- **后浪避坑**：如果我要基于此做后续研究，有哪些尚未填补的坑（Research Gap）？\n- **复用清单**：文中哪些模块、损失函数或数据预处理trick是“拿来即用”的？\n- **预见性失效**：预测该模型在什么特定场景下会彻底崩盘？\n---\n**语气要求：** 严谨、锐利、富有启发性、避免废话堆砌。\n",
+      "method": "# Role: 资深AI科研导师 (多模态与内容安全方向)\n## Task\n作为一名在AI顶级会议（CVPR, ACL, NeurIPS等）有多年审稿经验的资深研究员，请你带我深度研读上传的论文。你的目标是：像在组会上给同行或学生授课一样，剥离表象，拆解出论文的底层逻辑与科研价值。\n##  Input Requirements\n- 请仔细阅读全文，包括正文、数学公式、实验图表及附录。\n##  Output Format & Content\n### 1.  论文“身份卡”与锐评\n- **身份卡**：一句话讲一下发表会议/期刊含金量(以防是水文啥的)。\n- **自研摘要**：请不要完全参考原文摘要，基于你对全文的理解，简单给出一个总结摘要\n- **星级锐评**：给文章打 1-10 星。\n- **审稿人**：请给出一段作为审稿人的“锐评”。如果是顶会请说出文章为什么是，如果是一般的或者是水刊也指出其为什么水，比如评价其含金量、研究动机是否伪命题、是“真创新”还是“堆代码/刷榜单”。\n### 2. 🛠️ 核心工作与方法论拆解（回答的主体部分）\n- **整体工作&逻辑脉络**：先讲完整地清楚这篇文章主要干了什么主要工作。\n\t然后精炼描述工作架构，包括清楚要做什么，做了什么计算、数据的变化流动等等。要求：但必须与论文中的【计算公式】严格对齐，公式不是必要的，但不要遗漏关键的逻辑链路。\n- **视觉化解读**：请解释论文中的核心图表（如 Figure 1 的流程或 Table 的对比），说明它们证明了什么核心观点。\n- **生僻概念通解**：此点不是必要的，以防对很多基础技术进行重复介绍，遇到论文中实在是生僻或复杂的概念，请先给出专业定义，再通过一个【生活化类比】进行解释。\n\n### 3. ⚖️ 创新点与批判性审视\n- **硬核创新**：指出哪些是“客观创新点”（如结构重组、损失函数改进），哪些是作者为了中稿而包装的“魔改点”。\n- **前作关联**：指出该方法是否是某些经典方法（如 CLIP, Transformer, BERT）的变体或延伸。\n- **批判性漏洞**：\n  - 实验数据是否有偏见（例如：虚假新闻数据是否过旧）？\n  - 计算成本（FLOPs/显存占用）是否过高，难以落地？\n  - 鲁棒性：在噪声、对抗样本或跨域场景下是否会失效？\n  - 指标分析：哪些指标提升最明显？这揭示了该模型在处理什么问题上特别有效？\n\n### 4. 💡 思考、展望与复用\n- **学到什么**：例如：这篇论文中真正我们值得学习的思路，作者真正有创意投入了精力的闪光点，有哪些是可以迁移到其他AI领域的？\n- **后浪避坑**：如果我要基于此做后续研究，有哪些尚未填补的坑（Research Gap）？\n- **复用清单**：文中哪些模块、损失函数或数据预处理trick是“拿来即用”的？\n- **预见性失效**：预测该模型在什么特定场景下会彻底崩盘？\n---\n**语气要求：** 严谨、锐利、富有启发性、避免废话堆砌。\n",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": true,
+      "rating": 0,
+      "ratedDate": null,
+      "id": "1768201193013",
+      "categoryId": "1"
+    },
+    {
+      "title": "Capturing the style of fake news. ",
+      "venue": "2020",
+      "year": "AAAI",
+      "link": "",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1768218186327",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "Open-Domain, Content-based, Multi-modal Fact-checking of  Out-of-Context Images via Online Resources",
+      "venue": "CVPR",
+      "year": "2022",
+      "link": "https://arxiv.org/abs/2112.00061",
+      "problem": "🔍 论文“身份卡”与锐评\n\t• 标题：Open-Domain, Content-Based, Multi-Modal Fact-Checking of Out-of-Context Images via Online Resources\n\t• 作者团队：Sahar Abdelnabi, Rakibul Hasan, Mario Fritz (CISPA 亥姆霍兹信息安全中心，德国)\n\t• 发表会议：CVPR 2022 (计算机视觉顶级会议)\n📝 自研摘要\n\t1. 痛点：现有的多模态虚假新闻检测多是“闭门造车”，仅分析图文对内部特征，但面对“张冠李戴”（真实图片配上错误语境的文字，即Out-of-Context）这种高阶造假，如果没有外部背景知识，模型几乎是在瞎猜。\n\t2. 方案：提出一种“多模态循环一致性检查”（Multi-modal Cycle-consistency Check）框架，模仿人类查证过程：用图搜文（找文字证据），用文搜图（找视觉证据），再利用记忆网络（Memory Networks）比对证据与查询项的一致性。\n\t3. 结果：在NewsCLIPpings数据集上，准确率达到84.7%，比仅使用CLIP的基线模型（约66%）提升了近19个百分点，证明了引入外部证据的降维打击能力。\n⭐ 星级锐评：★★★★☆ (4/5)\n🗣️ 大佬直言\n\t“这篇论文的含金量在于工程化的诚实。很多做Deepfake检测的论文还在卷怎么提取更细微的噪声特征，试图在像素级找破绽，但这篇论文直接指出了皇帝的新衣：对于‘开局一张图，内容全靠编’的Out-of-Context（OoC）攻击，图像本身是没毛病的（Pristine），你去卷像素特征是伪命题。\n\t它的架构虽然有‘堆料’之嫌（ResNet + BERT + Memory Network + CLIP），但这种RAG（检索增强）的思路在2022年是非常有前瞻性的。它本质上是一个基于检索的多模态推理系统，而不是一个单纯的分类器。缺点也很明显：它极其依赖Google API，这让系统的实时性和复现性打了个折扣。”\n",
+      "method": "核心流程： 证据获取 (Retrieval)—> 特征编码与推理 (Encoding & Reasoning) —>融合判决 (Fusion & Classification)\n\n第一阶段：证据获取与预处理 (The Retrieval Cycle)\n目标： 构建“多模态循环一致性”，即通过图找文，再通过文找图，以此收集外部证据。\n\t1. 查询分解： 输入由“查询图像”和“查询文本”组成。\n\t2. 以图搜文 (Image —> Text)：\n\t\t○ 利用 Google Vision API 提取图像中的实体关键词（如 \"David Cameron\"）和网页证据。\n\t\t○ 使用 感知哈希 (pHash) 技术定位包含该图的网页，抓取其标题、Alt 属性及周围文本。\n\t3. 以文搜图 (Text—> Image)：\n\t\t○ 利用 Google Search API，根据查询文本反向搜索相关的图片列表。\n\t4. 防作弊清洗 (Filtering)：\n\t\t○ 关键步骤： 如果搜到的图片与原图完全一致（pHash相同），或文本去标点后与原文完全一致且来源相同，直接剔除。\n\t\t○ 目的： 强迫模型去学习逻辑推理，而不是简单的模式匹配。\n\n第二阶段：特征工程与推理 (Feature Engineering & Reasoning)\n架构概览： 包含 4 个基于 Memory Network 的推理分支 + 1 个独立的 CLIP 直觉分支。\nA. 视觉推理 (Visual Reasoning) - 双路并行\n输入为“查询图像”与“证据图像列表”。\n\t• 特征增强 (Trick)： 计算查询图与证据图的 Google Labels 重叠数（标量），直接拼接到特征向量后。\n\t• 分支 1：物体一致性 (Object): 使用 ResNet-152 (ImageNet) 提取特征，侧重物体识别。\n\t• 分支 2：场景一致性 (Scene): 使用 ResNet-50 (Places365) 提取特征，侧重环境背景（如室内/室外）判断。\n\t• 机制： 两者均通过 Memory Network 聚合证据，输出各自的特征向量。\nB. 文本推理 (Textual Reasoning) - 双路并行\n输入为“查询文本”与“证据文本”（分为实体和句子）。\n\t• 特征增强 (Trick)：\n\t\t1. 实体重叠： 使用 spaCy 提取人名地名，计算重叠情况（0/1 标识符）。\n\t\t2. 域名嵌入 (Domain Embedding)： 将证据来源的域名映射为 20维 向量（让模型学习哪些网站更可信）。\n\t• 分支 3：实体一致性 (Entity): 聚焦细节。使用 Memory Network 聚合证据中的实体。\n\t• 分支 4：语义一致性 (Sentence): 聚焦大意。使用 BERT (倒数第二层) + LSTM 提取特征，并聚合证据句子。\nC. 记忆网络核心逻辑 (Memory Network Mechanics)\n上述 4 个分支内部遵循同一套注意力机制（Attention）来处理维度与噪声：\n\t1. 投影 (Projection)： 将查询项和证据项投影到统一的 1024维 公共空间。\n\t2. 寻址 (Addressing)： 计算查询 (Query) 与证据 (Key) 的点积，经 Softmax 得到注意力权重。\n\t3. 读取 (Reading)： 根据权重对证据 (Value) 进行加权求和。\n\t4. 残差 (Residual)： 最终输出 = 加权和 + 原始查询向量。\nD. 直觉分支 (CLIP)\n\t• 动作： 一个独立微调过的 CLIP 模型。\n\t• 逻辑： 不看任何外部证据，直接计算查询图与查询文的联合 Embedding，判断两者是否匹配。\n\n第三阶段：融合与判决 (Fusion & Verdict)\n核心痛点： 5 路信号（物体、场景、实体、语义、CLIP）的数值分布差异巨大，直接拼接难以收敛。\n\t1. 关键操作：Batch Normalization (BN)\n\t\t○ 在拼接之前，强制对 5 个分支的输出向量分别通过 BN 层。这是文中提升效果最大的 Trick。\n\t2. 拼接与分类：\n\t\t○ 拼接： 将 5 个归一化后的向量拼成一个长向量。\n\t\t○ 分类器： 全连接层 —> ReLU —>BN —> Sigmoid。\n\t\t○ 输出： 最终判断为假新闻的概率。\n\t3. 损失函数： 标准的二元交叉熵损失 (Binary Cross-Entropy)。\n\n📝 极简复现指南 (The \"4-2-1\" Cheat Sheet)\n如果要复现该模型，请记住这个结构口诀：\n\t• 4 个外部推理通道：\n\t\t○ [图] ResNet (物体)—>Memory\n\t\t○ [图] ResNet (场景) —> Memory\n\t\t○ [文] NER/BERT (实体) —>Memory\n\t\t○ [文] BERT/LSTM (句子)—>Memory\n\t• 2 类特征增强 Trick：\n\t\t○ Overlap Feature： 图像算标签重叠数，文本算实体重叠位。\n\t\t○ Domain Embedding： 把证据来源（网站域名）变成向量喂给模型。\n\t• 1 个核心融合技：\n\t\t○ Pre-Concat BN： 在拼接所有特征前，必须先做一次 Batch Normalization。\n",
+      "results": "- 采用了人类测试去进行对比，一个是说模型已经达到了普通人类的鉴别水平 。第二是让人证明：高分的证据是真的重要，低分的证据是真的垃圾。\n- 范式转移：将多模态Fact-Checking定义为Open-World Retrieval问题，而不是简单的二分类问题。\n- 多粒度验证：没有把证据混为一谈，而是拆解为“物体、场景、实体、语义”四个维度，配合 Attention 机制精准去噪 。\n- 可解释性：User Study 证明，模型 Attention 关注的高权重证据，人类看了也觉得有用。这让模型不再是一个完全的黑盒 。\n--------------------------------\n-对搜索引擎的绝对依赖：模型的上限被 Google 锁死了。如果针对突发新闻（Breaking News），网上还没有相关证据，或者搜索引擎返回的全是噪声，模型就会失效（如 Figure 6 的失败案例）\n- 推理成本高昂：跑一次推理需要调多个 API、跑爬虫、过 ResNet、BERT、CLIP，这注定它只能用于离线审核，无法做到即时检测。",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 8,
+      "ratedDate": "2026-01-14T04:03:52.380Z",
+      "id": "1768270407157",
+      "categoryId": "1768808167984"
+    },
+    {
+      "title": "API-Bank: A Comprehensive Benchmark for Tool-Augmented LLMs",
+      "venue": "EMNLP",
+      "year": "2023",
+      "link": "https://arxiv.org/abs/2304.08244",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1768270630285",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "Detecting and Grounding Multi-Modal Media Manipulation",
+      "venue": "CVPR",
+      "year": "2023",
+      "link": "http://arxiv.org/abs/2304.02556",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1768299569579",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "NewsCLIPpings: Automatic Generation of Out-of-Context Multimodal Media",
+      "venue": "EMNLP",
+      "year": "2021",
+      "link": "https://arxiv.org/abs/2104.05893",
+      "problem": "• 自研摘要： 为了解决现有数据集（随机匹配太简单、篡改文本有语言漏洞）无法训练出鲁棒的多模态假新闻检测器的问题，作者提出了一种基于检索和对抗性过滤的自动化数据生成流水线。该方法利用 CLIP、SBERT 等预训练模型，从真实新闻库中检索出与目标标题“视觉相似”或“语义相关”但实际上不匹配的图片（即 Hard Negatives），构建了包含近 100 万样本的 NewsCLIPpings 数据集。实验证明，该数据集能有效愚弄人类（人类准确率仅 65%）和 SOTA 模型，揭示了当前多模态模型在细粒度语义一致性验证上的短板。\n• 星级锐评：⭐⭐⭐⭐⭐ (4.5星)\n\t• 理由：选题切中痛点（Out-of-context），方法论设计极其巧妙（利用 SOTA 模型攻击 SOTA 模型），实验扎实。扣掉 0.5 星是因为虽然提出了数据集，但未提出一种全新的检测架构（Defensive Architecture），主要是在测评现有模型。\n• 审稿人锐评：\n这是一篇非常有价值的 Dataset & Benchmark 论文。 含金量：极高。作者极其敏锐地指出了前人工作（如 TamperedNews）的致命伤——通过修改文本实体造假会留下语言痕迹，导致单模态文本模型就能破解。 动机判断：这是一个典型的“真命题”。在真实世界的信息战中，\"张冠李戴\"比\"无中生有\"更常见。 创新定性：这不仅是“刷数据”，这是一种**对抗性数据合成（Adversarial Data Synthesis）**的范式创新。它证明了利用现有的强模型（CLIP）可以自动化地生成高质量的对抗样本，反过来训练更强的判别器。",
+      "method": "目标是：给一个真实的标题（原配），在图库里找一张假的图片（第三者），要求这张假图必须看起来非常合适，以至于连 AI（甚至人类）都分辨不出来它是假的。\n整个过程分为三步走：\n第一步：理解“嘉宾” (预处理 Preprocessing)\n首先，我们要对数据库里的所有新闻（嘉宾）进行全方位的“体检”，提取特征，方便后续匹配 。\n\t• 输入： 比如 VisualNews 数据库里的一百万条真实新闻。\n\t• 提取特征：\n\t\t○ 读懂文字： 用 NLP 工具（spaCy）把标题里的人名（如 Obama）、地名（如 London）都标出来 。\n\t\t○ 看懂图片： 用计算机视觉模型（Faster R-CNN, ResNet）看图里有没有人？是在室内还是室外？ 。\n\t\t○ 计算“气质”： 用 CLIP 和 SBERT 模型把图片和文字转化成数学向量，方便计算相似度 。\n\n第二步：四大“牵线”策略 (Retrieval Strategies)\n现在我们手里有一个真实的标题 A（比如：“泰勒·斯威夫特在曼彻斯特体育馆表演”）。我们要甩掉它原本的真图 A，去图库里给它找一张假图 B。\n作者设计了四种找图的策略（也就是论文里的 Splits），这就好比四种不同的“欺骗逻辑”：\n1. 视觉欺骗 (CLIP Text-Image Match)\n\t• 逻辑： “找一张长得最像标题描述的图。”\n\t• 操作： 算法拿着标题 A 去问 CLIP 模型：“图库里哪张照片最符合这句话的画面感？”\n\t• 结果： CLIP 可能会找到一张另一位女歌手在舞台上的照片。\n\t• 为什么难防： 视觉元素（舞台、灯光、金发女郎）完全吻合，只有人不对 。\n2. 话题欺骗 (CLIP Text-Text Match)\n\t• 逻辑： “找一张原来配文意思差不多的图。”\n\t• 操作： 算法拿着标题 A 去问：“图库里哪个其他标题跟这句话意思最像？”\n\t• 结果： 比如标题 A 是“日本海啸”，算法找到了标题 B “智利洪水”（语义相似）。然后把智利洪水的图拿来配给“日本海啸” 。\n\t• 为什么难防： 事情的性质一模一样（都是水灾），只是地点搞错了。\n3. 身份欺骗 (Person Match) —— 最狡猾的一招\n\t• 逻辑： “找同一个人，但是错误的场合。”\n\t• 操作： 标题 A 提到了“奥巴马”。算法就去图库里搜所有包含“奥巴马”的照片，但特意挑选那些场景相似度低（SBERT 得分低）的照片 。\n\t• 结果： 标题是“奥巴马在白宫开会”，配图是“奥巴马在竞选集会上吃汉堡” 。\n\t• 为什么难防： 人脸识别完全正确，必须读懂背景环境不对才能识破。\n4. 场景欺骗 (Scene Match)\n\t• 逻辑： “找一个环境一模一样的图。”\n\t• 操作： 针对没有具体人物的新闻。用 ResNet 算法找场景构造（Scene Layout）一样的图 。\n\t• 结果： 标题是“福特汽车生产线”，配图是“本田汽车生产线” 。\n\n第三步：魔鬼测试 (Adversarial Filtering)\n这是最关键的一步，也是为什么这个数据集叫“NewsCLIPpings”的原因。\n即便经过了上面的匹配，有些假图还是太假了（一眼假）。作者为了让数据集更难，引入了一个**“把关人”**机制 。\n\t• 原理： 用原始的 CLIP 模型给 [标题 A + 真图 A] 打个分（真分数），再给 [标题 A + 假图 B] 打个分（假分数）。\n\t• 筛选标准：\n\t\t○ 如果不幸 假分数 << 真分数：说明这张假图太假了，CLIP 一眼就看穿了。扔掉，不要。\n\t\t○ 只有当 假分数 ≥ 真分数（或者非常接近）：说明这张假图非常有迷惑性，连 AI 都觉得它比真图还像真的。保留，加入数据集！ 。\n总结流程图\n为了帮你理清思路，我们可以把整个构建过程简化为下面的逻辑：\n\t1. 拿来一条真新闻： (标题: \"A\", 真图: \"Img-A\")\n\t2. 生成假候选： 算法在数据库里搜，找到了 (假图: \"Img-B\")，因为它和 \"Img-A\" 很像，或者描述很像。\n\t3. 主要规则： 确保 \"Img-B\" 对应的原始标题里，没有和 \"标题 A\" 重复的人名/地名（防止碰巧找对了）。\n\t4. AI 把关（对抗过滤）：\n\t\t○ CLIP 问：(标题 A + 真图 A) 匹配度是多少？ -> 答：0.8\n\t\t○ CLIP 问：(标题 A + 假图 B) 匹配度是多少？ -> 答：0.85\n\t\t○ 判定： 0.85 > 0.8，AI 被骗了！这个样本合格，存入数据集 。\n",
+      "results": "",
+      "thoughts": "",
+      "status": "read",
+      "starNote": "一篇非常有价值的 Dataset & Benchmark 论文，针对现象充分利用模型的性质，设计数据集构建的方法",
+      "isStarred": true,
+      "rating": 9,
+      "ratedDate": "2026-01-19T07:41:12.284Z",
+      "id": "1768300186949",
+      "categoryId": "1768808167984"
+    },
+    {
+      "title": "DeClarE: Debunking Fake News and False Claims using Evidence-Aware Deep Learning",
+      "venue": "EMNLP",
+      "year": "2018",
+      "link": "https://arxiv.org/abs/1809.06416",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "id": "1768300793318",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "VQA: Visual Question Answering",
+      "venue": "ICCV",
+      "year": "2015",
+      "link": "https://openaccess.thecvf.com/content_iccv_2015/html/Antol_VQA_Visual_Question_ICCV_2015_paper.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 0,
+      "ratedDate": null,
+      "id": "1768380171629",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "Multimodal Generative Models for Scalable Weakly-Supervised Learning",
+      "venue": "NeurIPS",
+      "year": "2018",
+      "link": "https://proceedings.neurips.cc/paper_files/paper/2018/hash/1102a326d5f7c9e04fc3c89d0ede88c9-Abstract.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 0,
+      "ratedDate": null,
+      "id": "1768380637377",
+      "categoryId": "1767439741110"
+    },
+    {
+      "title": "MVNN: Exploiting Multi-domain Visual Information for Fake News Detection",
+      "venue": "ICDM",
+      "year": "2019",
+      "link": "https://ieeexplore.ieee.org/abstract/document/8970940",
+      "problem": "1. 论文“身份卡”与锐评\n\t• 身份卡：\n\t\t○ 会议：ICDM 2019 \n\t\t○ 地位：在2019年那个时间点，它是较早将“传统图像取证（频域）”与“深度学习语义分析（像素域）”结合起来解决假新闻检测的文章，属于开坑之作。\n\t• 自研摘要：\n\t\t○ 假新闻里的图片主要玩两种花招：一是PS/拼接（物理造假），二是移花接木（语义误导，图是真的但语境是假的）。传统方法只看其中一面（要么只查PS痕迹，要么只看图片内容）。本文提出了MVNN（多域视觉神经网络），左手抓**频域（Frequency Domain）查物理篡改痕迹，右手抓像素域（Pixel Domain）**看语义情感煽动性，最后用注意力机制把两手抓的信息融合，实现“物理+语义”的双重照妖镜。\n\t• 星级锐评：🌟🌟🌟🌟🌟🌟🌟🌟 (8/10)\n\t\t○ 扣分点在于网络结构在今天看来稍显堆砌（CNN+RNN），但在当时是为了证明概念。\n\t• 审稿人锐评：\n\t\t○ Accept。这篇文章的Motivation（动机）极强。它非常精准地指出了当时假新闻检测的痛点：深度学习派只知道用VGG提特征，忽略了图片本身的物理篡改痕迹；而传统取证派只知道算DCT系数，不懂语义理解。作者没有单纯“刷榜”，而是从篡改图像（Tampered）和误导性图像（Misleading）这两个本质属性出发设计网络。虽然频域+像素域的融合在现在看来是基操，但在当时是一个非常漂亮的Insight（洞察）。",
+      "method": "- 把图片变成了“信号波形”来处理：输入图像 -> 分块 DCT 变换 -> 得到64个频率的直方图 -> 1D 傅里叶变换（为了增强特征），并使用一维卷积（CNN-1D）处理这些频率向量\n- 多分支 CNN：在CNN的不同阶段提取不同层级的特征，向上送入时序网络(Bi-GRU)，每层之间是两次二维卷积+一次MaxPooling\n- Bi-GRU 建模 (关键点)：作者认为低级特征（线条、颜色）和高级特征（物体、场景）之间有依赖关系，CNN出来的层级特征再经过一次卷积后全连接送进GRU",
+      "results": "• 看 Table II（消融实验），去掉 Pixel domain 准确率掉了 10.9%，去掉 Frequency domain 只掉了 5.2%。\n结论：说明在假新闻检测任务中，语义（内容）还是老大，物理痕迹只是辅助。这其实暗示了频域分支的上限不高。\n\n• 作者在文中明确提到，之前的研究（如 2015/2016 MediaEval benchmark）已经使用了 “视觉取证特征 (Visual forensics features)” 来辅助检测假新闻 。\n   例如引用文献 [15] 提取了如 BAG (block artifact grids) 这样的取证特征，并结合逻辑回归（LR）来做分类 。BAG 本质上就是利用 JPEG 压缩在频域留下的痕迹。\n   作者指出这些之前的方法主要依赖手工设计 (Hand-crafted) 的特征。这些特征往往是为了检测特定的篡改痕迹而设计的，比较僵化，且很难推广到复杂的误导性图像（Misleading images）检测中 。",
+      "thoughts": "",
+      "status": "reading",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 8,
+      "ratedDate": "2026-01-19T08:48:41.581Z",
+      "id": "1768455587512",
+      "categoryId": "1768455883095"
+    },
+    {
+      "title": "MVAE: Multimodal Generative Models for Scalable Weakly-Supervised Learning",
+      "venue": "NeurIPS",
+      "year": "2018",
+      "link": "https://proceedings.neurips.cc/paper_files/paper/2018/hash/1102a326d5f7c9e04fc3c89d0ede88c9-Abstract.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 0,
+      "ratedDate": null,
+      "id": "1768811287261",
+      "categoryId": "1767408883891"
+    },
+    {
+      "title": "VQA: Visual Question Answering",
+      "venue": "ICCV",
+      "year": "2015",
+      "link": "https://openaccess.thecvf.com/content_iccv_2015/html/Antol_VQA_Visual_Question_ICCV_2015_paper.html",
+      "problem": "",
+      "method": "",
+      "results": "",
+      "thoughts": "",
+      "status": "todo",
+      "starNote": "",
+      "isStarred": false,
+      "rating": 0,
+      "ratedDate": null,
+      "id": "1768811411786",
+      "categoryId": "1767408883891"
+    }
+  ]
+}

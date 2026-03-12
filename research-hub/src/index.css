@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- 修复 Tailwind Prose 对 KaTeX 公式的破坏 --- */
+
+/* 1. 稍微放大公式的整体字号 */
+.prose .katex { font-size: 1.3em !important; }
+
+/* 2. 强制重置行高，解决 \hat{y} 帽子重叠、多重上下标挤压的问题 */
+.prose .katex * { line-height: normal !important; }
+
+/* 3. 核心修复：防止 Prose 破坏矩阵！必须剥离 Prose 对 table 的强加样式 */
+.prose .katex table,
+.prose .katex tbody,
+.prose .katex tr,
+.prose .katex td,
+.prose .katex th {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  background-color: transparent !important;
+}
+
+/* 4. 给独立公式块增加合适的上下呼吸空间 */
+.prose .katex-display {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
