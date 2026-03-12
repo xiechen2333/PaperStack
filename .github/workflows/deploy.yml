@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+# 触发条件：当你推送到 main 分支时，自动执行此脚本
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # 在 GitHub 的云端 Ubuntu 电脑上运行
+
+    steps:
+      - name: 获取源码 🛎️
+        uses: actions/checkout@v3
+
+      - name: 安装 Node.js 环境 ⚙️
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # 使用 Node.js 18 版本（通常兼容绝大多数项目）
+
+      - name: 安装依赖并打包代码 🔧
+        run: |
+          npm install
+          npm run build
+
+      - name: 自动部署到 gh-pages 分支 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist 
