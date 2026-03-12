@@ -9,15 +9,15 @@ const MarkdownView = ({ content }) => {
   const safeContent = content || '';
 
   return (
-    <div className="prose prose-sm prose-slate max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-headings:my-2 break-words">
+    <div className="prose prose-sm prose-slate dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-headings:my-2 break-words">
       <ReactMarkdown
         remarkPlugins={[remarkMath]}
         rehypePlugins={[rehypeKatex]}
         components={{
-          a: ({...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline" />,
-          p: ({...props}) => <p {...props} className="leading-relaxed text-[15px] text-slate-700" />,
+          a: ({...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline" />,
+          p: ({...props}) => <p {...props} className="leading-relaxed text-[15px] text-slate-700 dark:text-slate-300" />,
           // 分隔线样式我们依然保留在这里，因为这属于组件的基础 UI 设定
-          hr: ({...props}) => <hr {...props} className="my-4 border-t border-slate-200/80" />
+          hr: ({...props}) => <hr {...props} className="my-4 border-t border-slate-200/80 dark:border-slate-800" />
         }}
       >
         {safeContent}

@@ -5,13 +5,14 @@ import {
     X, PlusCircle, Save, Lightbulb, Target, Zap, Scale,
     Folder, Globe, Clock, Book, CheckCircle2, AlertCircle, Star,
     Settings, CornerDownRight, Download, Upload, FolderInput, ArrowUp, ArrowDown,
-    Layout, Hash, Calendar, Loader2, FolderOpen, Circle,
+    Hash, Calendar, Loader2, FolderOpen, Circle,
     PanelLeftClose, PanelLeftOpen, History, Heart, AlertTriangle, ListFilter,
-    FileText
+    FileText, Moon, Sun
 } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 // --- 懒加载 Markdown 组件 ---
-const MarkdownView = React.lazy(() => import('./MarkdownView'));
+const MarkdownView = React.lazy(() => import('./components/MarkdownView'));
 
 // 配置 localforage
 localforage.config({
@@ -21,38 +22,33 @@ localforage.config({
 
 // --- 常量定义 ---
 const THEME = {
-    bg: 'bg-slate-50',
-    sidebar: 'bg-white',
-    primary: 'blue',
+    bg: 'bg-slate-50 dark:bg-slate-950',
     text: {
-        main: 'text-slate-900',
-        secondary: 'text-slate-600',
-        muted: 'text-slate-400'
+        main: 'text-slate-900 dark:text-slate-100',
     },
-    border: 'border-slate-200'
 };
 
 // --- 组件: SidebarItem (侧边栏单项 - 性能优化版) ---
 const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpanded, count, isManageMode, onToggle, onSelect, onManageAction }) => {
     const getLevelStyle = (d) => {
         if (d === 0) return {
-            icon: <Folder size={18} className={isActive ? "fill-blue-100 text-blue-600" : "fill-slate-100 text-slate-400"} />,
-            textClass: "text-[15px] font-semibold text-slate-800",
+            icon: <Folder size={18} className={isActive ? "fill-blue-100 text-blue-600 dark:text-blue-400" : "fill-slate-100 text-slate-400 dark:text-slate-500"} />,
+            textClass: "text-[15px] font-semibold text-slate-800 dark:text-slate-100",
             containerClass: "py-2.5 mb-1"
         };
         if (d === 1) return {
             icon: <FolderOpen size={16} />,
-            textClass: "text-[14px] font-medium text-slate-700",
+            textClass: "text-[14px] font-medium text-slate-700 dark:text-slate-200",
             containerClass: "py-2 mb-0.5"
         };
         if (d === 2) return {
             icon: <Hash size={14} className="opacity-70" />,
-            textClass: "text-[14px] font-normal text-slate-600",
+            textClass: "text-[14px] font-normal text-slate-600 dark:text-slate-300",
             containerClass: "py-1.5"
         };
         return {
             icon: <Circle size={6} className="fill-current opacity-40" />,
-            textClass: "text-[13px] text-slate-500",
+            textClass: "text-[13px] text-slate-500 dark:text-slate-400",
             containerClass: "py-1.5"
         };
     };
@@ -81,14 +77,14 @@ const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpa
                     {isExpanded ? <ChevronDown size={14} strokeWidth={2.5} /> : <ChevronRight size={14} strokeWidth={2.5} />}
                 </div>
 
-                <div className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-500'}`}>
+                <div className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300'}`}>
                     {style.icon}
                 </div>
 
                 <span className={`truncate flex-1 leading-snug ${style.textClass}`}>{category.name}</span>
 
                 {!isManageMode && count.total > 0 && (
-                    <div className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
+                    <div className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
                         {hasChildren && count.self > 0 ? `${count.self}/${count.total}` : count.total}
                     </div>
                 )}
@@ -171,6 +167,7 @@ const App = () => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     // UI 状态
+    const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [lastBackupTime, setLastBackupTime] = useState(null);
     const [now, setNow] = useState(Date.now());
@@ -179,6 +176,7 @@ const App = () => {
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [showAllPapers, setShowAllPapers] = useState(false);
+    const [activeTag, setActiveTag] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const deferredSearchQuery = useDeferredValue(searchQuery);
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: '' });
@@ -186,6 +184,7 @@ const App = () => {
     const [expandedPaperIds, setExpandedPaperIds] = useState([]);
     const [expandedSectionIds, setExpandedSectionIds] = useState([]);
     const [isManageMode, setIsManageMode] = useState(false);
+    const [showTopButton, setShowTopButton] = useState(false);
 
     // --- 性能优化状态: 分页显示 ---
     const [displayLimit, setDisplayLimit] = useState(20);
@@ -219,7 +218,17 @@ const App = () => {
         }
     ], []);
 
-    // 初始化定时器
+    // 初始化定时器与主题同步
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [isDarkMode]);
+
     useEffect(() => {
         const timer = setInterval(() => setNow(Date.now()), 3600000);
         return () => clearInterval(timer);
@@ -230,7 +239,7 @@ const App = () => {
             // 使用 behavior: 'auto' 可以瞬间跳回顶部，觉得突兀可以改成 'smooth'
             mainContentRef.current.scrollTo({ top: 0, behavior: 'auto' });
         }
-    }, [activeCategoryId, showFavoritesOnly, showAllPapers, searchQuery]);
+    }, [activeCategoryId, showFavoritesOnly, showAllPapers, searchQuery, activeTag]);
 
     // 初始化数据加载 - 优化为并行加载 (Promise.all)
     useEffect(() => {
@@ -325,8 +334,8 @@ const App = () => {
         return { label: `严重: ${label} 备份`, color: 'bg-red-50 text-red-700 border-red-200', icon: <AlertTriangle size={13} />, severity: 'danger' };
     }, [lastBackupTime, now]);
 
-    const getStarredCount = () => papers.filter(p => p.isStarred).length;
-    const getCategoryName = (id) => categories.find(c => c.id === id)?.name || 'Unknown';
+    const starredCount = useMemo(() => papers.filter(p => p.isStarred).length, [papers]);
+    const getCategoryName = useCallback((id) => categories.find(c => c.id === id)?.name || 'Unknown', [categories]);
 
     // --- 核心排序逻辑 ---
     const sortPapers = useCallback((paperList) => {
@@ -400,15 +409,25 @@ const App = () => {
     const processJSON = async (jsonText) => {
         try {
             const data = JSON.parse(jsonText);
-            if (!Array.isArray(data.categories) || !Array.isArray(data.papers)) { alert("备份格式错误。"); return; }
-            if (window.confirm(`确认恢复备份？\n覆盖当前 ${categories.length} 个分类和 ${papers.length} 篇文献。`)) {
-                setCategories(data.categories);
-                setPapers(data.papers);
-                await localforage.setItem('research_categories', data.categories);
-                await localforage.setItem('research_papers', data.papers);
-                alert(`✅ 成功恢复！`);
-            }
-        } catch { alert('解析失败，请检查文件。'); }
+            if (!Array.isArray(data.categories) || !Array.isArray(data.papers)) { toast.error("备份格式错误。"); return; }
+            toast((t) => (
+                <div className="flex flex-col gap-3">
+                    <p className="font-bold text-slate-800">确认恢复备份？</p>
+                    <p className="text-sm text-slate-600">覆盖当前 {categories.length} 个分类和 {papers.length} 篇文献。此操作不可逆。</p>
+                    <div className="flex gap-2 justify-end mt-2">
+                        <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-md text-sm font-medium hover:bg-slate-200">取消</button>
+                        <button onClick={async () => {
+                            toast.dismiss(t.id);
+                            setCategories(data.categories);
+                            setPapers(data.papers);
+                            await localforage.setItem('research_categories', data.categories);
+                            await localforage.setItem('research_papers', data.papers);
+                            toast.success(`✅ 成功恢复！`);
+                        }} className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">确认覆盖</button>
+                    </div>
+                </div>
+            ), { duration: Infinity, id: 'restore-confirm' });
+        } catch { toast.error('解析失败，请检查文件。'); }
     };
 
     const toggleFolder = useCallback((id) => { setExpandedFolders(prev => prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]); }, []);
@@ -561,25 +580,37 @@ const App = () => {
         setStarModal({ isOpen: false, paperId: null, currentNote: '' });
     };
 
+    // --- 标签汇总 ---
+    const allTagsMap = useMemo(() => {
+        const map = {};
+        papers.forEach(p => {
+            if (Array.isArray(p.tags)) {
+                p.tags.forEach(t => { map[t] = (map[t] || 0) + 1; });
+            }
+        });
+        return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    }, [papers]);
+
     // --- 过滤与排序 ---
     const filteredFlatPapers = useMemo(() => {
         let res = papers;
         // 1. 过滤
         if (showFavoritesOnly) res = res.filter(p => p.isStarred);
+        if (activeTag) res = res.filter(p => p.tags && p.tags.includes(activeTag));
         if (deferredSearchQuery) {
             const q = deferredSearchQuery.toLowerCase();
-            res = res.filter(p => p.title.toLowerCase().includes(q) || p.venue.toLowerCase().includes(q) || p.starNote?.toLowerCase().includes(q));
+            res = res.filter(p => p.title.toLowerCase().includes(q) || p.venue.toLowerCase().includes(q) || p.starNote?.toLowerCase().includes(q) || (p.tags && p.tags.some(t => t.toLowerCase().includes(q))));
         }
         // 2. 排序
         return sortPapers(res);
-    }, [papers, showFavoritesOnly, deferredSearchQuery, sortPapers]);
+    }, [papers, showFavoritesOnly, activeTag, deferredSearchQuery, sortPapers]);
 
-    // --- 早退: 数据未加载 ---
+    // --- 早退: 极简加载 (避免骨架屏导致 Sidebar 布局突变闪烁) ---
     if (!isDataLoaded) {
         return (
-            <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-50 text-slate-400 gap-3">
+            <div className={`flex flex-col items-center justify-center w-screen h-screen ${THEME.bg} text-slate-400 gap-3`}>
                 <Loader2 className="animate-spin text-blue-500" size={32} />
-                <p className="text-sm font-medium">正在加载数据库...</p>
+                <p className="text-sm font-medium">正在加载知识库...</p>
             </div>
         );
     }
@@ -649,27 +680,27 @@ const App = () => {
 
         const getHeaderStyle = (d) => {
             if (d === 0) return {
-                wrapper: "mb-4 mt-8 pb-3 border-b border-slate-200",
-                icon: <Folder className="text-blue-600 mr-2.5" size={22} />,
-                text: "text-xl font-bold text-slate-900 tracking-tight",
+                wrapper: "mb-4 mt-8 pb-3 border-b border-slate-200 dark:border-slate-800",
+                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2.5" size={22} />,
+                text: "text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight",
                 arrow: 22
             };
             if (d === 1) return {
                 wrapper: "mb-3 mt-6 ml-1",
-                icon: <FolderOpen className="text-slate-500 mr-2" size={18} />,
-                text: "text-lg font-semibold text-slate-800",
+                icon: <FolderOpen className="text-slate-500 dark:text-slate-400 mr-2" size={18} />,
+                text: "text-lg font-semibold text-slate-800 dark:text-slate-200",
                 arrow: 18
             };
             if (d === 2) return {
-                wrapper: "mb-2 mt-4 ml-3 pl-3 border-l-2 border-slate-200",
-                icon: <Hash className="text-slate-400 mr-2" size={16} />,
-                text: "text-base font-medium text-slate-700",
+                wrapper: "mb-2 mt-4 ml-3 pl-3 border-l-2 border-slate-200 dark:border-slate-800",
+                icon: <Hash className="text-slate-400 dark:text-slate-500 mr-2" size={16} />,
+                text: "text-base font-medium text-slate-700 dark:text-slate-300",
                 arrow: 16
             };
             return {
                 wrapper: "mb-2 mt-2 ml-5 flex items-center opacity-80",
-                icon: <Circle className="text-slate-300 mr-2 fill-current" size={8} />,
-                text: "text-xs font-bold text-slate-500 uppercase tracking-wider",
+                icon: <Circle className="text-slate-300 dark:text-slate-600 mr-2 fill-current" size={8} />,
+                text: "text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider",
                 arrow: 14
             };
         };
@@ -678,13 +709,13 @@ const App = () => {
 
         return (
             <div key={categoryId} className="animate-in fade-in duration-300">
-                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors hover:bg-slate-100 rounded-lg px-2 -ml-2 ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
+                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg px-2 -ml-2 ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
                     <div className="flex items-center">
                         <div className={`mr-1 transition-transform duration-200 ${isExpanded ? 'rotate-0 text-slate-400' : '-rotate-90 text-slate-300'}`}> <ChevronDown size={style.arrow} /> </div>
                         {style.icon}
                         <h3 className={style.text}>
                             {cat.name}
-                            <span className="ml-2 text-[11px] font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full align-middle relative -top-0.5 border border-slate-200">{count.total}</span>
+                            <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full align-middle relative -top-0.5 border border-slate-200 dark:border-slate-700">{count.total}</span>
                         </h3>
                     </div>
                     {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} />}
@@ -726,26 +757,27 @@ const App = () => {
 
     return (
         <div className={`flex h-screen ${THEME.bg} ${THEME.text.main} font-sans overflow-hidden antialiased`}>
+            <Toaster position="top-right" toastOptions={{ duration: 3000, style: { fontSize: '14px', borderRadius: '10px', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' } }} />
             {/* 侧边栏 */}
-            <div className={`${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0'} flex flex-col border-r border-slate-200 bg-white transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20`}>
-                <div className="p-5 border-b border-slate-50 flex items-center gap-3 min-w-[320px]">
+            <div className={`${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0'} flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20`}>
+                <div className="p-5 border-b border-slate-50 dark:border-slate-800/50 flex items-center gap-3 min-w-[320px]">
                     <div className="bg-slate-800 text-white p-2.5 rounded-lg shadow-md"> <BookOpen size={22} strokeWidth={2.5} /> </div>
-                    <h1 className="text-xl font-bold tracking-tight text-slate-900">PaperStack <span className="text-[11px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded ml-1 font-bold border border-blue-100">PRO</span></h1>
+                    <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">PaperStack <span className="text-[11px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-bold border border-blue-100 dark:border-blue-800/50">PRO</span></h1>
                 </div>
                 <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-[320px]">
                     {!isManageMode && (
                         <>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`} onClick={handleAllPapersClick} >
-                                <Globe size={18} className={`mr-3 ${showAllPapers ? 'text-slate-300' : 'text-slate-400'}`} /> 全部文献 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showAllPapers ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-500'}`}>{papers.length}</span>
+                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTag(null); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                                <Globe size={18} className={`mr-3 ${showAllPapers ? 'text-slate-300' : 'text-slate-400 dark:text-slate-500'}`} /> 全部文献 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showAllPapers ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{papers.length}</span>
                             </div>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 text-rose-700 ring-1 ring-rose-200/50' : 'text-slate-600 hover:bg-rose-50 hover:text-rose-700'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setExpandedPaperIds([]); setDisplayLimit(20); }} >
-                                <Heart size={18} className={`mr-3 ${showFavoritesOnly ? 'text-rose-500 fill-rose-500' : 'text-slate-400'}`} /> 我的收藏 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showFavoritesOnly ? 'bg-rose-100/50 text-rose-800' : 'bg-slate-100 text-slate-500'}`}>{getStarredCount()}</span>
+                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTag(null); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                                <Heart size={18} className={`mr-3 ${showFavoritesOnly ? 'text-rose-500 fill-rose-500' : 'text-slate-400 dark:text-slate-500'}`} /> 我的收藏 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showFavoritesOnly ? 'bg-rose-100/50 dark:bg-rose-900/50 text-rose-800 dark:text-rose-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{starredCount}</span>
                             </div>
 
                             {readingHistory.length > 0 && (
                                 <div className="mb-6 mt-6">
                                     <div
-                                        className="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center justify-between cursor-pointer hover:text-slate-600 transition-colors"
+                                        className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-2 flex items-center justify-between cursor-pointer hover:text-slate-600 dark:hover:text-white transition-colors"
                                         onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                                     >
                                         <div className="flex items-center gap-1">
@@ -761,9 +793,9 @@ const App = () => {
                                                 const p = papers.find(paper => paper.id === id);
                                                 if (!p) return null;
                                                 return (
-                                                    <div key={id} onClick={() => handleHistoryClick(id)} className="group flex items-center px-2 py-2 rounded-md cursor-pointer hover:bg-slate-100 transition-colors">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mr-2.5 group-hover:bg-blue-500"></div>
-                                                        <span className="text-[13px] text-slate-500 truncate font-medium group-hover:text-blue-700">{p.title}</span>
+                                                    <div key={id} onClick={() => handleHistoryClick(id)} className="group flex items-center px-2 py-2 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700 mr-2.5 group-hover:bg-blue-500"></div>
+                                                        <span className="text-[13px] text-slate-500 dark:text-slate-300 truncate font-medium group-hover:text-blue-700 dark:group-hover:text-blue-400">{p.title}</span>
                                                     </div>
                                                 )
                                             })}
@@ -771,11 +803,32 @@ const App = () => {
                                     )}
                                 </div>
                             )}
+
+                            {/* --- 标签库 --- */}
+                            {allTagsMap.length > 0 && (
+                                <div className="mb-4 mt-6">
+                                    <div className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-3 flex items-center justify-between">
+                                        <div className="flex items-center gap-1"><Hash size={13} /> 个人标签库</div>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 px-3">
+                                        {allTagsMap.map(([tag, count]) => (
+                                            <button
+                                                key={tag}
+                                                onClick={() => { setActiveTag(activeTag === tag ? null : tag); setShowAllPapers(false); setShowFavoritesOnly(false); setActiveCategoryId(null); setDisplayLimit(20); }}
+                                                className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors border ${activeTag === tag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                                                title={`包含 "${tag}" 的文献`}
+                                            >
+                                                {tag} <span className={`ml-1 text-[10px] ${activeTag === tag ? 'text-blue-200' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </>
                     )}
 
                     <div className="my-4 px-3">
-                        <div className="h-px bg-slate-100 w-full"></div>
+                        <div className="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
                     </div>
 
                     {isManageMode && <div className="bg-amber-50/50 border border-amber-200/50 rounded-lg p-3 mb-3 text-xs text-amber-700 font-medium flex items-center gap-2"> <AlertTriangle size={14} /> 管理模式已开启</div>}
@@ -784,7 +837,7 @@ const App = () => {
                     </div>
                     {isManageMode && (<button onClick={() => { setCategoryModal({ isOpen: true, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="w-full mt-4 flex items-center justify-center gap-1.5 bg-white text-slate-500 border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 py-3 rounded-lg text-[13px] font-bold transition-all" > <PlusCircle size={15} /> 新建顶级分类 </button>)}
                 </div>
-                <div className="p-4 border-t border-slate-100 bg-slate-50/30 min-w-[320px]">
+                <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/50 min-w-[320px]">
                     <input type="file" accept=".json" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                     {isManageMode ? (
                         <div className="flex flex-col gap-3 animate-in slide-in-from-bottom-2">
@@ -795,21 +848,24 @@ const App = () => {
                             <button onClick={() => setIsManageMode(false)} className="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-md hover:bg-slate-800 transition-colors" > <CheckCircle2 size={16} /> 完成 </button>
                         </div>
                     ) : (
-                        <button onClick={() => setIsManageMode(true)} className="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-[13px] font-bold bg-white text-slate-500 border border-slate-200 hover:bg-slate-100 hover:text-slate-700 transition-colors" > <Settings size={16} /> 管理模式 </button>
+                        <div className="flex gap-2">
+                            <button onClick={() => setIsManageMode(true)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-[13px] font-bold bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 hover:text-slate-700 transition-colors" > <Settings size={16} /> 管理模式 </button>
+                            <button onClick={() => setIsDarkMode(!isDarkMode)} className="w-[46px] flex items-center justify-center shrink-0 rounded-lg bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 transition-colors" title="切换深浅色"> {isDarkMode ? <Sun size={17} /> : <Moon size={17} />} </button>
+                        </div>
                     )}
                 </div>
             </div>
 
             {/* 主内容区域 */}
-            <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50 relative">
-                <div className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-10 gap-5 sticky top-0">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 relative">
+                <div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-10 gap-5 sticky top-0">
                     <div className="flex items-center gap-4 flex-1">
-                        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors mr-1">
+                        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors mr-1">
                             {isSidebarOpen ? <PanelLeftClose size={22} /> : <PanelLeftOpen size={22} />}
                         </button>
                         <div className="relative flex-1 max-w-lg group">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
-                            <input className="w-full pl-10 pr-4 py-2.5 bg-slate-100/50 border-transparent focus:bg-white border focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 rounded-lg outline-none text-[15px] transition-all" placeholder="搜索文献..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setDisplayLimit(20); /* 搜索时重置分页 */ }} />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
+                            <input className="w-full pl-10 pr-4 py-2.5 bg-slate-100/50 dark:bg-slate-800/50 border-transparent dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 border dark:border-slate-700/50 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 rounded-lg outline-none text-[15px] transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500" placeholder="搜索文献..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setDisplayLimit(20); /* 搜索时重置分页 */ }} />
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -820,19 +876,19 @@ const App = () => {
                     </div>
 
                         {/* 恢复的排序按钮组 */}
-                        <div className="flex items-center bg-slate-100 p-1 rounded-lg">
+                        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                             <button
                                 onClick={() => handleSortChange('year')}
-                                className={`p-2 rounded-md transition-all flex items-center gap-1 ${sortConfig.key === 'year' ? 'bg-white shadow text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`p-2 rounded-md transition-all flex items-center gap-1 ${sortConfig.key === 'year' ? 'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
                                 title="按年份排序"
                             >
                                 <Calendar size={16} />
                                 {sortConfig.key === 'year' && (sortConfig.direction === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
                             </button>
-                            <div className="w-px h-4 bg-slate-200 mx-1"></div>
+                            <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-1"></div>
                             <button
                                 onClick={() => handleSortChange('ratedDate')}
-                                className={`p-2 rounded-md transition-all flex items-center gap-1 ${sortConfig.key === 'ratedDate' ? 'bg-white shadow text-amber-500' : 'text-slate-400 hover:text-slate-600'}`}
+                                className={`p-2 rounded-md transition-all flex items-center gap-1 ${sortConfig.key === 'ratedDate' ? 'bg-white dark:bg-slate-700 shadow text-amber-500' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
                                 title="按评分时间排序"
                             >
                                 <Star size={16} />
@@ -844,22 +900,27 @@ const App = () => {
                     </div>
                 </div>
 
-                <div ref={mainContentRef} className="flex-1 overflow-y-auto p-10 custom-scrollbar pb-32">
+                <div 
+                    ref={mainContentRef} 
+                    onScroll={(e) => setShowTopButton(e.target.scrollTop > 500)}
+                    className="flex-1 overflow-y-auto p-10 custom-scrollbar pb-32"
+                >
                     <div className="mb-10 flex items-end justify-between group">
                         <div>
-                            <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-3 tracking-tight">
-                                {searchQuery ? <> <Search size={28} className="text-blue-600" /> 搜索: "{searchQuery}" </> :
-                                    showFavoritesOnly ? <> <Heart size={28} className="text-rose-500 fill-rose-500" /> 收藏 </> :
-                                        showAllPapers ? <> <ListFilter size={28} className="text-blue-600" /> 全部文献列表 </> :
-                                            activeCategoryId ? <> <Folder size={28} className="text-blue-600" /> {getCategoryName(activeCategoryId)} </> :
-                                                <> <Globe size={28} className="text-slate-700" /> 知识库概览 </>}
+                            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+                                {searchQuery ? <> <Search size={28} className="text-blue-600 dark:text-blue-400" /> 搜索: "{searchQuery}" </> :
+                                    showFavoritesOnly ? <> <Heart size={28} className="text-rose-500 fill-rose-500" /> 我收藏的文献 </> :
+                                        showAllPapers ? <> <ListFilter size={28} className="text-blue-600 dark:text-blue-400" /> 全部文献列表 </> :
+                                            activeTag ? <> <Hash size={28} className="text-blue-600 dark:text-blue-400" /> {activeTag} </> :
+                                                activeCategoryId ? <> <Folder size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
+                                                    <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
-                            <p className="text-slate-500 text-base mt-2 ml-1 font-medium"> {searchQuery || showFavoritesOnly || showAllPapers ? `共 ${filteredFlatPapers.length} 篇` : '您的个人知识库'} </p>
+                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium"> {searchQuery || showFavoritesOnly || showAllPapers || activeTag ? `共 ${filteredFlatPapers.length} 篇` : '您的个人知识库'} </p>
                         </div>
                         {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} />}
                     </div>
 
-                    {searchQuery || showFavoritesOnly || showAllPapers ? (
+                    {searchQuery || showFavoritesOnly || showAllPapers || activeTag ? (
                         <div className="grid grid-cols-1 gap-5">
                             {/* 性能优化核心：只渲染前 displayLimit 个元素 (Virtualization/Pagination) */}
                             {filteredFlatPapers.slice(0, displayLimit).map(p => (
@@ -898,7 +959,7 @@ const App = () => {
                                                         onToggle={() => togglePaper(p.id)}
                                                         onStarClick={() => handleStarClick(p.id, p.isStarred)}
                                                         onEdit={() => { updateHistory(p.id); setEditingPaper(p); setIsAddingPaper(true); }}
-                                                        onDelete={() => setDeleteModal({ isOpen: true, type: 'paper', id: p.id, title: p.title })}
+                                                        onDelete={() => { setDeleteModal({ isOpen: true, type: 'paper', id: p.id, title: p.title }); setDeleteCountdown(1); }}
                                                         onMove={() => setMoveModal({ isOpen: true, paperId: p.id })}
                                                     />
                                                 ))}
@@ -912,6 +973,15 @@ const App = () => {
                         </div>
                     )}
                 </div>
+
+                {/* 返回顶部按钮 */}
+                <button
+                    onClick={() => mainContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className={`absolute bottom-8 right-8 p-3 rounded-full bg-slate-900 text-white shadow-2xl shadow-slate-900/20 hover:bg-blue-600 hover:scale-110 active:scale-95 transition-all duration-300 z-40 flex items-center justify-center ${showTopButton ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}
+                    title="返回顶部"
+                >
+                    <ArrowUp size={22} strokeWidth={2.5} />
+                </button>
             </div>
 
             {/* 移动文件夹 Modal */}
@@ -944,7 +1014,7 @@ const App = () => {
                     <div className="bg-white w-full max-w-sm rounded-xl shadow-2xl p-6 border border-slate-100">
                         <input autoFocus className="w-full px-4 py-3 border border-slate-200 rounded-lg outline-none mb-6 text-sm" placeholder="名称..." value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveCategory()} />
                         <div className="flex justify-end gap-3">
-                            <button onClick={() => setCategoryModal({ isOpen: false, parentId: null, editId: null })} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-lg">取消</button>
+                            <button onClick={() => { setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-lg">取消</button>
                             <button onClick={handleSaveCategory} className="px-5 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 shadow-md">保存</button>
                         </div>
                     </div>
@@ -985,7 +1055,7 @@ const App = () => {
                     onSave={(d) => {
                         if (editingPaper) setPapers(p => p.map(x => x.id === editingPaper.id ? { ...d, id: x.id } : x));
                         // 修改为：新数据在前，旧数据在后 (...p)
-                        else setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || '1' }, ...p]);
+                        else setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
                         
                         // 建议同时滚动到顶部，确保用户看到新添加的项目
                         if (mainContentRef.current) mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1003,6 +1073,18 @@ const App = () => {
 // --- 组件: CompactPaperCard (交互终极版 - 性能优化) ---
 const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle, onStarClick, onEdit, onDelete, onMove }) => {
     const [isCollapsing, setIsCollapsing] = React.useState(false);
+    const cardRef = React.useRef(null);
+    // 曾经展开过才触发收起时的自动对齐，避免首次渲染的误触发
+    const hasBeenExpanded = React.useRef(false);
+
+    React.useEffect(() => {
+        if (isExpanded) {
+            hasBeenExpanded.current = true;
+        } else if (hasBeenExpanded.current) {
+            // 收起时，将卡片顶部平滑滚动回视野
+            cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [isExpanded]);
 
     const statusConfig = {
         'todo': { color: 'text-slate-500 bg-slate-100 border-slate-200', icon: <Clock size={14} />, label: '待读' },
@@ -1029,25 +1111,23 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
 
     return (
         <div
+            ref={cardRef}
             id={`paper-card-${paper.id}`}
             onMouseLeave={handleMouseLeave}
             style={{
-                // 性能优化：contentVisibility 允许浏览器跳过屏幕外内容的渲染
-                contentVisibility: 'auto',
-                containIntrinsicSize: '100px', // 给一个预估高度，防止滚动条抖动
                 boxShadow: isExpanded
                     ? '8px 14px 24px -6px rgba(0, 0, 0, 0.25), 0 4px 8px -4px rgba(0, 0, 0, 0.10)'
                     : undefined
             }}
             className={`
-            bg-white rounded-xl border relative
+            bg-white dark:bg-slate-900 rounded-xl border relative
             scroll-mt-24
             transition-all duration-500 ease-out
             ${isExpanded
-                    ? 'border-blue-500/40 ring-1 ring-blue-500/10 z-10'
+                    ? 'border-blue-500/40 ring-1 ring-blue-500/10 z-10 dark:border-blue-900/50'
                     : isCollapsing
-                        ? 'border-slate-200 shadow-sm z-0'
-                        : 'border-slate-200 shadow-sm hover:border-blue-500 hover:ring-1 hover:ring-blue-500 hover:shadow-md z-0'
+                        ? 'border-slate-200 dark:border-slate-800/80 shadow-sm z-0'
+                        : 'border-slate-200 shadow-sm hover:border-blue-500 hover:ring-1 hover:ring-blue-500 hover:shadow-md z-0 dark:border-slate-800/80 dark:hover:border-blue-500/50'
                 }
         `}
         >
@@ -1064,7 +1144,7 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
 
                 <div className="flex-1 min-w-0 pt-0.5">
                     <div className="flex items-start justify-between gap-6">
-                        <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight truncate pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700' : 'text-slate-800'}`}> {paper.title} </h3>
+                        <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight truncate pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-slate-200'}`}> {paper.title} </h3>
                         {!isExpanded && (
                             <div className="flex items-center gap-1.5 flex-shrink-0 mt-2 animate-in fade-in duration-500">
                                 <StatusDot filled={hasContent(paper.problem)} color="bg-rose-400" />
@@ -1075,13 +1155,23 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                         )}
                     </div>
                     <div className="flex items-center gap-2.5 mt-3 flex-wrap">
-                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold border ${currentStatus.color}`}> {currentStatus.icon} {currentStatus.label} </span>
-                        <span className="bg-slate-50 text-slate-600 px-3 py-1 rounded-full text-[12px] font-semibold border border-slate-200"> {paper.venue || 'Source'} {paper.year} </span>
+                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-bold border ${currentStatus.color.replace('bg-slate-100', 'bg-slate-100 dark:bg-slate-800/60').replace('bg-amber-50', 'bg-amber-50 dark:bg-amber-900/20').replace('bg-emerald-50', 'bg-emerald-50 dark:bg-emerald-900/20')}`}> {currentStatus.icon} {currentStatus.label} </span>
+                        <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full text-[12px] font-semibold border border-slate-200 dark:border-slate-700"> {paper.venue || 'Source'} {paper.year} </span>
 
                         {paper.rating > 0 && (
-                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] border border-amber-200/50 bg-amber-50 text-amber-700 font-bold" title={`打分时间: ${paper.ratedDate ? paper.ratedDate.split('T')[0] : ''}`}>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] border border-amber-200/50 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 font-bold" title={`打分时间: ${paper.ratedDate ? paper.ratedDate.split('T')[0] : ''}`}>
                                 <Star size={12} className="fill-amber-500 text-amber-500" />
                                 <span>{paper.rating}</span>
+                            </div>
+                        )}
+
+                        {Array.isArray(paper.tags) && paper.tags.length > 0 && (
+                            <div className="flex items-center gap-1.5 ml-1 flex-wrap">
+                                {paper.tags.map(tag => (
+                                    <span key={tag} className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50/80 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800/50 outline-none">
+                                        <Hash size={10} strokeWidth={3} /> {tag}
+                                    </span>
+                                ))}
                             </div>
                         )}
                     </div>
@@ -1141,15 +1231,16 @@ const CompactSection = ({ icon, title, color, content }) => {
     const sectionRef = useRef(null);
     const hasContent = content && content.trim().length > 5;
     const colors = {
-        rose: { border: 'border-l-rose-400', icon: 'text-rose-500', bg: 'bg-rose-50' },
-        blue: { border: 'border-l-blue-400', icon: 'text-blue-500', bg: 'bg-blue-50' },
-        emerald: { border: 'border-l-emerald-400', icon: 'text-emerald-500', bg: 'bg-emerald-50' },
-        amber: { border: 'border-l-amber-400', icon: 'text-amber-500', bg: 'bg-amber-50' },
+        rose: { border: 'border-l-rose-400', icon: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' },
+        blue: { border: 'border-l-blue-400', icon: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+        emerald: { border: 'border-l-emerald-400', icon: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+        amber: { border: 'border-l-amber-400', icon: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
     };
     const theme = colors[color];
-    const emptyStyle = 'bg-slate-50 border border-slate-200 border-dashed opacity-70';
-    const activeStyle = `bg-white border border-slate-200 border-l-4 ${theme.border} shadow-sm`;
+    const emptyStyle = 'bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 border-dashed opacity-70';
+    const activeStyle = `bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 border-l-4 ${theme.border} shadow-sm`;
 
+    // 收起子栏目时，将该栏目标题滚动回视野，避免内容消失后视图错位
     useEffect(() => {
         if (!isOpen && hasContent) {
             sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1159,15 +1250,14 @@ const CompactSection = ({ icon, title, color, content }) => {
     const handleDoubleClick = (e) => {
         if (hasContent) {
             e.stopPropagation();
-            setIsOpen(!isOpen);
+            setIsOpen(prev => !prev);
         }
     };
 
     const handleLeftClick = (e) => {
         if (!hasContent) return;
         e.stopPropagation();
-        if (isOpen) setIsOpen(false);
-        else setIsOpen(true);
+        setIsOpen(prev => !prev);
     };
 
     return (
@@ -1198,12 +1288,12 @@ const CompactSection = ({ icon, title, color, content }) => {
                     {React.cloneElement(icon, { size: 16, className: hasContent ? theme.icon : 'text-slate-400' })}
                 </div>
 
-                <span className={`font-bold text-[15px] tracking-tight flex-1 py-1 ${hasContent ? 'text-slate-800 cursor-default' : 'text-slate-400'}`}>
+                <span className={`font-bold text-[15px] tracking-tight flex-1 py-1 ${hasContent ? 'text-slate-800 dark:text-slate-100 cursor-default' : 'text-slate-400 dark:text-slate-500'}`}>
                     {title}
                 </span>
 
                 {hasContent && (
-                    <div className={`transition-transform duration-200 ${isOpen ? 'rotate-0' : '-rotate-90'} text-slate-300 pointer-events-none`}>
+                    <div className={`transition-transform duration-200 ${isOpen ? 'rotate-0' : '-rotate-90'} text-slate-300 dark:text-slate-500 pointer-events-none`}>
                         <ChevronDown size={16} />
                     </div>
                 )}
@@ -1222,41 +1312,88 @@ const CompactSection = ({ icon, title, color, content }) => {
 
 // --- 组件: ExpertPaperModal (编辑/新增弹窗) ---
 const ExpertPaperModal = ({ paper, onClose, onSave }) => {
-    const defaultState = { title: '', venue: '', year: new Date().getFullYear().toString(), link: '', problem: '', method: '', results: '', thoughts: '', status: 'todo', starNote: '', isStarred: false, rating: 0, ratedDate: null };
+    const defaultState = { title: '', venue: '', year: new Date().getFullYear().toString(), link: '', problem: '', method: '', results: '', thoughts: '', status: 'todo', starNote: '', isStarred: false, rating: 0, ratedDate: null, tags: [] };
     const [d, setD] = useState({ ...defaultState, ...(paper || {}) });
     const initialData = useRef(JSON.stringify({ ...defaultState, ...(paper || {}) }));
     const hasChanges = () => JSON.stringify(d) !== initialData.current;
+    const [tagInput, setTagInput] = useState('');
 
-    const handleSafeClose = () => { if (hasChanges()) { if (window.confirm("当前有未保存的修改，确定要放弃并关闭吗？")) onClose(); } else onClose(); };
+    const handleSafeClose = () => { 
+        if (hasChanges()) { 
+            toast((t) => (
+                <div className="flex flex-col gap-3">
+                    <p className="font-bold text-red-600">放弃未保存的修改？</p>
+                    <p className="text-sm text-slate-600">当前有未保存的内容，确定要放弃并关闭吗？</p>
+                    <div className="flex gap-2 justify-end mt-2">
+                        <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 bg-slate-100 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-200">继续编辑</button>
+                        <button onClick={() => { toast.dismiss(t.id); onClose(); }} className="px-3 py-1.5 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700">放弃修改</button>
+                    </div>
+                </div>
+            ), { duration: Infinity, id: 'close-confirm' });
+        } else {
+            onClose(); 
+            toast.dismiss('close-confirm');
+        }
+    };
     const handleRating = (score) => { const newRating = d.rating === score ? 0 : score; setD({ ...d, rating: newRating, ratedDate: newRating > 0 ? new Date().toISOString() : null }); };
 
     return (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-            <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200">
-                <div className="px-10 py-6 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800">
+                <div className="px-10 py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900/50 shrink-0">
                     <div className="flex items-center gap-6">
-                        <h2 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2"><FileText size={24} className="text-blue-600" /> {paper ? '编辑笔记' : '录入新文献'}</h2>
-                        <button onClick={() => setD({ ...d, isStarred: !d.isStarred })} className={`p-2 rounded-full transition-colors ${d.isStarred ? 'bg-rose-100 text-rose-500' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`} title="切换收藏"> <Heart size={20} fill={d.isStarred ? "currentColor" : "none"} /> </button>
-                        <div className="flex bg-slate-100 p-1 rounded-lg">
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2"><FileText size={24} className="text-blue-600 dark:text-blue-400" /> {paper ? '编辑笔记' : '录入新文献'}</h2>
+                        <button onClick={() => setD({ ...d, isStarred: !d.isStarred })} className={`p-2 rounded-full transition-colors ${d.isStarred ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`} title="切换收藏"> <Heart size={20} fill={d.isStarred ? "currentColor" : "none"} /> </button>
+                        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                             {['todo', 'reading', 'read'].map(s => (
-                                <button key={s} onClick={() => setD({ ...d, status: s })} className={`px-5 py-2 rounded-md text-xs font-bold uppercase transition-all ${d.status === s ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}>{s}</button>
+                                <button key={s} onClick={() => setD({ ...d, status: s })} className={`px-5 py-2 rounded-md text-xs font-bold uppercase transition-all ${d.status === s ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}>{s}</button>
                             ))}
                         </div>
                     </div>
-                    <button onClick={handleSafeClose} className="p-2 rounded-lg hover:bg-slate-100 transition-colors"><X size={26} className="text-slate-400" /></button>
+                    <button onClick={handleSafeClose} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={26} className="text-slate-400 dark:text-slate-500" /></button>
                 </div>
-                <div className="flex-1 overflow-y-auto bg-slate-50/50 p-10 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-10 custom-scrollbar">
                     <div className="max-w-4xl mx-auto space-y-8">
-                        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                            <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg border border-slate-100 mb-2">
-                                <div className="flex items-center gap-2"> <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">个人评分</span> {d.rating > 0 && <span className="text-xs font-medium text-slate-400"> • {new Date(d.ratedDate).toLocaleDateString()}</span>} </div>
+                        <div className="bg-white dark:bg-slate-800/60 p-8 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm space-y-6">
+                            <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-700/40 p-4 rounded-lg border border-slate-100 dark:border-slate-600/40 mb-2">
+                                <div className="flex items-center gap-2"> <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">个人评分</span> {d.rating > 0 && d.ratedDate && <span className="text-xs font-medium text-slate-400 dark:text-slate-500"> • {new Date(d.ratedDate).toLocaleDateString()}</span>} </div>
                                 <div className="flex items-center gap-1">
                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
-                                        <button key={star} onClick={() => handleRating(star)} className={`p-1 transition-all hover:scale-110 ${star <= d.rating ? 'text-amber-400' : 'text-slate-200 hover:text-amber-200'}`}> <Star size={24} fill={star <= d.rating ? "currentColor" : "none"} /> </button>
+                                        <button key={star} onClick={() => handleRating(star)} className={`p-1 transition-all hover:scale-110 ${star <= d.rating ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700 hover:text-amber-200'}`}> <Star size={24} fill={star <= d.rating ? "currentColor" : "none"} /> </button>
                                     ))}
-                                    <span className="ml-3 w-8 text-center font-bold text-2xl text-slate-700">{d.rating > 0 ? d.rating : '-'}</span>
+                                    <span className="ml-3 w-8 text-center font-bold text-2xl text-slate-700 dark:text-slate-200">{d.rating > 0 ? d.rating : '-'}</span>
                                 </div>
                             </div>
+                            
+                            <div className="flex flex-col gap-2 relative">
+                                <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1"><Hash size={13} /> 文献标签</label>
+                                <div className="flex flex-wrap items-center gap-2 p-3 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 rounded-xl min-h-[50px] focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500 transition-all">
+                                    {(d.tags || []).map(tag => (
+                                        <span key={tag} className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-[13px] font-bold rounded-lg border border-blue-100 dark:border-blue-800/50 group">
+                                            {tag}
+                                            <button onClick={() => setD({...d, tags: d.tags.filter(t => t !== tag)})} className="text-blue-400 dark:text-blue-500 hover:text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full p-0.5 transition-colors" title="移除标签"><X size={14} /></button>
+                                        </span>
+                                    ))}
+                                    <input 
+                                        type="text" 
+                                        value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                const newTag = tagInput.trim();
+                                                if (newTag && !(d.tags || []).includes(newTag)) {
+                                                    setD({...d, tags: [...(d.tags || []), newTag]});
+                                                    setTagInput('');
+                                                }
+                                            }
+                                        }}
+                                        placeholder="输入新标签并按回车..." 
+                                        className="flex-1 bg-transparent min-w-[140px] outline-none text-[15px] font-medium text-slate-700 dark:text-slate-200 placeholder:text-slate-300 dark:placeholder:text-slate-550 ml-1"
+                                    />
+                                </div>
+                            </div>
+
                             {d.isStarred && (
                                 <div className="animate-in slide-in-from-top-2 mb-2">
                                     <label className="text-xs font-bold text-rose-500 mb-1 block flex items-center gap-1"><Heart size={12} className="fill-current" /> 收藏备注</label>
@@ -1264,13 +1401,13 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                                 </div>
                             )}
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">标题</label>
-                                <input autoFocus type="text" className="w-full px-5 py-4 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-bold text-slate-900 text-xl shadow-sm transition-all" placeholder="论文标题..." value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} />
+                                <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">标题</label>
+                                <input autoFocus type="text" className="w-full px-5 py-4 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-bold text-slate-900 dark:text-slate-100 text-xl shadow-sm transition-all" placeholder="论文标题..." value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">会议/来源</label> <input type="text" className="w-full px-5 py-3 bg-white border border-slate-200 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors" placeholder="e.g. NeurIPS" value={d.venue} onChange={(e) => setD({ ...d, venue: e.target.value })} /> </div>
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">年份</label> <input type="text" className="w-full px-5 py-3 bg-white border border-slate-200 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors" placeholder="e.g. 2024" value={d.year} onChange={(e) => setD({ ...d, year: e.target.value })} /> </div>
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">链接</label> <input type="text" placeholder="https://..." className="w-full px-5 py-3 bg-white border border-slate-200 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors text-blue-600" value={d.link} onChange={(e) => setD({ ...d, link: e.target.value })} /> </div>
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">会议/来源</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. NeurIPS" value={d.venue} onChange={(e) => setD({ ...d, venue: e.target.value })} /> </div>
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">年份</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. 2024" value={d.year} onChange={(e) => setD({ ...d, year: e.target.value })} /> </div>
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">链接</label> <input type="text" placeholder="https://..." className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors text-blue-600 dark:text-blue-400" value={d.link} onChange={(e) => setD({ ...d, link: e.target.value })} /> </div>
                             </div>
                         </div>
                         <div className="space-y-8">
@@ -1279,11 +1416,15 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                             <InputBlock label="实验结果 (Results)" icon={<Scale size={18} />} color="emerald" value={d.results} onChange={v => setD({ ...d, results: v })} placeholder="实验结果和优缺点" />
                             <InputBlock label="思考启发 (Thoughts)" icon={<Lightbulb size={18} />} color="amber" value={d.thoughts} onChange={v => setD({ ...d, thoughts: v })} placeholder="总结、局限性与未来展望" />
                         </div>
+                        
+                        <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs px-2">
+                            <History size={14} /> <span>所有更改将在点击“保存笔记”后同步至本地数据库</span>
+                        </div>
                     </div>
                 </div>
-                <div className="p-6 border-t border-slate-100 bg-white flex justify-end gap-3 shrink-0 z-20">
-                    <button onClick={handleSafeClose} className="px-6 py-2.5 rounded-lg text-[15px] font-bold text-slate-500 hover:bg-slate-100 transition-colors">取消</button>
-                    <button onClick={() => onSave(d)} className="px-8 py-2.5 bg-slate-900 text-white rounded-lg text-[15px] font-bold hover:bg-black shadow-lg shadow-slate-200 flex items-center gap-2 transition-transform active:scale-95"><Save size={18} /> 保存笔记</button>
+                <div className="p-6 border-t border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-900 flex justify-end gap-3 shrink-0 z-20">
+                    <button onClick={handleSafeClose} className="px-6 py-2.5 rounded-lg text-[15px] font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">取消</button>
+                    <button onClick={() => onSave(d)} className="px-8 py-2.5 bg-slate-900 dark:bg-blue-600 text-white rounded-lg text-[15px] font-bold hover:bg-black dark:hover:bg-blue-500 shadow-lg shadow-slate-200 flex items-center gap-2 transition-transform active:scale-95"><Save size={18} /> 保存笔记</button>
                 </div>
             </div>
         </div>
@@ -1296,7 +1437,7 @@ const InputBlock = ({ label, icon, color, value, onChange, placeholder }) => {
     return (
         <div>
             <label className={`flex items-center gap-2 text-sm font-bold mb-3 ${colors[color].split(' ')[0]}`}><span>{icon}</span> {label}</label>
-            <textarea rows={6} placeholder={placeholder} className={`w-full px-5 py-4 bg-white border border-slate-200 rounded-xl outline-none transition-all text-[15px] leading-relaxed text-slate-700 placeholder-slate-300 shadow-sm focus:ring-4 font-mono ${colors[color]}`} value={value} onChange={(e) => onChange(e.target.value)} />
+            <textarea rows={6} placeholder={placeholder} className={`w-full px-5 py-4 bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/50 rounded-xl outline-none transition-all text-[15px] leading-relaxed text-slate-700 dark:text-slate-200 placeholder-slate-300 dark:placeholder-slate-500 shadow-sm focus:ring-4 font-mono ${colors[color]}`} value={value} onChange={(e) => onChange(e.target.value)} />
         </div>
     );
 };
