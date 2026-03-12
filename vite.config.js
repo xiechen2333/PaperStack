@@ -12,10 +12,6 @@ export default defineConfig({
     warmup: {
       clientFiles: ['./src/App.jsx', './src/MarkdownView.jsx'],
     },
-    // 【新增核心修复】：允许 Vite 跨目录读取上一级的 node_modules，彻底解决 KaTeX 字体 404 拦截问题
-    fs: {
-      allow: ['..'],
-    },
   },
 
   // 【核心修复】：必须把 markdown 系列包加到这里，否则开发模式会白屏

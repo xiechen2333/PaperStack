@@ -204,12 +204,12 @@ const App = () => {
     const fileInputRef = useRef(null);
     const mainContentRef = useRef(null);
     // 默认数据
-    const defaultCategories = [
+    const defaultCategories = useMemo(() => [
         { id: '1', name: '大语言模型 (LLMs)', parentId: null },
         { id: '2', name: '推理优化 (Inference)', parentId: '1' },
         { id: '3', name: '模型量化 (Quantization)', parentId: '2' },
-    ];
-    const defaultPapers = [
+    ], []);
+    const defaultPapers = useMemo(() => [
         {
             id: 'p1', categoryId: '2', title: 'Attention Is All You Need', venue: 'NeurIPS 2017', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
             problem: 'RNN/CNN 难以并行计算。\n\n**核心公式：**\n$$ Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V $$',
@@ -217,7 +217,7 @@ const App = () => {
             results: 'WMT-14 SOTA。', thoughts: 'LLM 基石。',
             status: 'read', isStarred: true, starNote: '必读经典'
         }
-    ];
+    ], []);
 
     // 初始化定时器
     useEffect(() => {
@@ -273,7 +273,7 @@ const App = () => {
             }
         };
         initData();
-    }, []);
+    }, [defaultCategories, defaultPapers]);
 
     // 数据持久化监听
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_categories', categories).catch(console.error); }, [categories, isDataLoaded]);
@@ -289,7 +289,7 @@ const App = () => {
             setExpandedSectionIds(rootIds);
             setExpandedFolders(prev => [...new Set([...prev, ...rootIds])]);
         }
-    }, [isDataLoaded, categories]);
+    }, [isDataLoaded, categories, expandedSectionIds.length]);
 
     // 统计逻辑
     const categoryCountsMap = useMemo(() => {
@@ -408,7 +408,7 @@ const App = () => {
                 await localforage.setItem('research_papers', data.papers);
                 alert(`✅ 成功恢复！`);
             }
-        } catch (err) { alert('解析失败，请检查文件。'); }
+        } catch { alert('解析失败，请检查文件。'); }
     };
 
     const toggleFolder = useCallback((id) => { setExpandedFolders(prev => prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]); }, []);
@@ -572,7 +572,7 @@ const App = () => {
         }
         // 2. 排序
         return sortPapers(res);
-    }, [papers, showFavoritesOnly, showAllPapers, deferredSearchQuery, sortPapers]);
+    }, [papers, showFavoritesOnly, deferredSearchQuery, sortPapers]);
 
     // --- 早退: 数据未加载 ---
     if (!isDataLoaded) {

@@ -14,10 +14,10 @@ const MarkdownView = ({ content }) => {
         remarkPlugins={[remarkMath]}
         rehypePlugins={[rehypeKatex]}
         components={{
-          a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline" />,
-          p: ({node, ...props}) => <p {...props} className="leading-relaxed text-[15px] text-slate-700" />,
+          a: ({...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline" />,
+          p: ({...props}) => <p {...props} className="leading-relaxed text-[15px] text-slate-700" />,
           // 分隔线样式我们依然保留在这里，因为这属于组件的基础 UI 设定
-          hr: ({node, ...props}) => <hr {...props} className="my-4 border-t border-slate-200/80" />
+          hr: ({...props}) => <hr {...props} className="my-4 border-t border-slate-200/80" />
         }}
       >
         {safeContent}
