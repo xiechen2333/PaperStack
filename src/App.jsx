@@ -173,6 +173,7 @@ const App = () => {
     const [now, setNow] = useState(Date.now());
     const [readingHistory, setReadingHistory] = useState([]);
     const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
+    const [isTagsExpanded, setIsTagsExpanded] = useState(false);
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [showAllPapers, setShowAllPapers] = useState(false);
@@ -210,7 +211,7 @@ const App = () => {
     ], []);
     const defaultPapers = useMemo(() => [
         {
-            id: 'p1', categoryId: '3', title: 'Attention Is All You Need', venue: 'NeurIPS 2017', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
+            id: 'p1', categoryId: '3', title: 'Attention Is All You Need', venue: 'NeurIPS', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
             problem: 'RNN/CNN 难以并行计算。\n\n**核心公式：**\n$$ Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V $$',
             method: '提出 Transformer 架构。',
             results: 'WMT-14 SOTA。', thoughts: 'LLM 基石。',
@@ -589,7 +590,8 @@ const App = () => {
                 p.tags.forEach(t => { map[t] = (map[t] || 0) + 1; });
             }
         });
-        return Object.entries(map).sort((a, b) => b[1] - a[1]);
+        // 从按频率排序改为按字母表排序
+        return Object.entries(map).sort((a, b) => a[0].localeCompare(b[0]));
     }, [papers]);
 
     // --- 过滤与排序 ---
@@ -781,12 +783,12 @@ const App = () => {
             {/* 侧边栏 */}
             <div className={`${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0'} flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20`}>
                 <div className="p-5 border-b border-slate-50 dark:border-slate-800/50 flex items-center gap-3 min-w-[320px]">
-                    <div 
+                    <div
                         onClick={() => setShowWelcome(true)}
                         className="bg-slate-800 text-white p-2.5 rounded-lg shadow-md cursor-pointer hover:bg-blue-600 transition-colors active:scale-95"
                         title="查看功能指南"
-                    > 
-                        <BookOpen size={22} strokeWidth={2.5} /> 
+                    >
+                        <BookOpen size={22} strokeWidth={2.5} />
                     </div>
                     <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">PaperStack <span className="text-[11px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-bold border border-blue-100 dark:border-blue-800/50">PRO</span></h1>
                 </div>
@@ -833,21 +835,29 @@ const App = () => {
                             {/* --- 标签库 --- */}
                             {allTagsMap.length > 0 && (
                                 <div className="mb-4 mt-6">
-                                    <div className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-3 flex items-center justify-between">
+                                    <div
+                                        className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-3 flex items-center justify-between cursor-pointer hover:text-slate-600 dark:hover:text-white transition-colors"
+                                        onClick={() => setIsTagsExpanded(!isTagsExpanded)}
+                                    >
                                         <div className="flex items-center gap-1"><Hash size={13} /> 个人标签库</div>
+                                        <div className={`transition-transform duration-200 ${isTagsExpanded ? 'rotate-0' : '-rotate-90'}`}>
+                                            <ChevronDown size={13} />
+                                        </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2 px-3">
-                                        {allTagsMap.map(([tag, count]) => (
-                                            <button
-                                                key={tag}
-                                                onClick={() => { setActiveTag(activeTag === tag ? null : tag); setShowAllPapers(false); setShowFavoritesOnly(false); setActiveCategoryId(null); setDisplayLimit(20); }}
-                                                className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors border ${activeTag === tag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
-                                                title={`包含 "${tag}" 的文献`}
-                                            >
-                                                {tag} <span className={`ml-1 text-[10px] ${activeTag === tag ? 'text-blue-200' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
-                                            </button>
-                                        ))}
-                                    </div>
+                                    {isTagsExpanded && (
+                                        <div className="flex flex-wrap gap-2 px-3 animate-in slide-in-from-top-1 duration-200">
+                                            {allTagsMap.map(([tag, count]) => (
+                                                <button
+                                                    key={tag}
+                                                    onClick={() => { setActiveTag(activeTag === tag ? null : tag); setShowAllPapers(false); setShowFavoritesOnly(false); setActiveCategoryId(null); setDisplayLimit(20); }}
+                                                    className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors border ${activeTag === tag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                                                    title={`包含 "${tag}" 的文献`}
+                                                >
+                                                    {tag} <span className={`ml-1 text-[10px] ${activeTag === tag ? 'text-blue-200' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </>
@@ -895,11 +905,11 @@ const App = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                    <div className={`flex items-center text-xs font-medium mr-1 whitespace-nowrap transition-all ${isSidebarOpen ? 'hidden xl:flex' : 'hidden md:flex'}`}>
-                        <div onClick={handleExportJSON} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border cursor-pointer transition-all hover:shadow-sm ${backupStatus.color}`}>
-                            {backupStatus.icon} <span className="font-semibold">{backupStatus.label}</span>
+                        <div className={`flex items-center text-xs font-medium mr-1 whitespace-nowrap transition-all ${isSidebarOpen ? 'hidden xl:flex' : 'hidden md:flex'}`}>
+                            <div onClick={handleExportJSON} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border cursor-pointer transition-all hover:shadow-sm ${backupStatus.color}`}>
+                                {backupStatus.icon} <span className="font-semibold">{backupStatus.label}</span>
+                            </div>
                         </div>
-                    </div>
 
                         {/* 恢复的排序按钮组 */}
                         <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
@@ -926,8 +936,8 @@ const App = () => {
                     </div>
                 </div>
 
-                <div 
-                    ref={mainContentRef} 
+                <div
+                    ref={mainContentRef}
                     onScroll={(e) => setShowTopButton(e.target.scrollTop > 500)}
                     className="flex-1 overflow-y-auto p-10 custom-scrollbar pb-32"
                 >
@@ -1082,14 +1092,15 @@ const App = () => {
                         if (editingPaper) setPapers(p => p.map(x => x.id === editingPaper.id ? { ...d, id: x.id } : x));
                         // 修改为：新数据在前，旧数据在后 (...p)
                         else setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
-                        
+
                         // 建议同时滚动到顶部，确保用户看到新添加的项目
                         if (mainContentRef.current) mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                        
+
                         setIsAddingPaper(false);
                         setEditingPaper(null);
                     }}
                     categoryName={categories.find(c => c.id === activeCategoryId)?.name || "未分类"}
+                    allExistingTags={allTagsMap.map(([tag]) => tag)}
                 />
             )}
 
@@ -1109,7 +1120,7 @@ const WelcomeModal = ({ onClose }) => {
                         <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
                             <BookOpen size={28} />
                         </div>
-                        <h2 className="text-2xl font-black tracking-tight leading-tight">欢迎使用<br/>PaperStack</h2>
+                        <h2 className="text-2xl font-black tracking-tight leading-tight">欢迎使用<br />PaperStack</h2>
                     </div>
                     <div className="text-blue-100/60 text-xs font-bold uppercase tracking-widest mt-10">AI Powered Insight</div>
                 </div>
@@ -1121,41 +1132,49 @@ const WelcomeModal = ({ onClose }) => {
                             </h3>
                             <p className="text-slate-600 dark:text-slate-300 text-[15px] leading-relaxed">
                                 PaperStack 不是替代 Zotero 的文献管理器，而是其<b>最佳辅助</b>——帮你把阅读灵感、打分和思绪，转化为清晰的记录。
+                                推荐配合 AI 阅读并总结论文，读完后再生成一份 Markdown 笔记直接粘贴进来。
                             </p>
                         </section>
-
                         <section>
                             <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
-                                💡 推荐工作流
+                                💡 管理模式
                             </h3>
                             <div className="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
                                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                    配合 AI 阅读并总结论文，读完后再生成一份 Markdown 笔记直接<b>粘贴进来</b>。配上评分和 Ideas，科研记录从此变轻松。
+                                    可在<b>左侧边栏</b>恢复备份、调整顺序或新增文件夹。<b>右侧卡片上</b>(文件夹和文献)可进行移动、删除或重命名。
                                 </p>
                             </div>
                         </section>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"> {/* 加了 mt-4 增加一点上下间距，你可以根据需要保留或删除 */}
                             <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><ListFilter size={12} /> 管理说明</div>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed"><b>管理模式</b>下可恢复备份、调整顺序或新增文件夹。鼠标<b>悬停在文献卡片上</b>可进行移动、删除或重命名。</p>
+                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
+                                    <ListFilter size={12} /> 快速上手
+                                </div>
+                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                                    双击论文概览、实验结果等子卡片，或点击四色图标，可折叠展开卡片。
+                                    本说明可在页面左上角重新打开。
+                                </p> {/* 就是这里！之前漏掉了这个闭合标签 */}
                             </div>
                             <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <div className="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5"><Globe size={12} /> 个人隐私</div>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">数据仅存本地浏览器。请养成定时<b>导出备份 (JSON)</b> 的好习惯。</p>
+                                <div className="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
+                                    <Globe size={12} /> 个人隐私
+                                </div>
+                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                                    数据仅存本地浏览器。请养成<b>定时导出备份</b> 的好习惯。
+                                </p>
                             </div>
                         </div>
-
                         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <a 
-                                href="https://github.com/xiechen2333/PaperStack/blob/main/README.md" 
-                                target="_blank" 
+                            <a
+                                href="https://github.com/xiechen2333/PaperStack/blob/main/README.md"
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 dark:text-blue-400 text-sm font-bold flex items-center gap-1.5 hover:underline decoration-2 underline-offset-4"
                             >
                                 <ExternalLink size={16} /> 查看完整 GitHub 文档
                             </a>
-                            <button 
+                            <button
                                 onClick={onClose}
                                 className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-2xl hover:bg-slate-800 dark:hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/10 active:scale-95"
                             >
@@ -1410,15 +1429,23 @@ const CompactSection = ({ icon, title, color, content }) => {
 };
 
 // --- 组件: ExpertPaperModal (编辑/新增弹窗) ---
-const ExpertPaperModal = ({ paper, onClose, onSave }) => {
+const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
     const defaultState = { title: '', venue: '', year: new Date().getFullYear().toString(), link: '', problem: '', method: '', results: '', thoughts: '', status: 'todo', starNote: '', isStarred: false, rating: 0, ratedDate: null, tags: [] };
     const [d, setD] = useState({ ...defaultState, ...(paper || {}) });
     const initialData = useRef(JSON.stringify({ ...defaultState, ...(paper || {}) }));
     const hasChanges = () => JSON.stringify(d) !== initialData.current;
     const [tagInput, setTagInput] = useState('');
 
-    const handleSafeClose = () => { 
-        if (hasChanges()) { 
+    const tagSuggestions = useMemo(() => {
+        if (!tagInput.trim()) return [];
+        const input = tagInput.toLowerCase();
+        return allExistingTags.filter(tag =>
+            tag.toLowerCase().includes(input) && !(d.tags || []).includes(tag)
+        ).slice(0, 5); // 限制显示5个建议
+    }, [tagInput, allExistingTags, d.tags]);
+
+    const handleSafeClose = () => {
+        if (hasChanges()) {
             toast((t) => (
                 <div className="flex flex-col gap-3">
                     <p className="font-bold text-red-600">放弃未保存的修改？</p>
@@ -1430,7 +1457,7 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                 </div>
             ), { duration: Infinity, id: 'close-confirm' });
         } else {
-            onClose(); 
+            onClose();
             toast.dismiss('close-confirm');
         }
     };
@@ -1463,18 +1490,18 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                                     <span className="ml-3 w-8 text-center font-bold text-2xl text-slate-700 dark:text-slate-200">{d.rating > 0 ? d.rating : '-'}</span>
                                 </div>
                             </div>
-                            
+
                             <div className="flex flex-col gap-2 relative">
                                 <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1"><Hash size={13} /> 文献标签</label>
                                 <div className="flex flex-wrap items-center gap-2 p-3 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 rounded-xl min-h-[50px] focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500 transition-all">
                                     {(d.tags || []).map(tag => (
                                         <span key={tag} className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-[13px] font-bold rounded-lg border border-blue-100 dark:border-blue-800/50 group">
                                             {tag}
-                                            <button onClick={() => setD({...d, tags: d.tags.filter(t => t !== tag)})} className="text-blue-400 dark:text-blue-500 hover:text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full p-0.5 transition-colors" title="移除标签"><X size={14} /></button>
+                                            <button onClick={() => setD({ ...d, tags: d.tags.filter(t => t !== tag) })} className="text-blue-400 dark:text-blue-500 hover:text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full p-0.5 transition-colors" title="移除标签"><X size={14} /></button>
                                         </span>
                                     ))}
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
                                         onKeyDown={(e) => {
@@ -1482,14 +1509,36 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                                                 e.preventDefault();
                                                 const newTag = tagInput.trim();
                                                 if (newTag && !(d.tags || []).includes(newTag)) {
-                                                    setD({...d, tags: [...(d.tags || []), newTag]});
+                                                    setD({ ...d, tags: [...(d.tags || []), newTag] });
                                                     setTagInput('');
                                                 }
                                             }
                                         }}
-                                        placeholder="输入新标签并按回车..." 
+                                        placeholder="输入新标签并按回车..."
                                         className="flex-1 bg-transparent min-w-[140px] outline-none text-[15px] font-medium text-slate-700 dark:text-slate-200 placeholder:text-slate-300 dark:placeholder:text-slate-550 ml-1"
                                     />
+                                    {tagSuggestions.length > 0 && (
+                                        <div className="absolute left-0 top-full mt-1 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-[60] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                            <div className="p-1 px-2 border-b border-slate-50 dark:border-slate-700/50 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                                                推荐标签
+                                            </div>
+                                            <div className="p-2 flex flex-wrap gap-2">
+                                                {tagSuggestions.map(tag => (
+                                                    <button
+                                                        key={tag}
+                                                        onClick={() => {
+                                                            setD({ ...d, tags: [...(d.tags || []), tag] });
+                                                            setTagInput('');
+                                                        }}
+                                                        className="px-3 py-1.5 bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 text-[13px] font-bold rounded-lg border border-slate-200 dark:border-slate-600/50 hover:border-blue-200 dark:hover:border-blue-800 transition-all flex items-center gap-1.5"
+                                                    >
+                                                        <PlusCircle size={14} />
+                                                        {tag}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -1515,7 +1564,7 @@ const ExpertPaperModal = ({ paper, onClose, onSave }) => {
                             <InputBlock label="实验结果 (Results)" icon={<Scale size={18} />} color="emerald" value={d.results} onChange={v => setD({ ...d, results: v })} placeholder="实验结果和优缺点" />
                             <InputBlock label="思考启发 (Thoughts)" icon={<Lightbulb size={18} />} color="amber" value={d.thoughts} onChange={v => setD({ ...d, thoughts: v })} placeholder="总结、局限性与未来展望" />
                         </div>
-                        
+
                         <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs px-2">
                             <History size={14} /> <span>所有更改将在点击“保存笔记”后同步至本地数据库</span>
                         </div>
