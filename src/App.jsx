@@ -432,7 +432,18 @@ const App = () => {
         } catch { toast.error('解析失败，请检查文件。'); }
     };
 
-    const toggleFolder = useCallback((id) => { setExpandedFolders(prev => prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]); }, []);
+    const toggleFolder = useCallback((id) => {
+        setExpandedFolders(prev => {
+            const isExpanding = !prev.includes(id);
+            // 同步右侧
+            setExpandedSectionIds(sectionPrev =>
+                isExpanding
+                    ? [...new Set([...sectionPrev, id])]
+                    : sectionPrev.filter(sid => sid !== id)
+            );
+            return isExpanding ? [...prev, id] : prev.filter(fid => fid !== id);
+        });
+    }, []);
 
     const updateHistory = useCallback((paperId) => {
         setReadingHistory(prev => {
@@ -452,8 +463,13 @@ const App = () => {
     }, [updateHistory]);
 
     const toggleSection = (id) => {
+        // 1. 先看右侧现在是什么状态
         const isCurrentlyExpanded = expandedSectionIds.includes(id);
+
+        // 2. 更新右侧
         setExpandedSectionIds(prev => isCurrentlyExpanded ? prev.filter(sid => sid !== id) : [...prev, id]);
+
+        // 3. 强制左侧做同样的动作：右边收起左边就收起，右边展开左边就展开
         setExpandedFolders(prev =>
             isCurrentlyExpanded
                 ? prev.filter(fid => fid !== id)
