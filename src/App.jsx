@@ -177,7 +177,7 @@ const App = () => {
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [showAllPapers, setShowAllPapers] = useState(false);
-    const [activeTag, setActiveTag] = useState(null);
+    const [activeTags, setActiveTags] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const deferredSearchQuery = useDeferredValue(searchQuery);
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: '' });
@@ -241,7 +241,7 @@ const App = () => {
             // 使用 behavior: 'auto' 可以瞬间跳回顶部，觉得突兀可以改成 'smooth'
             mainContentRef.current.scrollTo({ top: 0, behavior: 'auto' });
         }
-    }, [activeCategoryId, showFavoritesOnly, showAllPapers, searchQuery, activeTag]);
+    }, [activeCategoryId, showFavoritesOnly, showAllPapers, searchQuery, activeTags]);
 
     // 初始化数据加载 - 优化为并行加载 (Promise.all)
     useEffect(() => {
@@ -462,7 +462,7 @@ const App = () => {
     };
 
     const handleCategorySelect = useCallback((id) => {
-        setActiveCategoryId(id);
+        setActiveCategoryId(prev => prev === id ? null : id);
         setShowFavoritesOnly(false);
         setShowAllPapers(false);
         setExpandedPaperIds([]);
@@ -474,6 +474,7 @@ const App = () => {
         setShowFavoritesOnly(false);
         setShowAllPapers(true);
         setSearchQuery('');
+        setActiveTags([]);
         setExpandedPaperIds([]);
         setDisplayLimit(20); // 性能优化：重置分页
     }, []);
@@ -602,19 +603,32 @@ const App = () => {
         return Object.entries(map).sort((a, b) => a[0].localeCompare(b[0]));
     }, [papers]);
 
+    const getAllDescendantIds = useCallback((rootId) => {
+        let ids = [rootId];
+        const children = categories.filter(c => c.parentId === rootId);
+        children.forEach(child => {
+            ids = [...ids, ...getAllDescendantIds(child.id)];
+        });
+        return ids;
+    }, [categories]);
+
     // --- 过滤与排序 ---
     const filteredFlatPapers = useMemo(() => {
         let res = papers;
         // 1. 过滤
         if (showFavoritesOnly) res = res.filter(p => p.isStarred);
-        if (activeTag) res = res.filter(p => p.tags && p.tags.includes(activeTag));
+        if (activeTags.length > 0) res = res.filter(p => p.tags && activeTags.every(t => p.tags.includes(t)));
+        if (activeCategoryId) {
+            const descendantIds = getAllDescendantIds(activeCategoryId);
+            res = res.filter(p => descendantIds.includes(p.categoryId));
+        }
         if (deferredSearchQuery) {
             const q = deferredSearchQuery.toLowerCase();
             res = res.filter(p => p.title.toLowerCase().includes(q) || p.venue.toLowerCase().includes(q) || p.starNote?.toLowerCase().includes(q) || (p.tags && p.tags.some(t => t.toLowerCase().includes(q))));
         }
         // 2. 排序
         return sortPapers(res);
-    }, [papers, showFavoritesOnly, activeTag, deferredSearchQuery, sortPapers]);
+    }, [papers, showFavoritesOnly, activeTags, activeCategoryId, deferredSearchQuery, sortPapers, getAllDescendantIds]);
 
     // --- 说明导览状态 ---
     const [showWelcome, setShowWelcome] = useState(false);
@@ -646,14 +660,7 @@ const App = () => {
     }
 
     // --- 辅助渲染函数 ---
-    const getAllDescendantIds = (rootId) => {
-        let ids = [rootId];
-        const children = categories.filter(c => c.parentId === rootId);
-        children.forEach(child => {
-            ids = [...ids, ...getAllDescendantIds(child.id)];
-        });
-        return ids;
-    };
+
 
     const renderMoveCategoryModalTree = (parentId = null, depth = 0, excludeIds = []) => {
         const children = categories.filter(c => c.parentId === parentId);
@@ -803,10 +810,10 @@ const App = () => {
                 <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-[320px]">
                     {!isManageMode && (
                         <>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTag(null); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); }} >
                                 <Globe size={18} className={`mr-3 ${showAllPapers ? 'text-slate-300' : 'text-slate-400 dark:text-slate-500'}`} /> 全部文献 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showAllPapers ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{papers.length}</span>
                             </div>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTag(null); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); }} >
                                 <Heart size={18} className={`mr-3 ${showFavoritesOnly ? 'text-rose-500 fill-rose-500' : 'text-slate-400 dark:text-slate-500'}`} /> 我的收藏 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showFavoritesOnly ? 'bg-rose-100/50 dark:bg-rose-900/50 text-rose-800 dark:text-rose-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{starredCount}</span>
                             </div>
 
@@ -857,11 +864,17 @@ const App = () => {
                                             {allTagsMap.map(([tag, count]) => (
                                                 <button
                                                     key={tag}
-                                                    onClick={() => { setActiveTag(activeTag === tag ? null : tag); setShowAllPapers(false); setShowFavoritesOnly(false); setActiveCategoryId(null); setDisplayLimit(20); }}
-                                                    className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors border ${activeTag === tag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                                                    onClick={() => {
+                                                        setActiveTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+                                                        setShowAllPapers(false);
+                                                        setShowFavoritesOnly(false);
+                                                        // 不再清除 activeCategoryId，允许带标签浏览文件夹
+                                                        setDisplayLimit(20);
+                                                    }}
+                                                    className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors border ${activeTags.includes(tag) ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
                                                     title={`包含 "${tag}" 的文献`}
                                                 >
-                                                    {tag} <span className={`ml-1 text-[10px] ${activeTag === tag ? 'text-blue-200' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
+                                                    {tag} <span className={`ml-1 text-[10px] ${activeTags.includes(tag) ? 'text-blue-200' : 'text-slate-400 dark:text-slate-500'}`}>{count}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -955,16 +968,32 @@ const App = () => {
                                 {searchQuery ? <> <Search size={28} className="text-blue-600 dark:text-blue-400" /> 搜索: "{searchQuery}" </> :
                                     showFavoritesOnly ? <> <Heart size={28} className="text-rose-500 fill-rose-500" /> 我收藏的文献 </> :
                                         showAllPapers ? <> <ListFilter size={28} className="text-blue-600 dark:text-blue-400" /> 全部文献列表 </> :
-                                            activeTag ? <> <Hash size={28} className="text-blue-600 dark:text-blue-400" /> {activeTag} </> :
+                                            activeTags.length > 0 ? (
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <Hash size={28} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                                    {activeTags.map(tag => (
+                                                        <span key={tag} className="bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-lg text-lg border border-blue-100 dark:border-blue-800 flex items-center gap-1.5">
+                                                            {tag}
+                                                            <X size={14} className="cursor-pointer hover:text-blue-800" onClick={(e) => { e.stopPropagation(); setActiveTags(prev => prev.filter(t => t !== tag)); }} />
+                                                        </span>
+                                                    ))}
+                                                    {activeCategoryId && <span className="text-slate-300 dark:text-slate-600 mx-2">in</span>}
+                                                    {activeCategoryId && (
+                                                        <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg text-lg border border-slate-200 dark:border-slate-700 flex items-center gap-2">
+                                                            <Folder size={18} /> {getCategoryName(activeCategoryId)}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ) :
                                                 activeCategoryId ? <> <Folder size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
                                                     <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
-                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium"> {searchQuery || showFavoritesOnly || showAllPapers || activeTag ? `共 ${filteredFlatPapers.length} 篇` : '您的个人知识库'} </p>
+                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium"> {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? `共 ${filteredFlatPapers.length} 篇` : '您的个人知识库'} </p>
                         </div>
                         {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} />}
                     </div>
 
-                    {searchQuery || showFavoritesOnly || showAllPapers || activeTag ? (
+                    {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? (
                         <div className="grid grid-cols-1 gap-5">
                             {/* 性能优化核心：只渲染前 displayLimit 个元素 (Virtualization/Pagination) */}
                             {filteredFlatPapers.slice(0, displayLimit).map(p => (
@@ -1263,7 +1292,7 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                 </div>
             )}
 
-            <div className="p-6 cursor-pointer flex items-start gap-5 group" onClick={handleToggle}>
+            <div className="px-6 pt-6 pb-5 cursor-pointer flex items-start gap-5 group" onClick={handleToggle}>
                 <div className={`mt-1.5 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-500 ease-out ${isExpanded ? 'bg-blue-100 text-blue-600 rotate-90' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
                     <ChevronRight size={16} strokeWidth={2.5} />
                 </div>
@@ -1336,8 +1365,8 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
             </div>
 
             {isExpanded && (
-                <div className="px-6 pb-6 pt-2 animate-in slide-in-from-top-2 duration-500">
-                    <div className="grid grid-cols-1 gap-4 pl-0 border-t border-slate-100/50 pt-4 mt-2">
+                <div className="px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-500">
+                    <div className="grid grid-cols-1 gap-4 pl-0 border-t border-slate-100 dark:border-slate-800/40 pt-5 mt-1">
                         <CompactSection icon={<Target size={16} />} title="论文概览" color="rose" content={paper.problem} />
                         <CompactSection icon={<Zap size={16} />} title="核心方法" color="blue" content={paper.method} />
                         <CompactSection icon={<Scale size={16} />} title="实验结果" color="emerald" content={paper.results} />
@@ -1351,97 +1380,104 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
 
 const StatusDot = ({ filled, color }) => (<div className={`w-2.5 h-2.5 rounded-full ${filled ? color : 'bg-slate-200'}`} />);
 
-// --- 组件: CompactSection (交互终极版 - 紧凑型回滚) ---
+// --- 组件: CompactSection (像素级视觉对齐 + ICON右移版) ---
 const CompactSection = ({ icon, title, color, content }) => {
     const [isOpen, setIsOpen] = useState(true);
     const sectionRef = useRef(null);
     const hasContent = content && content.trim().length > 5;
-    const colors = {
-        rose: { border: 'border-l-rose-400', icon: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/20' },
-        blue: { border: 'border-l-blue-400', icon: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-        emerald: { border: 'border-l-emerald-400', icon: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
-        amber: { border: 'border-l-amber-400', icon: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-    };
-    const theme = colors[color];
-    const emptyStyle = 'bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 border-dashed opacity-70';
-    const activeStyle = `bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 border-l-4 ${theme.border} shadow-sm`;
 
-    // 收起子栏目时，将该栏目标题滚动回视野，避免内容消失后视图错位
+    const colors = {
+        rose: { bar: 'bg-rose-400', icon: 'text-rose-500', bg: 'bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40' },
+        blue: { bar: 'bg-blue-400', icon: 'text-blue-500', bg: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40' },
+        emerald: { bar: 'bg-emerald-400', icon: 'text-emerald-500', bg: 'bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40' },
+        amber: { bar: 'bg-amber-400', icon: 'text-amber-500', bg: 'bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/20 dark:hover:bg-amber-900/40' },
+    };
+
+    const theme = colors[color];
+
     useEffect(() => {
         if (!isOpen && hasContent) {
             sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }, [isOpen, hasContent]);
 
-    const handleDoubleClick = (e) => {
-        if (hasContent) {
-            e.stopPropagation();
-            setIsOpen(prev => !prev);
-        }
-    };
-
-    const handleLeftClick = (e) => {
+    const toggle = (e) => {
         if (!hasContent) return;
-        e.stopPropagation();
+        if (e) e.stopPropagation();
         setIsOpen(prev => !prev);
     };
 
     return (
         <div
             ref={sectionRef}
-            className={`rounded-lg transition-all duration-300 overflow-hidden relative scroll-mt-20 ${hasContent ? activeStyle : emptyStyle}`}
-            onDoubleClick={handleDoubleClick}
+            className={`relative scroll-mt-20 group ${!hasContent ? 'opacity-70' : ''}`}
+            onDoubleClick={toggle}
         >
-            {hasContent && isOpen && (
+            {/* 1. 垫底彩色拉出层 */}
+            {hasContent && (
                 <div
-                    className="absolute left-0 top-0 bottom-0 w-6 z-20 cursor-pointer hover:bg-black/5 transition-colors"
-                    title="单击收起"
-                    onClick={handleLeftClick}
+                    onClick={toggle}
+                    className={`
+                        absolute z-0 cursor-pointer 
+                        rounded-lg
+                        transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+                        ${theme.bar}
+                        top-0 bottom-0
+                        ${isOpen
+                            ? '-left-4 w-[40px] opacity-100 shadow-sm'
+                            : '-left-1.5 w-[24px] opacity-80 shadow-none'
+                        }
+                    `}
+                    title={isOpen ? "点击折叠" : "点击展开"}
                 />
             )}
 
-            <div className="flex items-center gap-3 px-5 py-3 select-none relative z-10">
-                <div
-                    className={`p-1.5 rounded-md transition-transform 
-                  ${hasContent
-                            ? 'cursor-pointer hover:brightness-95 active:scale-95'
-                            : 'bg-slate-200 cursor-not-allowed'
-                        }
-                  ${hasContent ? theme.bg : ''}
-              `}
-                    onClick={handleLeftClick}
-                >
-                    {React.cloneElement(icon, { size: 16, className: hasContent ? theme.icon : 'text-slate-400' })}
+            {/* 2. 前景白色内容卡片层 */}
+            <div
+                className={`
+                    relative z-10 overflow-hidden rounded-lg 
+                    transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+                    ${hasContent
+                        ? `bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 ${isOpen ? 'shadow-[6px_8px_16px_-6px_rgba(0,0,0,0.1)] dark:shadow-[6px_8px_16px_-6px_rgba(0,0,0,0.4)]' : 'shadow-sm'}`
+                        : 'bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700/50'
+                    }
+                `}
+            >
+                {/* 标题栏：左侧空白增加到 pl-3，让 ICON 向右移动 */}
+                <div className="flex items-center gap-3 py-3 pl-3 pr-5 select-none relative z-10">
+                    <div
+                        // 加入 translate-y-[1px] 强行向下微调1像素，解决视觉重心偏高的问题
+                        className={`flex items-center justify-center p-1.5 rounded-md transition-all duration-300 translate-y-[1px]
+                            ${hasContent ? 'cursor-pointer active:scale-95' : 'bg-slate-200 dark:bg-slate-700 cursor-not-allowed'}
+                            ${hasContent ? theme.bg : ''}
+                        `}
+                        onClick={hasContent ? toggle : undefined}
+                    >
+                        {React.cloneElement(icon, { size: 16, className: hasContent ? theme.icon : 'text-slate-400 dark:text-slate-500' })}
+                    </div>
+
+                    <span
+                        // 移除 py-1，加入 leading-snug 收缩行高，让 Flex 垂直居中计算更精确
+                        className={`font-bold text-base leading-snug tracking-tight flex-1 transition-colors duration-300 ${hasContent ? (isOpen ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-200') : 'text-slate-400 dark:text-slate-500'}`}
+                    >
+                        {title}
+                    </span>
                 </div>
 
-                <span className={`font-bold text-[15px] tracking-tight flex-1 py-1 ${hasContent ? 'text-slate-800 dark:text-slate-100 cursor-default' : 'text-slate-400 dark:text-slate-500'}`}>
-                    {title}
-                </span>
-
-                {hasContent && (
-                    <div className={`transition-transform duration-200 ${isOpen ? 'rotate-0' : '-rotate-90'} text-slate-300 dark:text-slate-500 pointer-events-none`}>
-                        <ChevronDown size={16} />
+                {/* 展开的内容区：配合头部的 pl-3，这里计算为 pl-[52px] 保持完美对齐 */}
+                {hasContent && isOpen && (
+                    <div className="px-5 pb-5 pt-1 pl-[52px] animate-in fade-in slide-in-from-top-1 duration-500 relative z-10 transform-gpu">
+                        <Suspense fallback={
+                            <div className="w-full animate-pulse space-y-2 pt-1">
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-3/4"></div>
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-full"></div>
+                            </div>
+                        }>
+                            <MarkdownView content={content} />
+                        </Suspense>
                     </div>
                 )}
             </div>
-
-            {hasContent && isOpen && (
-                <div className="px-5 pb-5 pt-1 pl-[3.8rem] animate-in fade-in duration-300 relative z-10">
-                    <Suspense 
-                        fallback={
-                            // 👇 新增：明暗呼吸感的骨架屏加载效果
-                            <div className="w-full animate-pulse space-y-2.5 pt-1">
-                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-3/4"></div>
-                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-full"></div>
-                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-5/6"></div>
-                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-4/5"></div>
-                            </div>
-                        }
-                    >
-                        <MarkdownView content={content} />
-                    </Suspense>
-                </div>
-            )}
         </div>
     );
 };
