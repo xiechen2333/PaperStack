@@ -451,7 +451,15 @@ const App = () => {
         });
     }, [updateHistory]);
 
-    const toggleSection = (id) => { setExpandedSectionIds(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]); };
+    const toggleSection = (id) => {
+        const isCurrentlyExpanded = expandedSectionIds.includes(id);
+        setExpandedSectionIds(prev => isCurrentlyExpanded ? prev.filter(sid => sid !== id) : [...prev, id]);
+        setExpandedFolders(prev =>
+            isCurrentlyExpanded
+                ? prev.filter(fid => fid !== id)
+                : [...new Set([...prev, id])]
+        );
+    };
 
     const handleCategorySelect = useCallback((id) => {
         setActiveCategoryId(id);
