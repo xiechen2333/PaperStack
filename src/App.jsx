@@ -1270,7 +1270,7 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
 
                 <div className="flex-1 min-w-0 pt-0.5">
                     <div className="flex items-start justify-between gap-6">
-                        <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight truncate pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-slate-200'}`}> {paper.title} </h3>
+                        <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700 dark:text-blue-400 whitespace-normal break-words' : 'text-slate-800 dark:text-slate-200 truncate'}`}> {paper.title} </h3>
                         {!isExpanded && (
                             <div className="flex items-center gap-1.5 flex-shrink-0 mt-2 animate-in fade-in duration-500">
                                 <StatusDot filled={hasContent(paper.problem)} color="bg-rose-400" />
@@ -1442,7 +1442,16 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
     const [d, setD] = useState({ ...defaultState, ...(paper || {}) });
     const initialData = useRef(JSON.stringify({ ...defaultState, ...(paper || {}) }));
     const hasChanges = () => JSON.stringify(d) !== initialData.current;
+    const titleRef = useRef(null);
     const [tagInput, setTagInput] = useState('');
+
+    useEffect(() => {
+        if (titleRef.current) {
+            // 确保光标在最左侧，且视图也滚动到最左侧
+            titleRef.current.setSelectionRange(0, 0);
+            titleRef.current.scrollLeft = 0;
+        }
+    }, []);
 
     const tagSuggestions = useMemo(() => {
         if (!tagInput.trim()) return [];
@@ -1498,8 +1507,23 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                                     <span className="ml-3 w-8 text-center font-bold text-2xl text-slate-700 dark:text-slate-200">{d.rating > 0 ? d.rating : '-'}</span>
                                 </div>
                             </div>
+                            {d.isStarred && (
+                                <div className="animate-in slide-in-from-top-2 mb-2">
+                                    <label className="text-xs font-bold text-rose-500 mb-1 block flex items-center gap-1"><Heart size={12} className="fill-current" /> 收藏备注</label>
+                                    <input type="text" className="w-full px-5 py-3 bg-rose-50 border border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-500/20 outline-none text-[15px] text-rose-900 font-medium placeholder-rose-900/30 transition-all" placeholder="为什么收藏这篇论文..." value={d.starNote || ''} onChange={(e) => setD({ ...d, starNote: e.target.value })} />
+                                </div>
+                            )}
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">标题</label>
+                                <input ref={titleRef} autoFocus type="text" className="w-full px-5 py-4 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-bold text-slate-900 dark:text-slate-100 text-xl shadow-sm transition-all" placeholder="论文标题..." value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">会议/来源</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. NeurIPS" value={d.venue} onChange={(e) => setD({ ...d, venue: e.target.value })} /> </div>
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">年份</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. 2024" value={d.year} onChange={(e) => setD({ ...d, year: e.target.value })} /> </div>
+                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">链接</label> <input type="text" placeholder="https://..." className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors text-blue-600 dark:text-blue-400" value={d.link} onChange={(e) => setD({ ...d, link: e.target.value })} /> </div>
+                            </div>
 
-                            <div className="flex flex-col gap-2 relative">
+                            <div className="flex flex-col gap-2 relative animate-in slide-in-from-top-2">
                                 <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1 flex items-center gap-1"><Hash size={13} /> 文献标签</label>
                                 <div className="flex flex-wrap items-center gap-2 p-3 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 rounded-xl min-h-[50px] focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500 transition-all">
                                     {(d.tags || []).map(tag => (
@@ -1548,22 +1572,6 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                                         </div>
                                     )}
                                 </div>
-                            </div>
-
-                            {d.isStarred && (
-                                <div className="animate-in slide-in-from-top-2 mb-2">
-                                    <label className="text-xs font-bold text-rose-500 mb-1 block flex items-center gap-1"><Heart size={12} className="fill-current" /> 收藏备注</label>
-                                    <input type="text" className="w-full px-5 py-3 bg-rose-50 border border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-500/20 outline-none text-[15px] text-rose-900 font-medium placeholder-rose-900/30 transition-all" placeholder="为什么收藏这篇论文..." value={d.starNote || ''} onChange={(e) => setD({ ...d, starNote: e.target.value })} />
-                                </div>
-                            )}
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">标题</label>
-                                <input autoFocus type="text" className="w-full px-5 py-4 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-bold text-slate-900 dark:text-slate-100 text-xl shadow-sm transition-all" placeholder="论文标题..." value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} />
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">会议/来源</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. NeurIPS" value={d.venue} onChange={(e) => setD({ ...d, venue: e.target.value })} /> </div>
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">年份</label> <input type="text" className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] dark:text-slate-200 focus:border-blue-500 transition-colors" placeholder="e.g. 2024" value={d.year} onChange={(e) => setD({ ...d, year: e.target.value })} /> </div>
-                                <div className="space-y-1"> <label className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">链接</label> <input type="text" placeholder="https://..." className="w-full px-5 py-3 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600/50 rounded-lg outline-none text-[15px] focus:border-blue-500 transition-colors text-blue-600 dark:text-blue-400" value={d.link} onChange={(e) => setD({ ...d, link: e.target.value })} /> </div>
                             </div>
                         </div>
                         <div className="space-y-8">
