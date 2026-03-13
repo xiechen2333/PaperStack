@@ -1427,7 +1427,17 @@ const CompactSection = ({ icon, title, color, content }) => {
 
             {hasContent && isOpen && (
                 <div className="px-5 pb-5 pt-1 pl-[3.8rem] animate-in fade-in duration-300 relative z-10">
-                    <Suspense fallback={<div className="text-xs text-slate-400 flex items-center gap-1"><Loader2 className="animate-spin" size={10} /> Loading...</div>}>
+                    <Suspense 
+                        fallback={
+                            // 👇 新增：明暗呼吸感的骨架屏加载效果
+                            <div className="w-full animate-pulse space-y-2.5 pt-1">
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-3/4"></div>
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-full"></div>
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-5/6"></div>
+                                <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-4/5"></div>
+                            </div>
+                        }
+                    >
                         <MarkdownView content={content} />
                     </Suspense>
                 </div>
