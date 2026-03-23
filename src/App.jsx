@@ -159,6 +159,21 @@ const ManagementToolbar = ({ onManageAction, categoryId }) => {
     );
 };
 
+// --- 辅助函数: 获取某分类的所有祖先 ID ---
+const getAncestorIds = (categoryId, categories) => {
+    const ancestors = [];
+    let currentId = categoryId;
+    let safetyCount = 0;
+    while (currentId && safetyCount < 20) {
+        safetyCount++;
+        const cat = categories.find(c => c.id === currentId);
+        if (!cat || !cat.parentId) break;
+        ancestors.push(cat.parentId);
+        currentId = cat.parentId;
+    }
+    return ancestors;
+};
+
 // --- 主组件: App ---
 const App = () => {
     // 数据状态
@@ -186,6 +201,10 @@ const App = () => {
     const [expandedSectionIds, setExpandedSectionIds] = useState([]);
     const [isManageMode, setIsManageMode] = useState(false);
     const [showTopButton, setShowTopButton] = useState(false);
+    // 知识库名称（可自定义）
+    const [libraryName, setLibraryName] = useState('您的个人知识库');
+    const [isEditingLibraryName, setIsEditingLibraryName] = useState(false);
+    const libraryNameInputRef = useRef(null);
 
     // --- 性能优化状态: 分页显示 ---
     const [displayLimit, setDisplayLimit] = useState(20);
@@ -212,11 +231,12 @@ const App = () => {
     const defaultPapers = useMemo(() => [
         {
             id: 'p1', categoryId: '3', title: 'Attention Is All You Need', venue: 'NeurIPS', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
-            problem: 'RNN/CNN 难以并行计算。\n\n**核心公式：**\n$$ Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V $$',
-            method: '提出 Transformer 架构。',
-            results: 'WMT-14 SOTA。', thoughts: 'LLM 基石。',
-            status: 'read', isStarred: true, starNote: '必读经典',
-            rating: 10, ratedDate: new Date().toISOString(), tags: ['Machine Learning']
+            problem: `本文提出的核心问题是：现有 RNN/LSTM 等序列模型依赖顺序计算，无法在序列长度维度并行化，且长距离依赖建模效果随序列增长而退化。\n\n论文提出 **Transformer** 架构，完全抛弃卷积和循环结构，仅基于注意力机制（Attention Mechanism）进行编解码，天然支持并行计算。\n\n**Scaled Dot-Product Attention 核心公式：**\n$$ Attention(Q, K, V) = softmax\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V $$\n\n其中 $d_k$ 为 Key 的维度，缩放因子 $\\sqrt{d_k}$ 用于防止点积过大导致 softmax 梯度消失。`,
+            method: `Transformer 由 **编码器（Encoder）** 和 **解码器（Decoder）** 各 6 层堆叠组成。\n\n**Multi-Head Attention（多头注意力）：** 将 Q/K/V 分别线性投影到 $h=8$ 个子空间，并行计算注意力后拼接融合，让模型同时关注来自不同表示子空间的信息：\n$$ MultiHead(Q,K,V) = Concat(head_1,...,head_h)W^O $$\n\n**Position-wise FFN：** 每个位置独立经过两层线性变换 + ReLU，增强非线性表达能力。\n\n**Positional Encoding：** 使用正弦/余弦函数编码位置信息以注入序列顺序。\n\n**残差连接 + Layer Norm** 应用于每个子层，保证训练稳定性。`,
+            results: `在机器翻译基准 **WMT 2014 英德** 任务上达到 **28.4 BLEU**，超越此前所有模型（含集成模型），训练成本仅为对比方法的一小部分（约 3.5 天 8 GPU）。\n\n**WMT 2014 英法**：41.0 BLEU，创当时 SOTA。\n\n**训练效率：** 将序列建模的最大路径长度从 $O(n)$ 降至 $O(1)$，极大加速了长距离依赖的建模。\n\n**消融实验** 证明多头数量、注意力维度等超参数均显著影响效果，单头注意力明显劣于多头。`,
+            thoughts: `这篇论文是现代 NLP / LLM 时代的绝对基石。GPT、BERT、LLaMA 等一切大语言模型的架构核心都是 Transformer。\n\n**关键洞察：** "Attention is all you need" 不只是标题噱头，而是一个重要结论——在序列建模中，显式的注意力机制足以替代归纳偏置更强但并行性差的 RNN 结构。\n\n**值得思考的局限性：**\n- Self-attention 的复杂度为 $O(n^2)$，对超长序列代价高昂，引出了后续 Longformer、Flash Attention 等工作。\n- Positional Encoding 是固定的，对位置外推能力有限（引出 RoPE、ALiBi 等改进）。\n\n**推荐阅读路径：** Attention Is All You Need → BERT → GPT-2 → T5 → GPT-3 → LLaMA。`,
+            status: 'read', isStarred: true, starNote: '必读经典，LLM 时代的架构起点',
+            rating: 10, ratedDate: new Date().toISOString(), tags: ['Transformer', 'Attention', 'NLP', 'Machine Learning']
         }
     ], []);
 
@@ -248,12 +268,15 @@ const App = () => {
         const initData = async () => {
             try {
                 // 性能优化：并行读取所有数据
-                const [dbCats, dbPapers, dbHistory, dbBackupTime] = await Promise.all([
+                const [dbCats, dbPapers, dbHistory, dbBackupTime, dbLibraryName] = await Promise.all([
                     localforage.getItem('research_categories'),
                     localforage.getItem('research_papers'),
                     localforage.getItem('research_history'),
-                    localforage.getItem('last_backup_timestamp')
+                    localforage.getItem('last_backup_timestamp'),
+                    localforage.getItem('library_name')
                 ]);
+
+                if (dbLibraryName) setLibraryName(dbLibraryName);
 
                 if (dbCats && Array.isArray(dbCats)) {
                     setCategories(dbCats);
@@ -286,10 +309,12 @@ const App = () => {
         initData();
     }, [defaultCategories, defaultPapers]);
 
+
     // 数据持久化监听
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_categories', categories).catch(console.error); }, [categories, isDataLoaded]);
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_papers', papers).catch(console.error); }, [papers, isDataLoaded]);
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_history', readingHistory).catch(console.error); }, [readingHistory, isDataLoaded]);
+    useEffect(() => { if (isDataLoaded) localforage.setItem('library_name', libraryName).catch(console.error); }, [libraryName, isDataLoaded]);
 
     useEffect(() => {
         if (isDataLoaded && categories.length > 0 && expandedSectionIds.length === 0) {
@@ -435,15 +460,19 @@ const App = () => {
     const toggleFolder = useCallback((id) => {
         setExpandedFolders(prev => {
             const isExpanding = !prev.includes(id);
-            // 同步右侧
-            setExpandedSectionIds(sectionPrev =>
-                isExpanding
-                    ? [...new Set([...sectionPrev, id])]
-                    : sectionPrev.filter(sid => sid !== id)
-            );
-            return isExpanding ? [...prev, id] : prev.filter(fid => fid !== id);
+            if (isExpanding) {
+                // 展开时：把自身和所有祖先一并展开（左侧+右侧），确保条目可见
+                const ancestors = getAncestorIds(id, categories);
+                const toAdd = [id, ...ancestors];
+                setExpandedSectionIds(sectionPrev => [...new Set([...sectionPrev, ...toAdd])]);
+                return [...new Set([...prev, ...toAdd])];
+            } else {
+                // 折叠时：只折叠自身
+                setExpandedSectionIds(sectionPrev => sectionPrev.filter(sid => sid !== id));
+                return prev.filter(fid => fid !== id);
+            }
         });
-    }, []);
+    }, [categories]);
 
     const updateHistory = useCallback((paperId) => {
         setReadingHistory(prev => {
@@ -462,20 +491,21 @@ const App = () => {
         });
     }, [updateHistory]);
 
-    const toggleSection = (id) => {
-        // 1. 先看右侧现在是什么状态
+    const toggleSection = useCallback((id) => {
         const isCurrentlyExpanded = expandedSectionIds.includes(id);
 
-        // 2. 更新右侧
-        setExpandedSectionIds(prev => isCurrentlyExpanded ? prev.filter(sid => sid !== id) : [...prev, id]);
-
-        // 3. 强制左侧做同样的动作：右边收起左边就收起，右边展开左边就展开
-        setExpandedFolders(prev =>
-            isCurrentlyExpanded
-                ? prev.filter(fid => fid !== id)
-                : [...new Set([...prev, id])]
-        );
-    };
+        if (!isCurrentlyExpanded) {
+            // 展开时：展开自身 + 左侧展开自身及所有祖先（确保侧边栏中对应节点可见）
+            const ancestors = getAncestorIds(id, categories);
+            const toExpand = [id, ...ancestors];
+            setExpandedSectionIds(prev => [...new Set([...prev, ...toExpand])]);
+            setExpandedFolders(prev => [...new Set([...prev, ...toExpand])]);
+        } else {
+            // 折叠时：只折叠自身
+            setExpandedSectionIds(prev => prev.filter(sid => sid !== id));
+            setExpandedFolders(prev => prev.filter(fid => fid !== id));
+        }
+    }, [expandedSectionIds, categories]);
 
     const handleCategorySelect = useCallback((id) => {
         setActiveCategoryId(prev => prev === id ? null : id);
@@ -483,7 +513,12 @@ const App = () => {
         setShowAllPapers(false);
         setExpandedPaperIds([]);
         setDisplayLimit(20); // 性能优化：重置分页
-    }, []);
+        // 选中时确保侧边栏中其所有祖先都展开，使其可见
+        const ancestors = getAncestorIds(id, categories);
+        if (ancestors.length > 0) {
+            setExpandedFolders(prev => [...new Set([...prev, id, ...ancestors])]);
+        }
+    }, [categories]);
 
     const handleAllPapersClick = useCallback(() => {
         setActiveCategoryId(null);
@@ -512,19 +547,10 @@ const App = () => {
         setExpandedPaperIds([paperId]);
         setDisplayLimit(20); // 性能优化：重置分页
 
-        const parents = [];
-        let currentId = paper.categoryId;
-        while (currentId) {
-            const cat = categories.find(c => c.id === currentId);
-            if (cat && cat.parentId) {
-                parents.push(cat.parentId);
-                currentId = cat.parentId;
-            } else {
-                break;
-            }
-        }
-        setExpandedFolders(prev => [...new Set([...prev, ...parents])]);
-        setExpandedSectionIds(prev => [...new Set([...prev, paper.categoryId])]);
+        const ancestors = getAncestorIds(paper.categoryId, categories);
+        const toExpand = [paper.categoryId, ...ancestors];
+        setExpandedFolders(prev => [...new Set([...prev, ...toExpand])]);
+        setExpandedSectionIds(prev => [...new Set([...prev, ...toExpand])]);
 
         setTimeout(() => {
             const element = document.getElementById(`paper-card-${paperId}`);
@@ -1004,7 +1030,31 @@ const App = () => {
                                                 activeCategoryId ? <> <Folder size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
                                                     <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
-                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium"> {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? `共 ${filteredFlatPapers.length} 篇` : '您的个人知识库'} </p>
+                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium">
+                                {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? `共 ${filteredFlatPapers.length} 篇` : (
+                                    isEditingLibraryName ? (
+                                        <input
+                                            ref={libraryNameInputRef}
+                                            autoFocus
+                                            type="text"
+                                            value={libraryName}
+                                            onChange={e => setLibraryName(e.target.value)}
+                                            onBlur={() => { setIsEditingLibraryName(false); if (!libraryName.trim()) setLibraryName('您的个人知识库'); }}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') { setIsEditingLibraryName(false); if (!libraryName.trim()) setLibraryName('您的个人知识库'); } }}
+                                            className="bg-transparent border-b-2 border-blue-400 outline-none font-medium text-slate-500 dark:text-slate-300 min-w-[8rem] max-w-xs"
+                                        />
+                                    ) : (
+                                        <span
+                                            onClick={() => setIsEditingLibraryName(true)}
+                                            title="点击重命名知识库"
+                                            className="cursor-pointer hover:text-blue-500 dark:hover:text-blue-400 transition-colors group inline-flex items-center gap-1"
+                                        >
+                                            {libraryName}
+                                            <Edit3 size={12} className="opacity-0 group-hover:opacity-60 transition-opacity" />
+                                        </span>
+                                    )
+                                )}
+                            </p>
                         </div>
                         {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} />}
                     </div>
@@ -1100,10 +1150,14 @@ const App = () => {
             {/* 分类编辑 Modal */}
             {categoryModal.isOpen && (
                 <div className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white w-full max-w-sm rounded-xl shadow-2xl p-6 border border-slate-100">
-                        <input autoFocus className="w-full px-4 py-3 border border-slate-200 rounded-lg outline-none mb-6 text-sm" placeholder="名称..." value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveCategory()} />
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6 border border-slate-100 dark:border-slate-700">
+                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+                            <Folder size={18} className="text-blue-500" />
+                            {categoryModal.editId ? '重命名文件夹' : '新建文件夹'}
+                        </h3>
+                        <input autoFocus className="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg outline-none mb-6 text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all" placeholder="文件夹名称..." value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveCategory()} />
                         <div className="flex justify-end gap-3">
-                            <button onClick={() => { setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-lg">取消</button>
+                            <button onClick={() => { setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
                             <button onClick={handleSaveCategory} className="px-5 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 shadow-md">保存</button>
                         </div>
                     </div>
@@ -1165,75 +1219,139 @@ const App = () => {
 
 // --- 组件: WelcomeModal (欢迎导览) ---
 const WelcomeModal = ({ onClose }) => {
-    return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
-                <div className="bg-blue-600 p-10 text-white flex flex-col justify-between md:w-56 shrink-0 font-sans">
-                    <div>
-                        <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-                            <BookOpen size={28} />
-                        </div>
-                        <h2 className="text-2xl font-black tracking-tight leading-tight">欢迎使用<br />PaperStack</h2>
-                    </div>
-                    <div className="text-blue-100/60 text-xs font-bold uppercase tracking-widest mt-10">AI Powered Insight</div>
-                </div>
-                <div className="flex-1 p-10 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/30">
-                    <div className="space-y-8">
-                        <section>
-                            <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
-                                <Zap size={18} className="text-amber-500" /> 工具定位与初衷
-                            </h3>
-                            <p className="text-slate-600 dark:text-slate-300 text-[15px] leading-relaxed">
-                                PaperStack 不是替代 Zotero 的文献管理器，而是其<b>最佳辅助</b>——帮你把阅读灵感、打分和思绪，转化为清晰的记录。
-                                推荐配合 AI 阅读并总结论文，读完后再生成一份 Markdown 笔记直接粘贴进来。
-                            </p>
-                        </section>
-                        <section>
-                            <h3 className="text-slate-900 dark:text-slate-100 font-bold flex items-center gap-2 mb-3">
-                                💡 管理模式
-                            </h3>
-                            <div className="bg-white dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                    可在<b>左侧边栏</b>恢复备份、调整顺序或新增文件夹。<b>右侧卡片上</b>(文件夹和文献)可进行移动、删除或重命名。
-                                </p>
-                            </div>
-                        </section>
+    const features = [
+        {
+            icon: <Folder size={14} />,
+            color: 'text-blue-600 dark:text-blue-400',
+            bg: 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800/40',
+            title: '文件夹管理',
+            items: [
+                '侧边栏底部「管理模式」按钮进入编辑态',
+                '悬停文件夹 → ✏️ 重命名 · 📂 移动 · 🗑️ 删除（含子文件夹）',
+                '管理模式侧边栏：⬆️⬇️ 调整同级顺序 · ➕ 新建子文件夹',
+                '右侧文件夹标题旁工具栏支持重命名 / 移动 / 删除',
+                '左右两侧折叠/展开始终保持同步',
+            ]
+        },
+        {
+            icon: <FileText size={14} />,
+            color: 'text-violet-600 dark:text-violet-400',
+            bg: 'bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-800/40',
+            title: '文献录入与操作',
+            items: [
+                '右上角「新文献」录入论文，支持标题/来源/年份/链接',
+                '四大笔记字段均支持 Markdown 与 LaTeX 公式',
+                '管理模式下悬停卡片 → 🗑️ 删除 · 📂 移动到其他文件夹',
+                '点击卡片展开，彩色图标可折叠单个字段 · 双击也可折叠',
+                '❤️ 收藏可加备注；⭐ 打分 1-10 自动记录时间',
+            ]
+        },
+        {
+            icon: <Download size={14} />,
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bg: 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/40',
+            title: '备份 & 恢复',
+            items: [
+                '数据仅存本地浏览器，清除缓存会导致数据丢失！',
+                '管理模式 →「备份」→ 下载 JSON 文件到本地',
+                '管理模式 →「恢复」→ 选择 JSON 文件覆盖恢复（不可逆）',
+                '顶部状态栏显示备份时长，超 3 天变红提醒',
+                '点击顶部状态栏徽章可快捷触发备份导出',
+            ]
+        },
+        {
+            icon: <Search size={14} />,
+            color: 'text-amber-600 dark:text-amber-400',
+            bg: 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/40',
+            title: '筛选 & 排序',
+            items: [
+                '顶部搜索框：实时搜索标题 / 来源 / 备注 / 标签',
+                '侧边栏「个人标签库」：点击标签筛选，可多选组合',
+                '⭐ 按评分时间排序；📅 按发表年份排序（再点切换升降序）',
+                '「我的收藏」快速查看收藏；「最近阅读」记录最近 10 篇',
+                '概览页副标题可点击自定义知识库名称',
+            ]
+        },
+    ];
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"> {/* 加了 mt-4 增加一点上下间距，你可以根据需要保留或删除 */}
-                            <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <div className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
-                                    <ListFilter size={12} /> 快速上手
+    return (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[92vh]">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6 text-white flex items-center gap-4 shrink-0">
+                    <div className="bg-white/20 w-11 h-11 rounded-2xl flex items-center justify-center shadow-inner shrink-0">
+                        <BookOpen size={24} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-black tracking-tight">PaperStack 功能指南</h2>
+                        <p className="text-blue-100/80 text-xs mt-0.5">配合 AI 阅读、沉淀你的研究洞见</p>
+                    </div>
+                    <button onClick={onClose} className="ml-auto p-2 rounded-lg hover:bg-white/20 transition-colors"><X size={20} /></button>
+                </div>
+
+                {/* Intro */}
+                <div className="px-8 py-4 bg-blue-50/60 dark:bg-blue-900/10 border-b border-blue-100 dark:border-blue-900/30 shrink-0">
+                    <p className="text-slate-600 dark:text-slate-300 text-[14px] leading-relaxed">
+                        <b>PaperStack</b> 是 Zotero 的最佳搭档——把 AI 辅助阅读产出的 Markdown 笔记、打分与灵感，整理成可检索的个人知识库。所有数据<b>仅存本地，无需登录</b>。
+                    </p>
+                </div>
+
+                {/* Feature grid */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {features.map((g) => (
+                            <div key={g.title} className={`p-5 rounded-2xl border ${g.bg}`}>
+                                <div className={`flex items-center gap-2 font-bold text-sm mb-3 ${g.color}`}>
+                                    {g.icon} {g.title}
                                 </div>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
-                                    双击论文概览、实验结果等子卡片，或点击四色图标，可折叠展开卡片。
-                                    本说明可在页面左上角重新打开。
-                                </p> {/* 就是这里！之前漏掉了这个闭合标签 */}
+                                <ul className="space-y-1.5">
+                                    {g.items.map((item, i) => (
+                                        <li key={i} className="flex items-start gap-2 text-[13px] text-slate-600 dark:text-slate-300 leading-snug">
+                                            <span className="text-slate-300 dark:text-slate-600 mt-0.5 shrink-0">›</span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                            <div className="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                <div className="text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
-                                    <Globe size={12} /> 个人隐私
+                        ))}
+                    </div>
+
+                    {/* Quick tips */}
+                    <div className="mt-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50">
+                        <div className="font-bold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                            <Lightbulb size={12} /> 使用小技巧
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
+                            {[
+                                '本说明可随时通过左上角书本图标重新打开',
+                                '论文笔记支持 LaTeX 公式（如 $x^2$）渲染',
+                                '点击卡片中的彩色图标可单独折叠该字段',
+                                '滚动页面后右下角出现「返回顶部」浮动按钮',
+                                '右上角排序按钮支持三态切换：降序→升序→默认',
+                                '概览页副标题可点击修改为自定义知识库名称',
+                            ].map((tip, i) => (
+                                <div key={i} className="flex items-start gap-1.5 text-[12px] text-slate-500 dark:text-slate-400">
+                                    <span className="text-blue-400 shrink-0">✦</span>{tip}
                                 </div>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
-                                    数据仅存本地浏览器。请养成<b>定时导出备份</b> 的好习惯。
-                                </p>
-                            </div>
+                            ))}
                         </div>
-                        <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <a
-                                href="https://github.com/xiechen2333/PaperStack/blob/main/README.md"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 text-sm font-bold flex items-center gap-1.5 hover:underline decoration-2 underline-offset-4"
-                            >
-                                <ExternalLink size={16} /> 查看完整 GitHub 文档
-                            </a>
-                            <button
-                                onClick={onClose}
-                                className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-2xl hover:bg-slate-800 dark:hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/10 active:scale-95"
-                            >
-                                我知道了，开始使用
-                            </button>
-                        </div>
+                    </div>
+
+                    <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <a
+                            href="https://github.com/xiechen2333/PaperStack/blob/main/README.md"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 text-sm font-bold flex items-center gap-1.5 hover:underline decoration-2 underline-offset-4"
+                        >
+                            <ExternalLink size={16} /> 查看完整 GitHub 文档
+                        </a>
+                        <button
+                            onClick={onClose}
+                            className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-2xl hover:bg-slate-800 dark:hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/10 active:scale-95"
+                        >
+                            开始使用
+                        </button>
                     </div>
                 </div>
             </div>
