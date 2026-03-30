@@ -31,21 +31,24 @@ const THEME = {
 // --- 组件: SidebarItem (侧边栏单项 - 性能优化版) ---
 const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpanded, count, isManageMode, onToggle, onSelect, onManageAction }) => {
     const getLevelStyle = (d) => {
+        // 第一层级：最大字号 + 最重字重
         if (d === 0) return {
             icon: <Folder size={18} className={isActive ? "fill-blue-100 text-blue-600 dark:text-blue-400" : "fill-slate-100 text-slate-400 dark:text-slate-500"} />,
             textClass: "text-[15px] font-semibold text-slate-800 dark:text-slate-100",
             containerClass: "py-2.5 mb-1"
         };
+        // 第二层级（depth 1 & 2 归为同组）：字号与字重过渡
         if (d === 1) return {
             icon: <FolderOpen size={16} />,
             textClass: "text-[14px] font-medium text-slate-700 dark:text-slate-200",
             containerClass: "py-2 mb-0.5"
         };
         if (d === 2) return {
-            icon: <Hash size={14} className="opacity-70" />,
-            textClass: "text-[14px] font-normal text-slate-600 dark:text-slate-300",
+            icon: <FolderOpen size={14} className="opacity-50" />,
+            textClass: "text-[13.5px] font-normal text-slate-600 dark:text-slate-300",
             containerClass: "py-1.5"
         };
+        // 第三层级（更深层）：最小字号 + 最浅灰度
         return {
             icon: null,
             textClass: "text-[13px] text-slate-500 dark:text-slate-400",
