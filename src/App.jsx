@@ -55,7 +55,7 @@ const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpa
     const style = getLevelStyle(depth);
 
     return (
-        <div className="select-none relative px-2">
+        <div className="select-none relative">
             <div
                 className={`
             flex items-center px-3 rounded-lg transition-all duration-200 group cursor-pointer 
@@ -127,17 +127,17 @@ const SidebarTree = React.memo(({ categories, parentId = null, depth = 0, active
                     <div key={cat.id} className="relative">
                         {depth > 0 && (
                             <>
-                                <div className="absolute border-l border-slate-200" style={{ left: '16px', top: '0', height: index === children.length - 1 ? '20px' : '100%', width: '1px' }} />
-                                <div className="absolute border-t border-slate-200" style={{ left: '16px', top: '20px', width: '10px', height: '1px' }} />
+                                <div className="absolute border-l border-slate-200/80 dark:border-slate-800" style={{ left: '12px', top: '0', height: index === children.length - 1 ? '16px' : '100%', width: '1px' }} />
+                                <div className="absolute border-t border-slate-200/80 dark:border-slate-800" style={{ left: '12px', top: '16px', width: '8px', height: '1px' }} />
                             </>
                         )}
 
-                        <div className={depth > 0 ? "pl-2" : ""}>
+                        <div className={depth > 0 ? "pl-1.5" : ""}>
                             <SidebarItem category={cat} depth={depth} hasChildren={hasChildren} isActive={activeCategoryId === cat.id} isExpanded={isExpanded} count={count} isManageMode={isManageMode} onToggle={onToggle} onSelect={onSelect} onManageAction={onManageAction} />
                         </div>
 
                         {hasChildren && isExpanded && (
-                            <div className="ml-4 relative">
+                            <div className="ml-3 relative">
                                 <SidebarTree categories={categories} parentId={cat.id} depth={depth + 1} activeCategoryId={activeCategoryId} expandedFolders={expandedFolders} isManageMode={isManageMode} countsMap={countsMap} onToggle={onToggle} onSelect={onSelect} onManageAction={onManageAction} />
                             </div>
                         )}
@@ -149,12 +149,23 @@ const SidebarTree = React.memo(({ categories, parentId = null, depth = 0, active
 });
 
 // --- 组件: ManagementToolbar ---
-const ManagementToolbar = ({ onManageAction, categoryId }) => {
+const ManagementToolbar = ({ onManageAction, categoryId, depth = 0, isPageTitle = false }) => {
+    let containerClass = "flex items-center gap-1 ml-3 transition-all duration-200 ";
+    if (isPageTitle) {
+        containerClass += "bg-white shadow-sm border border-slate-200 rounded-md p-1 dark:bg-slate-800/80 dark:border-slate-700/50 opacity-100";
+    } else if (depth === 0) {
+        containerClass += "opacity-60 hover:opacity-100";
+    } else {
+        containerClass += "opacity-0 group-hover:opacity-100"; // 鼠标悬停时才显示
+    }
+
     return (
-        <div className="flex items-center gap-1 ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white shadow-sm border border-slate-200 rounded-md p-1">
-            <button onClick={(e) => { e.stopPropagation(); onManageAction('edit', categoryId); }} className="p-1.5 rounded hover:bg-blue-50 text-slate-500 hover:text-blue-600 transition-colors" title="重命名" > <Edit3 size={15} /> </button>
-            <button onClick={(e) => { e.stopPropagation(); onManageAction('moveCategory', categoryId); }} className="p-1.5 rounded hover:bg-violet-50 text-slate-500 hover:text-violet-600 transition-colors" title="移动文件夹" > <FolderInput size={15} /> </button>
-            <button onClick={(e) => { e.stopPropagation(); onManageAction('delete', categoryId); }} className="p-1.5 rounded hover:bg-red-50 text-slate-500 hover:text-red-600 transition-colors" title="删除" > <Trash2 size={15} /> </button>
+        <div className={containerClass}>
+            <button onClick={(e) => { e.stopPropagation(); onManageAction('edit', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-blue-50 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400' : 'text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="编辑" > <Edit3 size={15} /> </button>
+            <button onClick={(e) => { e.stopPropagation(); onManageAction('moveCategory', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-violet-50 text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400' : 'text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="移动文件夹" > <FolderInput size={15} /> </button>
+            {isPageTitle && (
+                <button onClick={(e) => { e.stopPropagation(); onManageAction('delete', categoryId); }} className="p-1.5 rounded transition-colors hover:bg-red-50 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400" title="删除" > <Trash2 size={15} /> </button>
+            )}
         </div>
     );
 };
@@ -201,10 +212,6 @@ const App = () => {
     const [expandedSectionIds, setExpandedSectionIds] = useState([]);
     const [isManageMode, setIsManageMode] = useState(false);
     const [showTopButton, setShowTopButton] = useState(false);
-    // 知识库名称（可自定义）
-    const [libraryName, setLibraryName] = useState('您的个人知识库');
-    const [isEditingLibraryName, setIsEditingLibraryName] = useState(false);
-    const libraryNameInputRef = useRef(null);
 
     // --- 性能优化状态: 分页显示 ---
     const [displayLimit, setDisplayLimit] = useState(20);
@@ -212,8 +219,9 @@ const App = () => {
     // 模态框状态
     const [isAddingPaper, setIsAddingPaper] = useState(false);
     const [editingPaper, setEditingPaper] = useState(null);
-    const [categoryModal, setCategoryModal] = useState({ isOpen: false, parentId: null, editId: null, initialName: '' });
+    const [categoryModal, setCategoryModal] = useState({ isOpen: false, parentId: null, editId: null, initialName: '', initialDescription: '' });
     const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryDescription, setNewCategoryDescription] = useState('');
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, type: null, id: null, title: '' });
     const [deleteCountdown, setDeleteCountdown] = useState(0);
     const [starModal, setStarModal] = useState({ isOpen: false, paperId: null, currentNote: '' });
@@ -268,15 +276,12 @@ const App = () => {
         const initData = async () => {
             try {
                 // 性能优化：并行读取所有数据
-                const [dbCats, dbPapers, dbHistory, dbBackupTime, dbLibraryName] = await Promise.all([
+                const [dbCats, dbPapers, dbHistory, dbBackupTime] = await Promise.all([
                     localforage.getItem('research_categories'),
                     localforage.getItem('research_papers'),
                     localforage.getItem('research_history'),
-                    localforage.getItem('last_backup_timestamp'),
-                    localforage.getItem('library_name')
+                    localforage.getItem('last_backup_timestamp')
                 ]);
-
-                if (dbLibraryName) setLibraryName(dbLibraryName);
 
                 if (dbCats && Array.isArray(dbCats)) {
                     setCategories(dbCats);
@@ -314,16 +319,17 @@ const App = () => {
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_categories', categories).catch(console.error); }, [categories, isDataLoaded]);
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_papers', papers).catch(console.error); }, [papers, isDataLoaded]);
     useEffect(() => { if (isDataLoaded) localforage.setItem('research_history', readingHistory).catch(console.error); }, [readingHistory, isDataLoaded]);
-    useEffect(() => { if (isDataLoaded) localforage.setItem('library_name', libraryName).catch(console.error); }, [libraryName, isDataLoaded]);
 
+    const hasAutoExpandedRef = useRef(false);
     useEffect(() => {
-        if (isDataLoaded && categories.length > 0 && expandedSectionIds.length === 0) {
+        if (isDataLoaded && categories.length > 0 && expandedSectionIds.length === 0 && !hasAutoExpandedRef.current) {
             // 1. 找到没有父亲的根节点
             const rootIds = categories.filter(c => !c.parentId).map(c => c.id);
 
             // 2. 只告诉界面：“请展开这几个根节点”
             setExpandedSectionIds(rootIds);
             setExpandedFolders(prev => [...new Set([...prev, ...rootIds])]);
+            hasAutoExpandedRef.current = true;
         }
     }, [isDataLoaded, categories, expandedSectionIds.length]);
 
@@ -574,13 +580,13 @@ const App = () => {
         if (!newCategoryName.trim()) return;
         const newId = categoryModal.editId || Date.now().toString();
         if (categoryModal.editId) {
-            setCategories(prev => prev.map(c => c.id === newId ? { ...c, name: newCategoryName.trim() } : c));
+            setCategories(prev => prev.map(c => c.id === newId ? { ...c, name: newCategoryName.trim(), description: newCategoryDescription.trim() } : c));
         } else {
-            setCategories(prev => [...prev, { id: newId, name: newCategoryName.trim(), parentId: categoryModal.parentId }]);
+            setCategories(prev => [...prev, { id: newId, name: newCategoryName.trim(), description: newCategoryDescription.trim(), parentId: categoryModal.parentId }]);
             setExpandedSectionIds(prev => [...prev, newId]);
             if (categoryModal.parentId) setExpandedFolders(prev => [...new Set([...prev, categoryModal.parentId])]);
         }
-        setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '' }); setNewCategoryName('');
+        setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '', initialDescription: '' }); setNewCategoryName(''); setNewCategoryDescription('');
     };
 
     const handleManageAction = useCallback((action, id) => {
@@ -601,8 +607,8 @@ const App = () => {
                 return prev;
             });
         }
-        if (action === 'add') { setCategoryModal({ isOpen: true, parentId: id, editId: null, initialName: '' }); setNewCategoryName(''); }
-        if (action === 'edit') { setCategoryModal({ isOpen: true, parentId: null, editId: id, initialName: cat.name }); setNewCategoryName(cat.name); }
+        if (action === 'add') { setCategoryModal({ isOpen: true, parentId: id, editId: null, initialName: '', initialDescription: '' }); setNewCategoryName(''); setNewCategoryDescription(''); }
+        if (action === 'edit') { setCategoryModal({ isOpen: true, parentId: null, editId: id, initialName: cat.name, initialDescription: cat.description || '' }); setNewCategoryName(cat.name); setNewCategoryDescription(cat.description || ''); }
         if (action === 'delete') {
             setDeleteModal({ isOpen: true, type: 'category', id: id, title: cat.name });
             setDeleteCountdown(3);
@@ -759,28 +765,32 @@ const App = () => {
 
         const getHeaderStyle = (d) => {
             if (d === 0) return {
-                wrapper: "mb-4 mt-8 pb-3 border-b border-slate-200 dark:border-slate-800",
-                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2.5" size={22} />,
-                text: "text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight",
-                arrow: 22
-            };
-            if (d === 1) return {
-                wrapper: "mb-3 mt-6 ml-1",
-                icon: <FolderOpen className="text-slate-500 dark:text-slate-400 mr-2" size={18} />,
-                text: "text-lg font-semibold text-slate-800 dark:text-slate-200",
+                // 顶级分类：保持醒目的字重和底部细线拉开层次
+                wrapper: "mt-6 mb-3 pb-2 border-b-[2px] border-slate-200/50 dark:border-slate-700/80",
+                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={20} />,
+                text: "text-[17px] font-bold text-slate-800 dark:text-slate-100 tracking-wide",
                 arrow: 18
             };
-            if (d === 2) return {
-                wrapper: "mb-2 mt-4 ml-3 pl-3 border-l-2 border-slate-200 dark:border-slate-800",
-                icon: <Hash className="text-slate-400 dark:text-slate-500 mr-2" size={16} />,
-                text: "text-base font-medium text-slate-700 dark:text-slate-300",
+            if (d === 1) return {
+                // 第一级子集：减轻字重，缩小字号
+                wrapper: "mb-1 mt-3",
+                icon: <FolderOpen className="text-slate-500 dark:text-slate-400 mr-2 flex-shrink-0" size={16} />,
+                text: "text-[15px] font-semibold text-slate-700 dark:text-slate-200",
                 arrow: 16
             };
-            return {
-                wrapper: "mb-2 mt-2 ml-5 flex items-center opacity-80",
-                icon: <Circle className="text-slate-300 dark:text-slate-600 mr-2 fill-current" size={8} />,
-                text: "text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider",
+            if (d === 2) return {
+                // 第二级子集：常规字重，更加内敛
+                wrapper: "mb-1 mt-2",
+                icon: <Folder className="text-slate-400 dark:text-slate-500 mr-2 flex-shrink-0" size={14} />,
+                text: "text-[14px] font-medium text-slate-600 dark:text-slate-300",
                 arrow: 14
+            };
+            return {
+                // 更深层级
+                wrapper: "mb-1 mt-2 opacity-80",
+                icon: <Circle className="text-slate-400 dark:text-slate-500 mr-2 flex-shrink-0 fill-current" size={6} />,
+                text: "text-[13px] font-medium text-slate-500 dark:text-slate-400 tracking-wider",
+                arrow: 12
             };
         };
 
@@ -788,7 +798,7 @@ const App = () => {
 
         return (
             <div key={categoryId} className="animate-in fade-in duration-300">
-                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg px-2 -ml-2 ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
+                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-md px-1 py-1 -ml-1 ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
                     <div className="flex items-center">
                         <div className={`mr-1 transition-transform duration-200 ${isExpanded ? 'rotate-0 text-slate-400' : '-rotate-90 text-slate-300'}`}> <ChevronDown size={style.arrow} /> </div>
                         {style.icon}
@@ -797,12 +807,14 @@ const App = () => {
                             <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full align-middle relative -top-0.5 border border-slate-200 dark:border-slate-700">{count.total}</span>
                         </h3>
                     </div>
-                    {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} />}
+                    {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} depth={depth} />}
                 </div>
+
                 {isExpanded && (
-                    <div className="">
+                    <div className="relative pl-3">
                         {directPapers.length > 0 && (
-                            <div className="grid grid-cols-1 gap-5 mb-6">
+                            // 不做任何左右冗余挤压，最大化卡片显示空间，恢复最初的呼吸感
+                            <div className="grid grid-cols-1 gap-4 mt-2 mb-5">
                                 {/* 性能优化: 文件夹视图虽然不强制全局分页，但超过50篇也需要限制，这里为了简洁暂不加Folder内分页，因为一般文件夹内不会有太多 */}
                                 {directPapers.map(p => (
                                     <CompactPaperCard
@@ -826,7 +838,12 @@ const App = () => {
                                 ))}
                             </div>
                         )}
-                        <div className={depth >= 0 ? "pl-3" : ""}> {children.map(c => renderCategoryBlock(c.id, depth + 1))} </div>
+                        {children.length > 0 && (
+                            // 去掉 pl-4 包裹，层级缩进由各级标题行自身的 ml-X 承担，卡片始终全宽
+                            <div className="mt-2 mb-4">
+                                {children.map(c => renderCategoryBlock(c.id, depth + 1))}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -934,7 +951,7 @@ const App = () => {
                     <div className="pl-0">
                         <SidebarTree categories={categories} parentId={null} activeCategoryId={activeCategoryId} expandedFolders={expandedFolders} isManageMode={isManageMode} countsMap={categoryCountsMap} onToggle={toggleFolder} onSelect={handleCategorySelect} onManageAction={handleManageAction} />
                     </div>
-                    {isManageMode && (<button onClick={() => { setCategoryModal({ isOpen: true, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="w-full mt-4 flex items-center justify-center gap-1.5 bg-white text-slate-500 border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 py-3 rounded-lg text-[13px] font-bold transition-all" > <PlusCircle size={15} /> 新建顶级分类 </button>)}
+                    {isManageMode && (<button onClick={() => { setCategoryModal({ isOpen: true, parentId: null, editId: null, initialName: '', initialDescription: '' }); setNewCategoryName(''); setNewCategoryDescription(''); }} className="w-full mt-4 flex items-center justify-center gap-1.5 bg-white text-slate-500 border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 py-3 rounded-lg text-[13px] font-bold transition-all" > <PlusCircle size={15} /> 新建顶级分类 </button>)}
                 </div>
                 <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/50 min-w-[320px]">
                     <input type="file" accept=".json" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
@@ -1002,9 +1019,9 @@ const App = () => {
                 <div
                     ref={mainContentRef}
                     onScroll={(e) => setShowTopButton(e.target.scrollTop > 500)}
-                    className="flex-1 overflow-y-auto p-10 custom-scrollbar pb-32"
+                    className="flex-1 overflow-y-auto pl-12 pr-8 py-8 custom-scrollbar pb-32"
                 >
-                    <div className="mb-10 flex items-end justify-between group">
+                    <div className="mb-6 flex items-end justify-between group">
                         <div>
                             <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
                                 {searchQuery ? <> <Search size={28} className="text-blue-600 dark:text-blue-400" /> 搜索: "{searchQuery}" </> :
@@ -1030,33 +1047,18 @@ const App = () => {
                                                 activeCategoryId ? <> <Folder size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
                                                     <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
-                            <p className="text-slate-500 dark:text-slate-300 text-base mt-2 ml-1 font-medium">
-                                {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? `共 ${filteredFlatPapers.length} 篇` : (
-                                    isEditingLibraryName ? (
-                                        <input
-                                            ref={libraryNameInputRef}
-                                            autoFocus
-                                            type="text"
-                                            value={libraryName}
-                                            onChange={e => setLibraryName(e.target.value)}
-                                            onBlur={() => { setIsEditingLibraryName(false); if (!libraryName.trim()) setLibraryName('您的个人知识库'); }}
-                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') { setIsEditingLibraryName(false); if (!libraryName.trim()) setLibraryName('您的个人知识库'); } }}
-                                            className="bg-transparent border-b-2 border-blue-400 outline-none font-medium text-slate-500 dark:text-slate-300 min-w-[8rem] max-w-xs"
-                                        />
-                                    ) : (
-                                        <span
-                                            onClick={() => setIsEditingLibraryName(true)}
-                                            title="点击重命名知识库"
-                                            className="cursor-pointer hover:text-blue-500 dark:hover:text-blue-400 transition-colors group inline-flex items-center gap-1"
-                                        >
-                                            {libraryName}
-                                            <Edit3 size={12} className="opacity-0 group-hover:opacity-60 transition-opacity" />
-                                        </span>
-                                    )
-                                )}
+                            <p className="text-slate-500 dark:text-slate-400 text-[15px] mt-2.5 ml-1 font-medium tracking-wide">
+                                {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0
+                                    ? `共 ${filteredFlatPapers.length} 篇`
+                                    : activeCategoryId
+                                        ? (categories.find(c => c.id === activeCategoryId)?.description || null)
+                                        : "您的个人知识库"
+                                }
                             </p>
+                            {/* 柔润适中的点缀线，加长一点作为页面视觉根基 */}
+                            <div className="h-[3px] w-24 bg-blue-500/60 rounded-full mt-5 mb-1 ml-1" />
                         </div>
-                        {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} />}
+                        {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} isPageTitle={true} />}
                     </div>
 
                     {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? (
@@ -1155,9 +1157,10 @@ const App = () => {
                             <Folder size={18} className="text-blue-500" />
                             {categoryModal.editId ? '重命名文件夹' : '新建文件夹'}
                         </h3>
-                        <input autoFocus className="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg outline-none mb-6 text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all" placeholder="文件夹名称..." value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveCategory()} />
+                        <input autoFocus className="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg outline-none mb-3 text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all" placeholder="文件夹名称..." value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveCategory()} />
+                        <textarea className="w-full px-4 py-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg outline-none mb-6 text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all resize-none" rows={2} placeholder="文件夹说明文本（选填）..." value={newCategoryDescription} onChange={(e) => setNewCategoryDescription(e.target.value)} />
                         <div className="flex justify-end gap-3">
-                            <button onClick={() => { setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '' }); setNewCategoryName(''); }} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
+                            <button onClick={() => { setCategoryModal({ isOpen: false, parentId: null, editId: null, initialName: '', initialDescription: '' }); setNewCategoryName(''); setNewCategoryDescription(''); }} className="px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
                             <button onClick={handleSaveCategory} className="px-5 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 shadow-md">保存</button>
                         </div>
                     </div>
@@ -1221,94 +1224,87 @@ const App = () => {
 const WelcomeModal = ({ onClose }) => {
     const features = [
         {
-            icon: <Folder size={14} />,
-            color: 'text-blue-600 dark:text-blue-400',
-            bg: 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800/40',
+            icon: <Folder size={16} />,
+            iconBg: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
             title: '文件夹管理',
             items: [
-                '侧边栏底部「管理模式」按钮进入编辑态',
-                '悬停文件夹 → ✏️ 重命名 · 📂 移动 · 🗑️ 删除（含子文件夹）',
-                '管理模式侧边栏：⬆️⬇️ 调整同级顺序 · ➕ 新建子文件夹',
-                '右侧文件夹标题旁工具栏支持重命名 / 移动 / 删除',
-                '左右两侧折叠/展开始终保持同步',
+                <><b className="text-slate-800 dark:text-slate-200">管理模式</b>：侧边栏底部切换，开启层级管理能力</>,
+                <><b className="text-slate-800 dark:text-slate-200">新建目录</b>：管理状态下点击 ➕ 直接嵌套子文件夹</>,
+                <><b className="text-slate-800 dark:text-slate-200">编辑体系</b>：支持多级子文件夹重命名、跨层级移动与删除</>,
+                <><b className="text-slate-800 dark:text-slate-200">顺序调整</b>：直观使用 ⬆⬇ 按钮轻松整理同级排序</>,
             ]
         },
         {
-            icon: <FileText size={14} />,
-            color: 'text-violet-600 dark:text-violet-400',
-            bg: 'bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-800/40',
-            title: '文献录入与操作',
+            icon: <FileText size={16} />,
+            iconBg: 'bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400',
+            title: '文献录入',
             items: [
-                '右上角「新文献」录入论文，支持标题/来源/年份/链接',
-                '四大笔记字段均支持 Markdown 与 LaTeX 公式',
-                '管理模式下悬停卡片 → 🗑️ 删除 · 📂 移动到其他文件夹',
-                '点击卡片展开，彩色图标可折叠单个字段 · 双击也可折叠',
-                '❤️ 收藏可加备注；⭐ 打分 1-10 自动记录时间',
+                <><b className="text-slate-800 dark:text-slate-200">极速创建</b>：点击右上角「新文献」，秒速建立基础信息元数据</>,
+                <><b className="text-slate-800 dark:text-slate-200">四大专业区块</b>：原生支持 <b>Markdown</b> 排版与 LaTeX 复杂数学公式</>,
+                <><b className="text-slate-800 dark:text-slate-200">清爽折叠</b>：遇到长段落，可点击彩色骨架节点单独缩放特定区域</>,
+                <><b className="text-slate-800 dark:text-slate-200">星标与评分</b>：❤️ 收藏并附加见解 · ⭐ 1–10 阶梯打分，记录此刻</>,
             ]
         },
         {
-            icon: <Download size={14} />,
-            color: 'text-emerald-600 dark:text-emerald-400',
-            bg: 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/40',
-            title: '备份 & 恢复',
+            icon: <Download size={16} />,
+            iconBg: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
+            title: '备份与恢复',
             items: [
-                '数据仅存本地浏览器，清除缓存会导致数据丢失！',
-                '管理模式 →「备份」→ 下载 JSON 文件到本地',
-                '管理模式 →「恢复」→ 选择 JSON 文件覆盖恢复（不可逆）',
-                '顶部状态栏显示备份时长，超 3 天变红提醒',
-                '点击顶部状态栏徽章可快捷触发备份导出',
+                <><b className="text-rose-600 dark:text-rose-400">数据安全</b>：所有数据均存在本地，清除浏览器缓存将永久抹除记录</>,
+                <><b className="text-slate-800 dark:text-slate-200">安全导出</b>：进入管理模式 → 备份 → 生成专属 JSON 文件存入硬盘</>,
+                <><b className="text-slate-800 dark:text-slate-200">灾备恢复</b>：换机或重置后，一键上传 JSON 数据完美复原全库结构</>,
+                <><b className="text-slate-800 dark:text-slate-200">智能告警</b>：顶部导航栏精准追踪备份周期，超过 3 天自动示警护航</>,
             ]
         },
         {
-            icon: <Search size={14} />,
-            color: 'text-amber-600 dark:text-amber-400',
-            bg: 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/40',
-            title: '筛选 & 排序',
+            icon: <Search size={16} />,
+            iconBg: 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
+            title: '搜索与检索',
             items: [
-                '顶部搜索框：实时搜索标题 / 来源 / 备注 / 标签',
-                '侧边栏「个人标签库」：点击标签筛选，可多选组合',
-                '⭐ 按评分时间排序；📅 按发表年份排序（再点切换升降序）',
-                '「我的收藏」快速查看收藏；「最近阅读」记录最近 10 篇',
-                '概览页副标题可点击自定义知识库名称',
+                <><b className="text-slate-800 dark:text-slate-200">瞬时检索</b>：顶部搜索框实时毫秒级匹配标题、来源、全文备注与标签</>,
+                <><b className="text-slate-800 dark:text-slate-200">标签管理</b>：侧边全量标签库一览无余，支持多标签灵活组合交叉过滤</>,
+                <><b className="text-slate-800 dark:text-slate-200">三大独立视图</b>：精选收藏集 / 全维文献列表 / 知识库树状大纲无缝跳转</>,
+                <><b className="text-slate-800 dark:text-slate-200">动态排序</b>：支持录入时间、评分等维度动态排布，降序与升序灵活切控</>,
             ]
         },
     ];
 
     return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[92vh]">
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+            <div className="bg-slate-50 dark:bg-slate-900 w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6 text-white flex items-center gap-4 shrink-0">
-                    <div className="bg-white/20 w-11 h-11 rounded-2xl flex items-center justify-center shadow-inner shrink-0">
-                        <BookOpen size={24} />
+                <div className="bg-white dark:bg-slate-900 px-8 py-6 flex items-center gap-5 shrink-0 rounded-t-2xl border-b border-slate-100 dark:border-slate-800 relative">
+                    <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/20">
+                        <BookOpen size={24} className="text-white" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-black tracking-tight">PaperStack 功能指南</h2>
-                        <p className="text-blue-100/80 text-xs mt-0.5">配合 AI 阅读、沉淀你的研究洞见</p>
+                        <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">PaperStack 使用指南</h2>
+                        <p className="text-slate-500 dark:text-slate-400 text-[13px] mt-1">极致清爽的本地知识库 · 完全离线运行 · 无需登录即可使用</p>
                     </div>
-                    <button onClick={onClose} className="ml-auto p-2 rounded-lg hover:bg-white/20 transition-colors"><X size={20} /></button>
+                    <button onClick={onClose} className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"><X size={20} /></button>
                 </div>
 
-                {/* Intro */}
-                <div className="px-8 py-4 bg-blue-50/60 dark:bg-blue-900/10 border-b border-blue-100 dark:border-blue-900/30 shrink-0">
-                    <p className="text-slate-600 dark:text-slate-300 text-[14px] leading-relaxed">
-                        <b>PaperStack</b> 是 Zotero 的最佳搭档——把 AI 辅助阅读产出的 Markdown 笔记、打分与灵感，整理成可检索的个人知识库。所有数据<b>仅存本地，无需登录</b>。
-                    </p>
-                </div>
+                {/* Scrollable content */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
 
-                {/* Feature grid */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Feature grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {features.map((g) => (
-                            <div key={g.title} className={`p-5 rounded-2xl border ${g.bg}`}>
-                                <div className={`flex items-center gap-2 font-bold text-sm mb-3 ${g.color}`}>
-                                    {g.icon} {g.title}
+                            <div key={g.title} className="p-5 rounded-xl bg-white dark:bg-slate-800/60 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${g.iconBg}`}>
+                                        {g.icon}
+                                    </div>
+                                    <div className="font-bold text-[15px] text-slate-800 dark:text-slate-100 tracking-tight">
+                                        {g.title}
+                                    </div>
                                 </div>
-                                <ul className="space-y-1.5">
+                                <ul className="space-y-2">
                                     {g.items.map((item, i) => (
-                                        <li key={i} className="flex items-start gap-2 text-[13px] text-slate-600 dark:text-slate-300 leading-snug">
-                                            <span className="text-slate-300 dark:text-slate-600 mt-0.5 shrink-0">›</span>
-                                            <span>{item}</span>
+                                        <li key={i} className="flex items-start text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                                            <div className="min-w-[14px] flex justify-center shrink-0 mr-2 text-slate-300 dark:text-slate-600 mt-[3px]">›</div>
+                                            <span className="flex-1">{item}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -1317,38 +1313,39 @@ const WelcomeModal = ({ onClose }) => {
                     </div>
 
                     {/* Quick tips */}
-                    <div className="mt-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50">
-                        <div className="font-bold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                            <Lightbulb size={12} /> 使用小技巧
+                    <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50">
+                        <div className="font-bold text-[11px] text-slate-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+                            <Lightbulb size={11} /> 快速提示
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
                             {[
-                                '本说明可随时通过左上角书本图标重新打开',
-                                '论文笔记支持 LaTeX 公式（如 $x^2$）渲染',
-                                '点击卡片中的彩色图标可单独折叠该字段',
+                                '点击左上角书本图标可随时重新打开本指南',
+                                '笔记支持 LaTeX 渲染，如 $E=mc^2$',
+                                '管理模式下悬停卡片可删除或移动文献',
                                 '滚动页面后右下角出现「返回顶部」浮动按钮',
-                                '右上角排序按钮支持三态切换：降序→升序→默认',
-                                '概览页副标题可点击修改为自定义知识库名称',
+                                '排序按钮支持三态切换：降序 → 升序 → 默认',
+                                '文件夹可嵌套多级，侧边栏辅助线标示层级',
                             ].map((tip, i) => (
                                 <div key={i} className="flex items-start gap-1.5 text-[12px] text-slate-500 dark:text-slate-400">
-                                    <span className="text-blue-400 shrink-0">✦</span>{tip}
+                                    <span className="text-blue-400 shrink-0 mt-0.5">✦</span>{tip}
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    {/* Footer */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                         <a
                             href="https://github.com/xiechen2333/PaperStack/blob/main/README.md"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 text-sm font-bold flex items-center gap-1.5 hover:underline decoration-2 underline-offset-4"
+                            className="text-slate-400 hover:text-blue-500 text-[12px] font-medium flex items-center gap-1.5 transition-colors"
                         >
-                            <ExternalLink size={16} /> 查看完整 GitHub 文档
+                            <ExternalLink size={13} /> 查看 GitHub 文档
                         </a>
                         <button
                             onClick={onClose}
-                            className="w-full sm:w-auto px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-2xl hover:bg-slate-800 dark:hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/10 active:scale-95"
+                            className="w-full sm:w-auto px-8 py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-bold rounded-xl hover:bg-slate-700 dark:hover:bg-blue-500 transition-all text-[14px] active:scale-95"
                         >
                             开始使用
                         </button>
@@ -1598,9 +1595,9 @@ const CompactSection = ({ icon, title, color, content }) => {
                     </span>
                 </div>
 
-                {/* 展开的内容区：配合头部的 pl-3，这里计算为 pl-[52px] 保持完美对齐 */}
+                {/* 展开的内容区：配合头部的 pl-3，这里计算为 pl-[52px] 保持完美与标题文字对齐 */}
                 {hasContent && isOpen && (
-                    <div className="px-5 pb-5 pt-1 pl-[52px] animate-in fade-in slide-in-from-top-1 duration-500 relative z-10 transform-gpu">
+                    <div className="pr-6 pl-[52px] pb-5 pt-1 animate-in fade-in slide-in-from-top-1 duration-500 relative z-10 transform-gpu leading-relaxed">
                         <Suspense fallback={
                             <div className="w-full animate-pulse space-y-2 pt-1">
                                 <div className="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-3/4"></div>
