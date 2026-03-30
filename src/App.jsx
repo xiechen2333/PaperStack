@@ -47,7 +47,7 @@ const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpa
             containerClass: "py-1.5"
         };
         return {
-            icon: <Circle size={6} className="fill-current opacity-40" />,
+            icon: null,
             textClass: "text-[13px] text-slate-500 dark:text-slate-400",
             containerClass: "py-1.5"
         };
@@ -526,16 +526,6 @@ const App = () => {
         }
     }, [categories]);
 
-    const handleAllPapersClick = useCallback(() => {
-        setActiveCategoryId(null);
-        setShowFavoritesOnly(false);
-        setShowAllPapers(true);
-        setSearchQuery('');
-        setActiveTags([]);
-        setExpandedPaperIds([]);
-        setDisplayLimit(20); // 性能优化：重置分页
-    }, []);
-
     const handleHistoryClick = (paperId) => {
         const paper = papers.find(p => p.id === paperId);
         if (!paper) {
@@ -765,40 +755,50 @@ const App = () => {
 
         const getHeaderStyle = (d) => {
             if (d === 0) return {
-                // 顶级分类：保持醒目的字重和底部细线拉开层次
-                wrapper: "mt-6 mb-3 pb-2 border-b-[2px] border-slate-200/50 dark:border-slate-700/80",
-                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={20} />,
-                text: "text-[17px] font-bold text-slate-800 dark:text-slate-100 tracking-wide",
-                arrow: 18
+                // 顶级分类
+                wrapper: `mt-6 mb-3 pb-2 border-b-[2px] border-slate-200/60 dark:border-slate-700/80 rounded-2xl`,
+                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={22} />,
+                text: "text-[18px] font-bold text-slate-800 dark:text-slate-100 tracking-wide",
+                arrow: 20
             };
             if (d === 1) return {
-                // 第一级子集：减轻字重，缩小字号
-                wrapper: "mb-1 mt-3",
-                icon: <FolderOpen className="text-slate-500 dark:text-slate-400 mr-2 flex-shrink-0" size={16} />,
-                text: "text-[15px] font-semibold text-slate-700 dark:text-slate-200",
-                arrow: 16
+                // 第一级子集：加重字形，图标加入浅灰填充色，使其拥有稳重的节级感
+                wrapper: 'mt-5 mb-2',
+                icon: <FolderOpen className="text-slate-700 dark:text-slate-400 mr-2 flex-shrink-0 fill-slate-100 dark:fill-slate-800/50" size={18} />,
+                text: "text-[16px] font-bold text-slate-800 dark:text-slate-200 tracking-tight",
+                arrow: 18
             };
             if (d === 2) return {
-                // 第二级子集：常规字重，更加内敛
-                wrapper: "mb-1 mt-2",
-                icon: <Folder className="text-slate-400 dark:text-slate-500 mr-2 flex-shrink-0" size={14} />,
-                text: "text-[14px] font-medium text-slate-600 dark:text-slate-300",
-                arrow: 14
+                // 第二级子集：降级字重为 semibold，色阶降为 600，图标改为空心且变淡/缩小，彻底和上一级拉开视觉差距
+                wrapper: 'mt-3 mb-1.5',
+                icon: <Folder className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" size={15} strokeWidth={2.5} />,
+                text: "text-[14.5px] font-semibold text-slate-600 dark:text-slate-300",
+                arrow: 16
             };
+            // 更深层级（动态透明度背景：3级内透明度降低，4级起无底色）
+            const level = d - 3;
+            let bgClass = ''; 
+            if (level === 0) bgClass = 'bg-slate-200/50 dark:bg-slate-700/50';
+            else if (level === 1) bgClass = 'bg-slate-200/30 dark:bg-slate-700/30';
+            else if (level === 2) bgClass = 'bg-slate-200/15 dark:bg-slate-700/15';
+
             return {
-                // 更深层级
-                wrapper: "mb-1 mt-2 opacity-80",
-                icon: <Circle className="text-slate-400 dark:text-slate-500 mr-2 flex-shrink-0 fill-current" size={6} />,
-                text: "text-[13px] font-medium text-slate-500 dark:text-slate-400 tracking-wider",
-                arrow: 12
+                wrapper: `${bgClass ? 'px-3 py-1 w-max max-w-full ' + bgClass + ' rounded-full' : 'px-1 py-1'} mt-2 mb-1`,
+                icon: null,
+                text: "text-[13.5px] font-medium text-slate-600 dark:text-slate-300 tracking-wide",
+                arrow: 14,
+                hoverRow: " " // 取消整行的 hover 隐色叠加
             };
         };
 
         const style = getHeaderStyle(depth);
+        const rowHoverClass = style.hoverRow !== undefined ? style.hoverRow : "hover:bg-slate-50 dark:hover:bg-slate-800/50";
+
+        const hasContent = directPapers.length > 0 || children.length > 0;
 
         return (
             <div key={categoryId} className="animate-in fade-in duration-300">
-                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-md px-1 py-1 -ml-1 ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
+                <div className={`cursor-pointer group select-none flex items-center justify-between transition-colors rounded-md px-1 py-1 -ml-1 ${rowHoverClass} ${style.wrapper}`} onClick={() => toggleSection(categoryId)}>
                     <div className="flex items-center">
                         <div className={`mr-1 transition-transform duration-200 ${isExpanded ? 'rotate-0 text-slate-400' : '-rotate-90 text-slate-300'}`}> <ChevronDown size={style.arrow} /> </div>
                         {style.icon}
@@ -807,15 +807,14 @@ const App = () => {
                             <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full align-middle relative -top-0.5 border border-slate-200 dark:border-slate-700">{count.total}</span>
                         </h3>
                     </div>
-                    {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} depth={depth} />}
+                {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} depth={depth} />}
                 </div>
 
-                {isExpanded && (
-                    <div className="relative pl-3">
+                {isExpanded && hasContent && (
+                    <div className="relative">
                         {directPapers.length > 0 && (
-                            // 不做任何左右冗余挤压，最大化卡片显示空间，恢复最初的呼吸感
-                            <div className="grid grid-cols-1 gap-4 mt-2 mb-5">
-                                {/* 性能优化: 文件夹视图虽然不强制全局分页，但超过50篇也需要限制，这里为了简洁暂不加Folder内分页，因为一般文件夹内不会有太多 */}
+                            <div className={`grid grid-cols-1 gap-5 mt-3 ${children.length > 0 ? 'mb-8' : 'mb-10'}`}>
+                                {/* 性能优化: 文件夹视图虽然不强制全局分页，但避免DOM爆炸 */}
                                 {directPapers.map(p => (
                                     <CompactPaperCard
                                         key={p.id}
@@ -839,8 +838,8 @@ const App = () => {
                             </div>
                         )}
                         {children.length > 0 && (
-                            // 去掉 pl-4 包裹，层级缩进由各级标题行自身的 ml-X 承担，卡片始终全宽
-                            <div className="mt-2 mb-4">
+                            // 嵌套文件夹区域
+                            <div className="mt-2 mb-2 pl-3">
                                 {children.map(c => renderCategoryBlock(c.id, depth + 1))}
                             </div>
                         )}
