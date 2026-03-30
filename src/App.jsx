@@ -798,29 +798,32 @@ const App = () => {
         const count = categoryCountsMap[categoryId] || { total: 0 };
 
         const getHeaderStyle = (d, expanded) => {
+            // 核心修复：根据 expanded 状态动态决定使用哪种图标
             const Icon = expanded ? FolderOpen : Folder;
+
             if (d === 0) return {
-                // 顶级分类：始终使用 FolderOpen (静态)
                 wrapper: `mt-6 mb-3 pb-2 border-b-[2px] border-slate-200/60 dark:border-slate-700/80 rounded-2xl`,
-                icon: <FolderOpen className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={22} />,
+                // 修复：把写死的 <FolderOpen /> 替换为动态的 <Icon />
+                icon: <Icon className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={22} />,
                 text: "text-[18px] font-bold text-slate-800 dark:text-slate-100 tracking-wide",
                 arrow: 20
             };
             if (d === 1) return {
-                // 第一级子集：加重字形，图标加入浅灰填充色，使其拥有稳重的节级感
                 wrapper: 'mt-5 mb-2',
+                // 确保这里也是 <Icon />
                 icon: <Icon className="text-slate-700 dark:text-slate-400 mr-2 flex-shrink-0 fill-slate-100 dark:fill-slate-800/50" size={18} />,
                 text: "text-[16px] font-bold text-slate-800 dark:text-slate-200 tracking-tight",
                 arrow: 18
             };
             if (d === 2) return {
-                // 第二级子集：降级字重为 semibold，色阶降为 600，图标改为空心且变淡/缩小，彻底和上一级拉开视觉差距
                 wrapper: 'mt-3 mb-1.5',
+                // 确保这里也是 <Icon />
                 icon: <Icon className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" size={15} strokeWidth={2.5} />,
                 text: "text-[14.5px] font-semibold text-slate-600 dark:text-slate-300",
                 arrow: 16
             };
-            // 更深层级（动态透明度背景：3级内透明度降低，4级起无底色）
+
+            // 更深层级
             const level = d - 3;
             let bgClass = '';
             if (level === 0) bgClass = 'bg-slate-200/50 dark:bg-slate-700/50';
@@ -829,10 +832,11 @@ const App = () => {
 
             return {
                 wrapper: `${bgClass ? 'px-3 py-1 w-max max-w-full ' + bgClass + ' rounded-full' : 'px-1 py-1'} mt-2 mb-1`,
-                icon: expanded ? <FolderOpen size={14} className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" /> : <Folder size={14} className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" />,
+                // 修复：把三元表达式写死的地方也换成统一的 <Icon />
+                icon: <Icon size={14} className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" />,
                 text: "text-[13.5px] font-medium text-slate-600 dark:text-slate-300 tracking-wide",
                 arrow: 14,
-                hoverRow: " " // 取消整行的 hover 隐色叠加
+                hoverRow: " "
             };
         };
 
