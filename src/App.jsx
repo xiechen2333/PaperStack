@@ -30,32 +30,34 @@ const THEME = {
 
 // --- 组件: SidebarItem (侧边栏单项 - 性能优化版) ---
 const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpanded, count, isManageMode, onToggle, onSelect, onManageAction }) => {
-    const getLevelStyle = (d) => {
+    const getLevelStyle = (d, showOpen) => {
+        const Icon = showOpen ? FolderOpen : Folder;
         // 第一层级：最大字号 + 最重字重
         if (d === 0) return {
-            icon: <Folder size={18} className={isActive ? "fill-blue-100 text-blue-600 dark:text-blue-400" : "fill-slate-100 text-slate-400 dark:text-slate-500"} />,
+            icon: <Icon size={18} className={isActive ? "fill-blue-200 text-blue-700 dark:text-blue-400" : "fill-slate-100 text-slate-400 dark:text-slate-500"} />,
             textClass: "text-[15px] font-semibold text-slate-800 dark:text-slate-100",
             containerClass: "py-2.5 mb-1"
         };
-        // 第二层级（depth 1 & 2 归为同组）：字号与字重过渡
+        // 第二层级
         if (d === 1) return {
-            icon: <FolderOpen size={16} />,
+            icon: <Icon size={16} />,
             textClass: "text-[14px] font-medium text-slate-700 dark:text-slate-200",
             containerClass: "py-2 mb-0.5"
         };
         if (d === 2) return {
-            icon: <FolderOpen size={14} className="opacity-50" />,
+            icon: <Icon size={14} className="opacity-50" />,
             textClass: "text-[13.5px] font-normal text-slate-600 dark:text-slate-300",
             containerClass: "py-1.5"
         };
-        // 第三层级（更深层）：最小字号 + 最浅灰度
+        // 第三层级（更深层）
         return {
             icon: null,
             textClass: "text-[13px] text-slate-500 dark:text-slate-400",
             containerClass: "py-1.5"
         };
     };
-    const style = getLevelStyle(depth);
+    // 当 isActive 或 isExpanded 时显示打开图标
+    const style = getLevelStyle(depth, isActive || isExpanded);
 
     return (
         <div className="select-none relative">
@@ -64,30 +66,20 @@ const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpa
             flex items-center px-3 rounded-lg transition-all duration-200 group cursor-pointer 
             ${style.containerClass} 
             ${isActive
-                        ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100'
+                        ? 'bg-blue-100/90 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 shadow-sm ring-1 ring-blue-200 dark:ring-blue-700'
                         : 'hover:bg-slate-100 text-slate-600 active:scale-[0.99]'} 
             ${isManageMode ? 'pr-1' : ''} 
           `}
                 onClick={(e) => { e.stopPropagation(); onSelect(category.id); }}
             >
-                <div
-                    className={`
-                w-5 h-5 flex items-center justify-center rounded mr-1.5 transition-all flex-shrink-0 
-                ${hasChildren ? 'hover:bg-slate-200 text-slate-400 hover:text-slate-600' : 'opacity-0 pointer-events-none'}
-            `}
-                    onClick={(e) => { e.stopPropagation(); onToggle(category.id); }}
-                >
-                    {isExpanded ? <ChevronDown size={14} strokeWidth={2.5} /> : <ChevronRight size={14} strokeWidth={2.5} />}
-                </div>
-
-                <div className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300'}`}>
+                <div className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-700 dark:text-blue-300' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300'}`}>
                     {style.icon}
                 </div>
 
                 <span className={`truncate flex-1 leading-snug ${style.textClass}`}>{category.name}</span>
 
                 {!isManageMode && count.total > 0 && (
-                    <div className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
+                    <div className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-200/70 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
                         {hasChildren && count.self > 0 ? `${count.self}/${count.total}` : count.total}
                     </div>
                 )}
@@ -210,7 +202,7 @@ const App = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const deferredSearchQuery = useDeferredValue(searchQuery);
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: '' });
-    const [expandedFolders, setExpandedFolders] = useState(['1', '2']);
+    const [expandedFolders, setExpandedFolders] = useState([]);
     const [expandedPaperIds, setExpandedPaperIds] = useState([]);
     const [expandedSectionIds, setExpandedSectionIds] = useState([]);
     const [isManageMode, setIsManageMode] = useState(false);
@@ -235,22 +227,35 @@ const App = () => {
     const mainContentRef = useRef(null);
     // 默认数据
     const defaultCategories = useMemo(() => [
-        { id: '1', name: '人工智能核心 (Core AI)', parentId: null },
-        { id: '2', name: '深度学习架构 (DL Architectures)', parentId: '1' },
-        { id: '3', name: '注意力机制 (Attention)', parentId: '2' },
+        { id: '1', name: 'Transformer 架构', parentId: null },
+        { id: '2', name: '序列建模与注意力', parentId: '1' },
+        { id: '3', name: 'Self-Attention 机制', parentId: '2' },
     ], []);
     const defaultPapers = useMemo(() => [
         {
-            id: 'p1', categoryId: '3', title: 'Attention Is All You Need', venue: 'NeurIPS', link: 'https://arxiv.org/abs/1706.03762', year: '2017',
-            problem: `本文提出的核心问题是：现有 RNN/LSTM 等序列模型依赖顺序计算，无法在序列长度维度并行化，且长距离依赖建模效果随序列增长而退化。\n\n论文提出 **Transformer** 架构，完全抛弃卷积和循环结构，仅基于注意力机制（Attention Mechanism）进行编解码，天然支持并行计算。\n\n**Scaled Dot-Product Attention 核心公式：**\n$$ Attention(Q, K, V) = softmax\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V $$\n\n其中 $d_k$ 为 Key 的维度，缩放因子 $\\sqrt{d_k}$ 用于防止点积过大导致 softmax 梯度消失。`,
-            method: `Transformer 由 **编码器（Encoder）** 和 **解码器（Decoder）** 各 6 层堆叠组成。\n\n**Multi-Head Attention（多头注意力）：** 将 Q/K/V 分别线性投影到 $h=8$ 个子空间，并行计算注意力后拼接融合，让模型同时关注来自不同表示子空间的信息：\n$$ MultiHead(Q,K,V) = Concat(head_1,...,head_h)W^O $$\n\n**Position-wise FFN：** 每个位置独立经过两层线性变换 + ReLU，增强非线性表达能力。\n\n**Positional Encoding：** 使用正弦/余弦函数编码位置信息以注入序列顺序。\n\n**残差连接 + Layer Norm** 应用于每个子层，保证训练稳定性。`,
-            results: `在机器翻译基准 **WMT 2014 英德** 任务上达到 **28.4 BLEU**，超越此前所有模型（含集成模型），训练成本仅为对比方法的一小部分（约 3.5 天 8 GPU）。\n\n**WMT 2014 英法**：41.0 BLEU，创当时 SOTA。\n\n**训练效率：** 将序列建模的最大路径长度从 $O(n)$ 降至 $O(1)$，极大加速了长距离依赖的建模。\n\n**消融实验** 证明多头数量、注意力维度等超参数均显著影响效果，单头注意力明显劣于多头。`,
-            thoughts: `这篇论文是现代 NLP / LLM 时代的绝对基石。GPT、BERT、LLaMA 等一切大语言模型的架构核心都是 Transformer。\n\n**关键洞察：** "Attention is all you need" 不只是标题噱头，而是一个重要结论——在序列建模中，显式的注意力机制足以替代归纳偏置更强但并行性差的 RNN 结构。\n\n**值得思考的局限性：**\n- Self-attention 的复杂度为 $O(n^2)$，对超长序列代价高昂，引出了后续 Longformer、Flash Attention 等工作。\n- Positional Encoding 是固定的，对位置外推能力有限（引出 RoPE、ALiBi 等改进）。\n\n**推荐阅读路径：** Attention Is All You Need → BERT → GPT-2 → T5 → GPT-3 → LLaMA。`,
-            status: 'read', isStarred: true, starNote: '必读经典，LLM 时代的架构起点',
-            rating: 10, ratedDate: new Date().toISOString(), tags: ['Transformer', 'Attention', 'NLP', 'Machine Learning']
+            id: 'p1',
+            categoryId: '3',
+            title: 'Attention Is All You Need',
+            venue: 'NeurIPS',
+            link: 'https://arxiv.org/abs/1706.03762',
+            year: '2017',
+
+            problem: `传统 \`RNN/LSTM\` 存在**难以并行计算**与**长距离依赖易丢失**两大缺陷。Transformer 提出完全摒弃循环与卷积，仅基于注意力机制进行全局建模，天然支持大规模并行训练。\n\n> **Scaled Dot-Product Attention**\n> $$Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V$$`,
+
+            method: `模型主体由 **编码器 (Encoder)** 与 **解码器 (Decoder)** 堆叠而成，核心为多头注意力与前馈网络，并辅以残差连接及 \`LayerNorm\`。\n\n- **Multi-Head Attention**：将 \`Q/K/V\` 投影至多个低维子空间并行计算，以捕获不同表示子空间的语义特征。\n- **Positional Encoding**：引入正弦与余弦位置编码，为模型注入绝对与相对位置信息：\n  $$PE_{(pos, 2i)} = \\sin(pos / 10000^{2i/d_{model}})$$`,
+
+            results: `- **WMT'14 英德翻译**：BLEU 28.4 (SOTA)，训练耗时仅 3.5 天 (8 P100 GPU)\n- **WMT'14 英法翻译**：BLEU 41.0 (SOTA)\n \n---\n \n> **核心突破**\n> 将序列特征交互的路径长度降至 \`O(1)\`，在显著提升精度的同时大幅降低了计算成本。`,
+
+            thoughts: `大语言模型 (LLM) 时代的奠基之作，\`BERT\`、\`GPT\` 家族及 \`LLaMA\` 等主流架构的底层核心。\n\n- **💡 核心洞见**：显式的注意力机制足以独立完成强大的序列建模，让位于计算的规模化。\n- **🚀 复杂度挑战**：自注意力 \`O(n²)\` 的复杂度催生了 \`FlashAttention\` 等长文本加速方案。\n- **⏳ 位置编码**：固定编码的外推局限性，推动了 \`RoPE\` (旋转位置编码) 等动态时序技术的发展。`,
+
+            status: 'read',
+            isStarred: true,
+            starNote: '必读经典，LLM 时代的架构起点',
+            rating: 10,
+            ratedDate: new Date().toISOString(),
+            tags: ['Transformer', 'Attention', 'NLP', 'LLM']
         }
     ], []);
-
     // 初始化定时器与主题同步
     useEffect(() => {
         if (isDarkMode) {
@@ -288,7 +293,8 @@ const App = () => {
 
                 if (dbCats && Array.isArray(dbCats)) {
                     setCategories(dbCats);
-                    setPapers(dbPapers || []);
+                    const loadedPapers = dbPapers && Array.isArray(dbPapers) && dbPapers.length > 0 ? dbPapers : defaultPapers;
+                    setPapers(loadedPapers);
                     if (dbHistory) setReadingHistory(dbHistory);
                     if (dbBackupTime) setLastBackupTime(parseInt(dbBackupTime));
                 } else {
@@ -325,16 +331,16 @@ const App = () => {
 
     const hasAutoExpandedRef = useRef(false);
     useEffect(() => {
-        if (isDataLoaded && categories.length > 0 && expandedSectionIds.length === 0 && !hasAutoExpandedRef.current) {
+        if (isDataLoaded && categories.length > 0 && !hasAutoExpandedRef.current) {
             // 1. 找到没有父亲的根节点
             const rootIds = categories.filter(c => !c.parentId).map(c => c.id);
 
             // 2. 只告诉界面：“请展开这几个根节点”
             setExpandedSectionIds(rootIds);
-            setExpandedFolders(prev => [...new Set([...prev, ...rootIds])]);
+            setExpandedFolders(rootIds);
             hasAutoExpandedRef.current = true;
         }
-    }, [isDataLoaded, categories, expandedSectionIds.length]);
+    }, [isDataLoaded, categories]);
 
     // 统计逻辑
     const categoryCountsMap = useMemo(() => {
@@ -392,7 +398,8 @@ const App = () => {
             let valA, valB;
             switch (sortConfig.key) {
                 case 'year': valA = parseInt(a.year || '0'); valB = parseInt(b.year || '0'); break;
-                case 'title': valA = a.title.toLowerCase(); valB = b.title.toLowerCase(); break;
+                // 加入空值保护 (a.title || '')
+                case 'title': valA = (a.title || '').toLowerCase(); valB = (b.title || '').toLowerCase(); break;
                 default: return 0;
             }
             if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -458,6 +465,16 @@ const App = () => {
                             setPapers(data.papers);
                             await localforage.setItem('research_categories', data.categories);
                             await localforage.setItem('research_papers', data.papers);
+
+                            // 重置所有查看状态，防止UI崩溃
+                            setActiveCategoryId(null);
+                            setShowAllPapers(true);
+                            setShowFavoritesOnly(false);
+                            setExpandedFolders([]);
+                            setExpandedPaperIds([]);
+                            setSearchQuery('');
+                            setDisplayLimit(20);
+
                             toast.success(`✅ 成功恢复！`);
                         }} className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">确认覆盖</button>
                     </div>
@@ -465,7 +482,6 @@ const App = () => {
             ), { duration: Infinity, id: 'restore-confirm' });
         } catch { toast.error('解析失败，请检查文件。'); }
     };
-
     const toggleFolder = useCallback((id) => {
         setExpandedFolders(prev => {
             const isExpanding = !prev.includes(id);
@@ -516,17 +532,28 @@ const App = () => {
         }
     }, [expandedSectionIds, categories]);
 
+    // 左侧聊天栏点击文件夹
     const handleCategorySelect = useCallback((id) => {
-        setActiveCategoryId(prev => prev === id ? null : id);
         setShowFavoritesOnly(false);
         setShowAllPapers(false);
         setExpandedPaperIds([]);
-        setDisplayLimit(20); // 性能优化：重置分页
-        // 选中时确保侧边栏中其所有祖先都展开，使其可见
-        const ancestors = getAncestorIds(id, categories);
-        if (ancestors.length > 0) {
-            setExpandedFolders(prev => [...new Set([...prev, id, ...ancestors])]);
-        }
+        setDisplayLimit(20);
+
+        setActiveCategoryId(prev => {
+            if (prev === id) {
+                // 已选中同一个→取消选中并折叠
+                setExpandedFolders(f => f.filter(fid => fid !== id));
+                setExpandedSectionIds(s => s.filter(sid => sid !== id));
+                return null;
+            } else {
+                // 选中新的→展开它以及所有祖先（确保左侧树可见）
+                const ancestors = getAncestorIds(id, categories);
+                const toAdd = [id, ...ancestors];
+                setExpandedFolders(f => [...new Set([...f, ...toAdd])]);
+                setExpandedSectionIds(s => [...new Set([...s, ...toAdd])]);
+                return id;
+            }
+        });
     }, [categories]);
 
     const handleHistoryClick = (paperId) => {
@@ -611,14 +638,28 @@ const App = () => {
 
     const handleConfirmDelete = () => {
         const { type, id } = deleteModal;
+
         if (type === 'category') {
+            // 递归获取要删除的文件夹及其所有子文件夹的 ID
             const getIds = (root) => [root, ...categories.filter(c => c.parentId === root).flatMap(c => getIds(c.id))];
-            const ids = getIds(id);
-            setCategories(prev => prev.filter(c => !ids.includes(c.id)));
-            if (ids.includes(activeCategoryId)) setActiveCategoryId(null);
-        } else {
+            const idsToDelete = getIds(id);
+            setCategories(prev => prev.filter(c => !idsToDelete.includes(c.id)));
+            // 级联删除这些分类下的所有文献，防止产生“幽灵文献”
+            setPapers(prev => prev.filter(p => !idsToDelete.includes(p.categoryId)));
+            if (idsToDelete.includes(activeCategoryId)) {
+                setActiveCategoryId(null);
+            }
+            // 同步清理左侧侧边栏和右侧展开状态中包含的已被删掉的 ID 
+            setExpandedFolders(prev => prev.filter(folderId => !idsToDelete.includes(folderId)));
+            setExpandedSectionIds(prev => prev.filter(folderId => !idsToDelete.includes(folderId)));
+        } else if (type === 'paper') {
+            //删除单篇文献
             setPapers(prev => prev.filter(p => p.id !== id));
+            // 清理相关的 UI 状态（防止被删除的论文还在阅读历史里引发空指针报错）
+            setReadingHistory(prev => prev.filter(paperId => paperId !== id));
+            setExpandedPaperIds(prev => prev.filter(paperId => paperId !== id));
         }
+        // 最后重置/关闭删除确认弹窗
         setDeleteModal({ isOpen: false, type: null, id: null, title: '' });
     };
 
@@ -756,45 +797,46 @@ const App = () => {
         const isExpanded = expandedSectionIds.includes(categoryId);
         const count = categoryCountsMap[categoryId] || { total: 0 };
 
-        const getHeaderStyle = (d) => {
+        const getHeaderStyle = (d, expanded) => {
+            const Icon = expanded ? FolderOpen : Folder;
             if (d === 0) return {
-                // 顶级分类
+                // 顶级分类：始终使用 FolderOpen (静态)
                 wrapper: `mt-6 mb-3 pb-2 border-b-[2px] border-slate-200/60 dark:border-slate-700/80 rounded-2xl`,
-                icon: <Folder className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={22} />,
+                icon: <FolderOpen className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 fill-blue-50 dark:fill-blue-900/40" size={22} />,
                 text: "text-[18px] font-bold text-slate-800 dark:text-slate-100 tracking-wide",
                 arrow: 20
             };
             if (d === 1) return {
                 // 第一级子集：加重字形，图标加入浅灰填充色，使其拥有稳重的节级感
                 wrapper: 'mt-5 mb-2',
-                icon: <FolderOpen className="text-slate-700 dark:text-slate-400 mr-2 flex-shrink-0 fill-slate-100 dark:fill-slate-800/50" size={18} />,
+                icon: <Icon className="text-slate-700 dark:text-slate-400 mr-2 flex-shrink-0 fill-slate-100 dark:fill-slate-800/50" size={18} />,
                 text: "text-[16px] font-bold text-slate-800 dark:text-slate-200 tracking-tight",
                 arrow: 18
             };
             if (d === 2) return {
                 // 第二级子集：降级字重为 semibold，色阶降为 600，图标改为空心且变淡/缩小，彻底和上一级拉开视觉差距
                 wrapper: 'mt-3 mb-1.5',
-                icon: <Folder className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" size={15} strokeWidth={2.5} />,
+                icon: <Icon className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" size={15} strokeWidth={2.5} />,
                 text: "text-[14.5px] font-semibold text-slate-600 dark:text-slate-300",
                 arrow: 16
             };
             // 更深层级（动态透明度背景：3级内透明度降低，4级起无底色）
             const level = d - 3;
-            let bgClass = ''; 
+            let bgClass = '';
             if (level === 0) bgClass = 'bg-slate-200/50 dark:bg-slate-700/50';
             else if (level === 1) bgClass = 'bg-slate-200/30 dark:bg-slate-700/30';
             else if (level === 2) bgClass = 'bg-slate-200/15 dark:bg-slate-700/15';
 
             return {
                 wrapper: `${bgClass ? 'px-3 py-1 w-max max-w-full ' + bgClass + ' rounded-full' : 'px-1 py-1'} mt-2 mb-1`,
-                icon: null,
+                icon: expanded ? <FolderOpen size={14} className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" /> : <Folder size={14} className="text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" />,
                 text: "text-[13.5px] font-medium text-slate-600 dark:text-slate-300 tracking-wide",
                 arrow: 14,
                 hoverRow: " " // 取消整行的 hover 隐色叠加
             };
         };
 
-        const style = getHeaderStyle(depth);
+        const style = getHeaderStyle(depth, isExpanded);
         const rowHoverClass = style.hoverRow !== undefined ? style.hoverRow : "hover:bg-slate-50 dark:hover:bg-slate-800/50";
 
         const hasContent = directPapers.length > 0 || children.length > 0;
@@ -810,7 +852,7 @@ const App = () => {
                             <span className="ml-2 text-[11px] font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full align-middle relative -top-0.5 border border-slate-200 dark:border-slate-700">{count.total}</span>
                         </h3>
                     </div>
-                {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} depth={depth} />}
+                    {isManageMode && <ManagementToolbar onManageAction={handleManageAction} categoryId={cat.id} depth={depth} />}
                 </div>
 
                 {isExpanded && hasContent && (
@@ -1014,7 +1056,14 @@ const App = () => {
                             </button>
                         </div>
 
-                        <button onClick={() => { setEditingPaper(null); setIsAddingPaper(true); }} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-[14px] font-bold shadow-lg shadow-slate-900/10 whitespace-nowrap transition-all active:scale-95"> <PlusCircle size={18} /> <span>新文献</span> </button>
+                        <button onClick={() => {
+                            if (categories.length === 0) {
+                                toast.error("请先在左侧新建至少一个文件夹");
+                                return;
+                            }
+                            setEditingPaper(null);
+                            setIsAddingPaper(true);
+                        }} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-[14px] font-bold shadow-lg shadow-slate-900/10 whitespace-nowrap transition-all active:scale-95"> <PlusCircle size={18} /> <span>新文献</span> </button>
                     </div>
                 </div>
 
@@ -1046,7 +1095,7 @@ const App = () => {
                                                     )}
                                                 </div>
                                             ) :
-                                                activeCategoryId ? <> <Folder size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
+                                                activeCategoryId ? <> <FolderOpen size={28} className="text-blue-600 dark:text-blue-400" /> {getCategoryName(activeCategoryId)} </> :
                                                     <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
                             <p className="text-slate-500 dark:text-slate-400 text-[15px] mt-2.5 ml-1 font-medium tracking-wide">
@@ -1719,8 +1768,11 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                                             if (e.key === 'Enter') {
                                                 e.preventDefault();
                                                 const newTag = tagInput.trim();
-                                                if (newTag && !(d.tags || []).includes(newTag)) {
+                                                const existingTagsLower = (d.tags || []).map(t => t.toLowerCase());
+                                                if (newTag && !existingTagsLower.includes(newTag.toLowerCase())) {
                                                     setD({ ...d, tags: [...(d.tags || []), newTag] });
+                                                    setTagInput('');
+                                                } else if (existingTagsLower.includes(newTag.toLowerCase())) {
                                                     setTagInput('');
                                                 }
                                             }
