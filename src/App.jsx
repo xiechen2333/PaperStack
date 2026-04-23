@@ -1254,12 +1254,14 @@ const App = () => {
                     paper={editingPaper}
                     onClose={() => { setIsAddingPaper(false); setEditingPaper(null); }}
                     onSave={(d) => {
-                        if (editingPaper) setPapers(p => p.map(x => x.id === editingPaper.id ? { ...d, id: x.id } : x));
-                        // 修改为：新数据在前，旧数据在后 (...p)
-                        else setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
-
-                        // 建议同时滚动到顶部，确保用户看到新添加的项目
-                        if (mainContentRef.current) mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                        if (editingPaper) {
+                            setPapers(p => p.map(x => x.id === editingPaper.id ? { ...d, id: x.id } : x));
+                        } else {
+                            // 修改为：新数据在前，旧数据在后 (...p)
+                            setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
+                            // 仅在新建卡片时滚动到顶部，确保用户看到新添加的项目
+                            if (mainContentRef.current) mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
 
                         setIsAddingPaper(false);
                         setEditingPaper(null);
@@ -1277,133 +1279,81 @@ const App = () => {
 
 // --- 组件: WelcomeModal (欢迎导览) ---
 const WelcomeModal = ({ onClose }) => {
-    const features = [
+    const manuals = [
         {
-            icon: <Folder size={16} />,
+            icon: <Folder size={22} strokeWidth={2} />,
             iconBg: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-            title: '文件夹管理',
-            items: [
-                <><b className="text-slate-800 dark:text-slate-200">管理模式</b>：侧边栏底部切换，开启层级管理能力</>,
-                <><b className="text-slate-800 dark:text-slate-200">新建目录</b>：管理状态下点击 ➕ 直接嵌套子文件夹</>,
-                <><b className="text-slate-800 dark:text-slate-200">编辑体系</b>：支持多级子文件夹重命名、跨层级移动与删除</>,
-                <><b className="text-slate-800 dark:text-slate-200">顺序调整</b>：直观使用 ⬆⬇ 按钮轻松整理同级排序</>,
-            ]
+            title: '如何管理分类文件夹',
+            description: '点击侧边栏底部的「管理模式」即可开启编辑状态。在该状态下，你可以点击文件夹旁边的图标进行重命名、移动层级、删除，或者新建子文件夹。同级文件夹可通过上下箭头调整顺序。'
         },
         {
-            icon: <FileText size={16} />,
+            icon: <FileText size={22} strokeWidth={2} />,
             iconBg: 'bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400',
-            title: '文献录入',
-            items: [
-                <><b className="text-slate-800 dark:text-slate-200">极速创建</b>：点击右上角「新文献」，秒速建立基础信息元数据</>,
-                <><b className="text-slate-800 dark:text-slate-200">四大专业区块</b>：原生支持 <b>Markdown</b> 排版与 LaTeX 复杂数学公式</>,
-                <><b className="text-slate-800 dark:text-slate-200">清爽折叠</b>：遇到长段落，可点击彩色骨架节点单独缩放特定区域</>,
-                <><b className="text-slate-800 dark:text-slate-200">星标与评分</b>：❤️ 收藏并附加见解 · ⭐ 1–10 阶梯打分，记录此刻</>,
-            ]
+            title: '如何录入与编辑笔记',
+            description: '点击右上角「新文献」按钮即可创建。笔记内容支持 Markdown 语法与 LaTeX 数学公式（如 $E=mc^2$）。在普通视图下，将鼠标悬停在卡片上，会显示编辑、移动和删除图标。'
         },
         {
-            icon: <Download size={16} />,
+            icon: <Search size={22} strokeWidth={2} />,
+            iconBg: 'bg-amber-50 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400',
+            title: '如何检索与使用标签',
+            description: '在顶部搜索框输入内容，会实时匹配文献的标题、摘要、评分备注等。在编辑笔记时可以添加多个自定义标签，添加后它们会出现在左侧栏的「个人标签库」中，点击即可交叉过滤。'
+        },
+        {
+            icon: <Download size={22} strokeWidth={2} />,
             iconBg: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
-            title: '备份与恢复',
-            items: [
-                <><b className="text-rose-600 dark:text-rose-400">数据安全</b>：所有数据均存在本地，清除浏览器缓存将永久抹除记录</>,
-                <><b className="text-slate-800 dark:text-slate-200">安全导出</b>：进入管理模式 → 备份 → 生成专属 JSON 文件存入硬盘</>,
-                <><b className="text-slate-800 dark:text-slate-200">灾备恢复</b>：换机或重置后，一键上传 JSON 数据完美复原全库结构</>,
-                <><b className="text-slate-800 dark:text-slate-200">智能告警</b>：顶部导航栏精准追踪备份周期，超过 3 天自动示警护航</>,
-            ]
-        },
-        {
-            icon: <Search size={16} />,
-            iconBg: 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
-            title: '搜索与检索',
-            items: [
-                <><b className="text-slate-800 dark:text-slate-200">瞬时检索</b>：顶部搜索框实时毫秒级匹配标题、来源、全文备注与标签</>,
-                <><b className="text-slate-800 dark:text-slate-200">标签管理</b>：侧边全量标签库一览无余，支持多标签灵活组合交叉过滤</>,
-                <><b className="text-slate-800 dark:text-slate-200">三大独立视图</b>：精选收藏集 / 全维文献列表 / 知识库树状大纲无缝跳转</>,
-                <><b className="text-slate-800 dark:text-slate-200">动态排序</b>：支持录入时间、评分等维度动态排布，降序与升序灵活切控</>,
-            ]
+            title: '如何进行数据备份',
+            description: '【重要】你的数据仅保存在当前浏览器中，清空缓存会造成丢失！建议经常点击页面右上方的「备份状态提示」（如“未备份”或“N天前备份”）一键下载 JSON 备份。需要恢复时，开启管理模式并点击「恢复」即可。'
         },
     ];
 
     return (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
-            <div className="bg-slate-50 dark:bg-slate-900 w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
-
-                {/* Header */}
-                <div className="bg-white dark:bg-slate-900 px-8 py-6 flex items-center gap-5 shrink-0 rounded-t-2xl border-b border-slate-100 dark:border-slate-800 relative">
-                    <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/20">
-                        <BookOpen size={24} className="text-white" />
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100 dark:border-slate-800">
+                
+                {/* 极简顶栏 */}
+                <div className="px-10 py-10 flex items-center justify-between relative bg-slate-50 dark:bg-slate-800/50">
+                    <div className="flex items-center gap-5">
+                        <div className="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+                            <BookOpen size={28} strokeWidth={2.5} />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">PaperStack 使用说明书</h2>
+                            <p className="text-slate-500 dark:text-slate-400 text-[15px] mt-1.5 font-medium">了解基本操作与注意事项，防止数据丢失</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100">PaperStack 使用指南</h2>
-                        <p className="text-slate-500 dark:text-slate-400 text-[13px] mt-1">极致清爽的本地知识库 · 完全离线运行 · 无需登录即可使用</p>
-                    </div>
-                    <button onClick={onClose} className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"><X size={20} /></button>
+                    <button onClick={onClose} className="p-3 bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-full transition-all border border-slate-200 dark:border-slate-700 hover:scale-110 active:scale-95"><X size={20} strokeWidth={2.5} /></button>
                 </div>
 
-                {/* Scrollable content */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
-
-                    {/* Feature grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {features.map((g) => (
-                            <div key={g.title} className="p-5 rounded-xl bg-white dark:bg-slate-800/60 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${g.iconBg}`}>
-                                        {g.icon}
-                                    </div>
-                                    <div className="font-bold text-[15px] text-slate-800 dark:text-slate-100 tracking-tight">
-                                        {g.title}
-                                    </div>
+                <div className="px-10 pb-10 overflow-y-auto custom-scrollbar flex flex-col gap-8">
+                    {/* 网格功能区 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4">
+                        {manuals.map((g, idx) => (
+                            <div key={idx} className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col gap-4 group hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 cursor-default">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${g.iconBg}`}>
+                                    {g.icon}
                                 </div>
-                                <ul className="space-y-2">
-                                    {g.items.map((item, i) => (
-                                        <li key={i} className="flex items-start text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                                            <div className="min-w-[14px] flex justify-center shrink-0 mr-2 text-slate-300 dark:text-slate-600 mt-[3px]">›</div>
-                                            <span className="flex-1">{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <div>
+                                    <h3 className="font-bold text-[17px] text-slate-800 dark:text-slate-100 mb-2 tracking-tight">{g.title}</h3>
+                                    <p className="text-[14px] text-slate-600 dark:text-slate-400 leading-relaxed">{g.description}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Quick tips */}
-                    <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50">
-                        <div className="font-bold text-[11px] text-slate-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
-                            <Lightbulb size={11} /> 快速提示
+                    {/* 快速提示与动作区 */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-slate-100 dark:border-slate-800/60">
+                        <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 text-[14.5px] font-medium px-2">
+                            <Lightbulb className="text-amber-500 shrink-0" size={18} />
+                            <span>随时点击左上角 <b className="text-slate-700 dark:text-slate-300">书本图标</b> 重新打开本说明书</span>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
-                            {[
-                                '点击左上角书本图标可随时重新打开本指南',
-                                '笔记支持 LaTeX 渲染，如 $E=mc^2$',
-                                '管理模式下悬停卡片可删除或移动文献',
-                                '滚动页面后右下角出现「返回顶部」浮动按钮',
-                                '排序按钮支持三态切换：降序 → 升序 → 默认',
-                                '文件夹可嵌套多级，侧边栏辅助线标示层级',
-                            ].map((tip, i) => (
-                                <div key={i} className="flex items-start gap-1.5 text-[12px] text-slate-500 dark:text-slate-400">
-                                    <span className="text-blue-400 shrink-0 mt-0.5">✦</span>{tip}
-                                </div>
-                            ))}
+                        <div className="flex items-center gap-5 w-full sm:w-auto">
+                            <a href="https://github.com/xiechen2333/PaperStack" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-[14px] font-bold flex items-center gap-1.5 transition-colors hidden sm:flex">
+                                <ExternalLink size={16} /> GitHub
+                            </a>
+                            <button onClick={onClose} className="flex-1 sm:flex-none px-10 py-3.5 bg-slate-900 dark:bg-blue-600 text-white font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-blue-500 shadow-lg shadow-slate-900/20 dark:shadow-blue-900/20 transition-all active:scale-95 text-[15px]">
+                                我知道了
+                            </button>
                         </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <a
-                            href="https://github.com/xiechen2333/PaperStack/blob/main/README.md"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-slate-400 hover:text-blue-500 text-[12px] font-medium flex items-center gap-1.5 transition-colors"
-                        >
-                            <ExternalLink size={13} /> 查看 GitHub 文档
-                        </a>
-                        <button
-                            onClick={onClose}
-                            className="w-full sm:w-auto px-8 py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-bold rounded-xl hover:bg-slate-700 dark:hover:bg-blue-500 transition-all text-[14px] active:scale-95"
-                        >
-                            开始使用
-                        </button>
                     </div>
                 </div>
             </div>
