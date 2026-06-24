@@ -63,32 +63,50 @@ const SidebarItem = React.memo(({ category, depth, hasChildren, isActive, isExpa
         <div className="select-none relative">
             <div
                 className={`
-            flex items-center px-3 rounded-lg transition-all duration-200 group cursor-pointer 
+            flex items-center px-2 rounded-lg transition-all duration-200 group
             ${style.containerClass} 
             ${isActive
                         ? 'bg-blue-100/90 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 shadow-sm ring-1 ring-blue-200 dark:ring-blue-700'
                         : 'hover:bg-slate-100 text-slate-600 active:scale-[0.99]'} 
             ${isManageMode ? 'pr-1' : ''} 
           `}
-                onClick={(e) => { e.stopPropagation(); onSelect(category.id); }}
             >
-                <div className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-700 dark:text-blue-300' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300'}`}>
-                    {style.icon}
-                </div>
+                <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); if (hasChildren) onToggle(category.id); }}
+                    className={`mr-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${hasChildren ? 'text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200' : 'cursor-default text-slate-300 dark:text-slate-600'}`}
+                    aria-label={hasChildren ? `${isExpanded ? '折叠' : '展开'} ${category.name}` : `${category.name} 无子分类`}
+                    aria-expanded={hasChildren ? isExpanded : undefined}
+                    tabIndex={hasChildren ? 0 : -1}
+                    title={hasChildren ? (isExpanded ? '折叠分类' : '展开分类') : undefined}
+                >
+                    {hasChildren ? (isExpanded ? <ChevronDown size={15} strokeWidth={2.5} /> : <ChevronRight size={15} strokeWidth={2.5} />) : <span className="h-1.5 w-1.5 rounded-full bg-current opacity-40" />}
+                </button>
 
-                <span className={`truncate flex-1 leading-snug ${style.textClass}`}>{category.name}</span>
+                <button
+                    type="button"
+                    className="flex min-w-0 flex-1 items-center text-left"
+                    onClick={(e) => { e.stopPropagation(); onSelect(category.id); }}
+                    aria-current={isActive ? 'page' : undefined}
+                >
+                    <span className={`mr-2.5 flex-shrink-0 transition-colors ${isActive ? 'text-blue-700 dark:text-blue-300' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300'}`}>
+                        {style.icon}
+                    </span>
 
-                {!isManageMode && count.total > 0 && (
-                    <div className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-200/70 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
-                        {hasChildren && count.self > 0 ? `${count.self}/${count.total}` : count.total}
-                    </div>
-                )}
+                    <span className={`truncate flex-1 leading-snug ${style.textClass}`}>{category.name}</span>
+
+                    {!isManageMode && count.total > 0 && (
+                        <span className={`text-[11px] px-2 h-5 flex items-center justify-center rounded-full ml-2 font-medium transition-colors ${isActive ? 'bg-blue-200/70 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
+                            {hasChildren && count.self > 0 ? `${count.self}/${count.total}` : count.total}
+                        </span>
+                    )}
+                </button>
 
                 {isManageMode && (
-                    <div className="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <button onClick={(e) => { e.stopPropagation(); onManageAction('moveUp', category.id); }} className="p-1.5 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700" title="上移" > <ArrowUp size={14} /> </button>
-                        <button onClick={(e) => { e.stopPropagation(); onManageAction('moveDown', category.id); }} className="p-1.5 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700 mr-1" title="下移" > <ArrowDown size={14} /> </button>
-                        <button onClick={(e) => { e.stopPropagation(); onManageAction('add', category.id); }} className="p-1.5 rounded hover:bg-emerald-100 text-slate-400 hover:text-emerald-600" title="添加子分类" ><PlusCircle size={14} /></button>
+                    <div className="flex items-center gap-1 ml-2 opacity-100 transition-opacity duration-200">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('moveUp', category.id); }} className="p-1.5 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200" title="上移" aria-label={`上移 ${category.name}`}> <ArrowUp size={14} /> </button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('moveDown', category.id); }} className="p-1.5 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 mr-1" title="下移" aria-label={`下移 ${category.name}`}> <ArrowDown size={14} /> </button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('add', category.id); }} className="p-1.5 rounded hover:bg-emerald-100 text-slate-500 hover:text-emerald-600 dark:hover:bg-emerald-900/30" title="添加子分类" aria-label={`给 ${category.name} 添加子分类`}><PlusCircle size={14} /></button>
                     </div>
                 )}
             </div>
@@ -149,17 +167,17 @@ const ManagementToolbar = ({ onManageAction, categoryId, depth = 0, isPageTitle 
     if (isPageTitle) {
         containerClass += "bg-white shadow-sm border border-slate-200 rounded-md p-1 dark:bg-slate-800/80 dark:border-slate-700/50 opacity-100";
     } else if (depth === 0) {
-        containerClass += "opacity-60 hover:opacity-100";
+        containerClass += "opacity-100 md:opacity-80 md:hover:opacity-100";
     } else {
-        containerClass += "opacity-0 group-hover:opacity-100"; // 鼠标悬停时才显示
+        containerClass += "opacity-100";
     }
 
     return (
-        <div className={containerClass}>
-            <button onClick={(e) => { e.stopPropagation(); onManageAction('edit', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-blue-50 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400' : 'text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="编辑" > <Edit3 size={15} /> </button>
-            <button onClick={(e) => { e.stopPropagation(); onManageAction('moveCategory', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-violet-50 text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400' : 'text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="移动文件夹" > <FolderInput size={15} /> </button>
+        <div className={containerClass} aria-label="分类管理操作">
+            <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('edit', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-blue-50 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400' : 'text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="编辑" aria-label="编辑分类"> <Edit3 size={15} /> </button>
+            <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('moveCategory', categoryId); }} className={`p-1.5 rounded transition-colors ${isPageTitle ? 'hover:bg-violet-50 text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400' : 'text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`} title="移动文件夹" aria-label="移动分类"> <FolderInput size={15} /> </button>
             {isPageTitle && (
-                <button onClick={(e) => { e.stopPropagation(); onManageAction('delete', categoryId); }} className="p-1.5 rounded transition-colors hover:bg-red-50 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400" title="删除" > <Trash2 size={15} /> </button>
+                <button type="button" onClick={(e) => { e.stopPropagation(); onManageAction('delete', categoryId); }} className="p-1.5 rounded transition-colors hover:bg-red-50 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400" title="删除" aria-label="删除分类"> <Trash2 size={15} /> </button>
             )}
         </div>
     );
@@ -180,6 +198,41 @@ const getAncestorIds = (categoryId, categories) => {
     return ancestors;
 };
 
+const BACKUP_VERSION = "2.1";
+
+const getBackupFilename = (date = new Date()) => `paperstack_backup_${date.toISOString().slice(0, 10)}.json`;
+
+const validateBackupData = (data) => {
+    const errors = [];
+    if (!data || typeof data !== 'object') errors.push('备份文件不是有效对象。');
+    if (!Array.isArray(data?.categories)) errors.push('缺少 categories 数组。');
+    if (!Array.isArray(data?.papers)) errors.push('缺少 papers 数组。');
+
+    const categories = Array.isArray(data?.categories) ? data.categories : [];
+    const papers = Array.isArray(data?.papers) ? data.papers : [];
+
+    categories.forEach((category, index) => {
+        if (!category || typeof category !== 'object') errors.push(`第 ${index + 1} 个分类格式无效。`);
+        if (typeof category?.id !== 'string' || !category.id.trim()) errors.push(`第 ${index + 1} 个分类缺少 id。`);
+        if (typeof category?.name !== 'string') errors.push(`第 ${index + 1} 个分类缺少 name。`);
+    });
+
+    papers.forEach((paper, index) => {
+        if (!paper || typeof paper !== 'object') errors.push(`第 ${index + 1} 篇文献格式无效。`);
+        if (typeof paper?.id !== 'string' || !paper.id.trim()) errors.push(`第 ${index + 1} 篇文献缺少 id。`);
+        if (typeof paper?.title !== 'string') errors.push(`第 ${index + 1} 篇文献缺少 title。`);
+    });
+
+    return {
+        ok: errors.length === 0,
+        errors,
+        categories,
+        papers,
+        version: data?.version || 'unknown',
+        timestamp: data?.timestamp || null,
+    };
+};
+
 // --- 主组件: App ---
 const App = () => {
     // 数据状态
@@ -189,7 +242,7 @@ const App = () => {
 
     // UI 状态
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => typeof window === 'undefined' ? true : window.innerWidth >= 768);
     const [lastBackupTime, setLastBackupTime] = useState(null);
     const [now, setNow] = useState(Date.now());
     const [readingHistory, setReadingHistory] = useState([]);
@@ -225,6 +278,12 @@ const App = () => {
 
     const fileInputRef = useRef(null);
     const mainContentRef = useRef(null);
+    const closeSidebarOnMobile = useCallback(() => {
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            setIsSidebarOpen(false);
+        }
+    }, []);
+
     // 默认数据
     const defaultCategories = useMemo(() => [
         { id: '1', name: 'Transformer 架构', parentId: null },
@@ -422,49 +481,62 @@ const App = () => {
     const handleExportJSON = async () => {
         const currentTime = Date.now();
         const dataToSave = {
-            version: "2.1",
+            version: BACKUP_VERSION,
             timestamp: new Date(currentTime).toISOString(),
             categories,
             papers
         };
         const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(blob));
-        link.setAttribute("download", `research_hub_backup_${new Date().toISOString().slice(0, 10)}.json`);
+        link.setAttribute("href", url);
+        link.setAttribute("download", getBackupFilename(new Date(currentTime)));
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
         setLastBackupTime(currentTime);
         await localforage.setItem('last_backup_timestamp', currentTime);
+        toast.success('PaperStack 备份已下载');
     };
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (!file) return;
-        if (file.size > 50 * 1024 * 1024) { alert("文件过大 (超过50MB)，请勿上传。"); event.target.value = ''; return; }
+        if (file.size > 50 * 1024 * 1024) { toast.error("文件过大，无法恢复超过 50MB 的备份。"); event.target.value = ''; return; }
         const reader = new FileReader();
         reader.onload = (e) => processJSON(e.target.result);
-        reader.readAsText(file);
+        reader.onerror = () => toast.error('读取备份文件失败，请重试。');
+        reader.readAsText(file, 'utf-8');
         event.target.value = '';
     };
 
     const processJSON = async (jsonText) => {
         try {
             const data = JSON.parse(jsonText);
-            if (!Array.isArray(data.categories) || !Array.isArray(data.papers)) { toast.error("备份格式错误。"); return; }
+            const result = validateBackupData(data);
+            if (!result.ok) {
+                toast.error(`备份格式错误：${result.errors.slice(0, 2).join(' ')}`, { duration: 6000 });
+                return;
+            }
             toast((t) => (
                 <div className="flex flex-col gap-3">
                     <p className="font-bold text-slate-800">确认恢复备份？</p>
-                    <p className="text-sm text-slate-600">覆盖当前 {categories.length} 个分类和 {papers.length} 篇文献。此操作不可逆。</p>
+                    <p className="text-sm text-slate-600">
+                        将导入 {result.categories.length} 个分类和 {result.papers.length} 篇文献，覆盖当前 {categories.length} 个分类和 {papers.length} 篇文献。
+                    </p>
+                    <p className="text-xs text-slate-400">
+                        备份版本：{result.version}{result.timestamp ? ` · ${new Date(result.timestamp).toLocaleString()}` : ''}
+                    </p>
                     <div className="flex gap-2 justify-end mt-2">
-                        <button onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-md text-sm font-medium hover:bg-slate-200">取消</button>
-                        <button onClick={async () => {
+                        <button type="button" onClick={() => toast.dismiss(t.id)} className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-md text-sm font-medium hover:bg-slate-200">取消</button>
+                        <button type="button" onClick={async () => {
                             toast.dismiss(t.id);
-                            setCategories(data.categories);
-                            setPapers(data.papers);
-                            await localforage.setItem('research_categories', data.categories);
-                            await localforage.setItem('research_papers', data.papers);
+                            setCategories(result.categories);
+                            setPapers(result.papers);
+                            await localforage.setItem('research_categories', result.categories);
+                            await localforage.setItem('research_papers', result.papers);
 
                             // 重置所有查看状态，防止UI崩溃
                             setActiveCategoryId(null);
@@ -475,12 +547,12 @@ const App = () => {
                             setSearchQuery('');
                             setDisplayLimit(20);
 
-                            toast.success(`✅ 成功恢复！`);
+                            toast.success('成功恢复 PaperStack 备份');
                         }} className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">确认覆盖</button>
                     </div>
                 </div>
             ), { duration: Infinity, id: 'restore-confirm' });
-        } catch { toast.error('解析失败，请检查文件。'); }
+        } catch { toast.error('解析失败，请检查文件是否为有效 JSON。'); }
     };
     const toggleFolder = useCallback((id) => {
         setExpandedFolders(prev => {
@@ -538,6 +610,7 @@ const App = () => {
         setShowAllPapers(false);
         setExpandedPaperIds([]);
         setDisplayLimit(20);
+        closeSidebarOnMobile();
 
         setActiveCategoryId(prev => {
             if (prev === id) {
@@ -554,7 +627,7 @@ const App = () => {
                 return id;
             }
         });
-    }, [categories]);
+    }, [categories, closeSidebarOnMobile]);
 
     const handleHistoryClick = (paperId) => {
         const paper = papers.find(p => p.id === paperId);
@@ -577,6 +650,7 @@ const App = () => {
         const toExpand = [paper.categoryId, ...ancestors];
         setExpandedFolders(prev => [...new Set([...prev, ...toExpand])]);
         setExpandedSectionIds(prev => [...new Set([...prev, ...toExpand])]);
+        closeSidebarOnMobile();
 
         setTimeout(() => {
             const element = document.getElementById(`paper-card-${paperId}`);
@@ -903,32 +977,44 @@ const App = () => {
         <div className={`flex h-screen ${THEME.bg} ${THEME.text.main} font-sans overflow-hidden antialiased`}>
             <Toaster position="top-right" toastOptions={{ duration: 3000, style: { fontSize: '14px', borderRadius: '10px', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' } }} />
             {/* 侧边栏 */}
-            <div className={`${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full opacity-0'} flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20`}>
-                <div className="p-5 border-b border-slate-50 dark:border-slate-800/50 flex items-center gap-3 min-w-[320px]">
-                    <div
+            {isSidebarOpen && (
+                <button
+                    type="button"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="fixed inset-0 z-30 bg-slate-900/30 backdrop-blur-[1px] md:hidden"
+                    aria-label="关闭侧边栏"
+                />
+            )}
+            <div className={`${isSidebarOpen ? 'w-80 translate-x-0 opacity-100' : 'w-80 -translate-x-full opacity-0 pointer-events-none md:w-0'} fixed md:relative inset-y-0 left-0 md:inset-auto flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out shrink-0 overflow-hidden whitespace-nowrap shadow-[4px_0_24px_-12px_rgba(0,0,0,0.05)] z-40 md:z-20 max-w-[calc(100vw-3rem)] md:max-w-none`}>
+                <div className="p-5 border-b border-slate-50 dark:border-slate-800/50 flex items-center gap-3 min-w-0">
+                    <button
+                        type="button"
                         onClick={() => setShowWelcome(true)}
                         className="bg-slate-800 text-white p-2.5 rounded-lg shadow-md cursor-pointer hover:bg-blue-600 transition-colors active:scale-95"
                         title="查看功能指南"
+                        aria-label="查看功能指南"
                     >
                         <BookOpen size={22} strokeWidth={2.5} />
-                    </div>
+                    </button>
                     <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">PaperStack <span className="text-[11px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-bold border border-blue-100 dark:border-blue-800/50">PRO</span></h1>
                 </div>
-                <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-[320px]">
+                <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-0">
                     {!isManageMode && (
                         <>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showAllPapers}>
                                 <Globe size={18} className={`mr-3 ${showAllPapers ? 'text-slate-300' : 'text-slate-400 dark:text-slate-500'}`} /> 全部文献 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showAllPapers ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{papers.length}</span>
-                            </div>
-                            <div className={`flex items-center px-3 py-2.5 mb-2 rounded-lg cursor-pointer text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); }} >
+                            </button>
+                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showFavoritesOnly}>
                                 <Heart size={18} className={`mr-3 ${showFavoritesOnly ? 'text-rose-500 fill-rose-500' : 'text-slate-400 dark:text-slate-500'}`} /> 我的收藏 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showFavoritesOnly ? 'bg-rose-100/50 dark:bg-rose-900/50 text-rose-800 dark:text-rose-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{starredCount}</span>
-                            </div>
+                            </button>
 
                             {readingHistory.length > 0 && (
                                 <div className="mb-6 mt-6">
-                                    <div
-                                        className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-2 flex items-center justify-between cursor-pointer hover:text-slate-600 dark:hover:text-white transition-colors"
+                                    <button
+                                        type="button"
+                                        className="w-full px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-2 flex items-center justify-between hover:text-slate-600 dark:hover:text-white transition-colors"
                                         onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                                        aria-expanded={isHistoryExpanded}
                                     >
                                         <div className="flex items-center gap-1">
                                             <History size={13} /> 最近阅读
@@ -936,17 +1022,17 @@ const App = () => {
                                         <div className={`transition-transform duration-200 ${isHistoryExpanded ? 'rotate-0' : '-rotate-90'}`}>
                                             <ChevronDown size={13} />
                                         </div>
-                                    </div>
+                                    </button>
                                     {isHistoryExpanded && (
                                         <div className="space-y-0.5 animate-in slide-in-from-top-1 duration-200 pl-1">
                                             {readingHistory.map(id => {
                                                 const p = papers.find(paper => paper.id === id);
                                                 if (!p) return null;
                                                 return (
-                                                    <div key={id} onClick={() => handleHistoryClick(id)} className="group flex items-center px-2 py-2 rounded-md cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                                    <button type="button" key={id} onClick={() => handleHistoryClick(id)} className="group w-full flex items-center px-2 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700 mr-2.5 group-hover:bg-blue-500"></div>
                                                         <span className="text-[13px] text-slate-500 dark:text-slate-300 truncate font-medium group-hover:text-blue-700 dark:group-hover:text-blue-400">{p.title}</span>
-                                                    </div>
+                                                    </button>
                                                 )
                                             })}
                                         </div>
@@ -957,15 +1043,17 @@ const App = () => {
                             {/* --- 标签库 --- */}
                             {allTagsMap.length > 0 && (
                                 <div className="mb-4 mt-6">
-                                    <div
-                                        className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-3 flex items-center justify-between cursor-pointer hover:text-slate-600 dark:hover:text-white transition-colors"
+                                    <button
+                                        type="button"
+                                        className="w-full px-3 text-[11px] font-bold text-slate-400 dark:text-slate-100 uppercase tracking-widest mb-3 flex items-center justify-between hover:text-slate-600 dark:hover:text-white transition-colors"
                                         onClick={() => setIsTagsExpanded(!isTagsExpanded)}
+                                        aria-expanded={isTagsExpanded}
                                     >
                                         <div className="flex items-center gap-1"><Hash size={13} /> 个人标签库</div>
                                         <div className={`transition-transform duration-200 ${isTagsExpanded ? 'rotate-0' : '-rotate-90'}`}>
                                             <ChevronDown size={13} />
                                         </div>
-                                    </div>
+                                    </button>
                                     {isTagsExpanded && (
                                         <div className="flex flex-wrap gap-2 px-3 animate-in slide-in-from-top-1 duration-200">
                                             {allTagsMap.map(([tag, count]) => (
@@ -1001,20 +1089,20 @@ const App = () => {
                     </div>
                     {isManageMode && (<button onClick={() => { setCategoryModal({ isOpen: true, parentId: null, editId: null, initialName: '', initialDescription: '' }); setNewCategoryName(''); setNewCategoryDescription(''); }} className="w-full mt-4 flex items-center justify-center gap-1.5 bg-white text-slate-500 border border-dashed border-slate-300 hover:border-blue-400 hover:text-blue-600 py-3 rounded-lg text-[13px] font-bold transition-all" > <PlusCircle size={15} /> 新建顶级分类 </button>)}
                 </div>
-                <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/50 min-w-[320px]">
+                <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/50 min-w-0">
                     <input type="file" accept=".json" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                     {isManageMode ? (
                         <div className="flex flex-col gap-3 animate-in slide-in-from-bottom-2">
                             <div className="flex gap-2">
-                                <button onClick={handleExportJSON} className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-blue-50 hover:border-blue-100 shadow-sm" title="备份" > <Download size={14} /> 备份 </button>
-                                <button onClick={() => fileInputRef.current.click()} className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-blue-50 hover:border-blue-100 shadow-sm" title="恢复" > <Upload size={14} /> 恢复 </button>
+                                <button type="button" onClick={handleExportJSON} className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-blue-50 hover:border-blue-100 shadow-sm" title="备份" > <Download size={14} /> 备份 </button>
+                                <button type="button" onClick={() => fileInputRef.current.click()} className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-blue-50 hover:border-blue-100 shadow-sm" title="恢复" > <Upload size={14} /> 恢复 </button>
                             </div>
-                            <button onClick={() => setIsManageMode(false)} className="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-md hover:bg-slate-800 transition-colors" > <CheckCircle2 size={16} /> 完成 </button>
+                            <button type="button" onClick={() => setIsManageMode(false)} className="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-md hover:bg-slate-800 transition-colors" > <CheckCircle2 size={16} /> 完成 </button>
                         </div>
                     ) : (
                         <div className="flex gap-2">
-                            <button onClick={() => setIsManageMode(true)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-[13px] font-bold bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 hover:text-slate-700 transition-colors" > <Settings size={16} /> 管理模式 </button>
-                            <button onClick={() => setIsDarkMode(!isDarkMode)} className="w-[46px] flex items-center justify-center shrink-0 rounded-lg bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 transition-colors" title="切换深浅色"> {isDarkMode ? <Sun size={17} /> : <Moon size={17} />} </button>
+                            <button type="button" onClick={() => setIsManageMode(true)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-[13px] font-bold bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 hover:text-slate-700 transition-colors" > <Settings size={16} /> 管理模式 </button>
+                            <button type="button" onClick={() => setIsDarkMode(!isDarkMode)} className="w-[46px] flex items-center justify-center shrink-0 rounded-lg bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 border border-slate-200 dark:border-slate-700 transition-colors" title="切换深浅色" aria-label="切换深浅色"> {isDarkMode ? <Sun size={17} /> : <Moon size={17} />} </button>
                         </div>
                     )}
                 </div>
@@ -1022,21 +1110,21 @@ const App = () => {
 
             {/* 主内容区域 */}
             <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 relative">
-                <div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-10 gap-5 sticky top-0">
-                    <div className="flex items-center gap-4 flex-1">
-                        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors mr-1">
+                <div className="min-h-16 sm:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex flex-wrap sm:flex-nowrap items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-0 shrink-0 z-10 gap-3 sm:gap-5 sticky top-0">
+                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                        <button type="button" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors mr-1" aria-label={isSidebarOpen ? '关闭侧边栏' : '打开侧边栏'} aria-expanded={isSidebarOpen}>
                             {isSidebarOpen ? <PanelLeftClose size={22} /> : <PanelLeftOpen size={22} />}
                         </button>
-                        <div className="relative flex-1 max-w-lg group">
+                        <div className="relative flex-1 min-w-[160px] max-w-lg group">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
                             <input className="w-full pl-10 pr-4 py-2.5 bg-slate-100/50 dark:bg-slate-800/50 border-transparent dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 border dark:border-slate-700/50 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 rounded-lg outline-none text-[15px] transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500" placeholder="搜索文献..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setDisplayLimit(20); /* 搜索时重置分页 */ }} />
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         <div className={`flex items-center text-xs font-medium mr-1 whitespace-nowrap transition-all ${isSidebarOpen ? 'hidden xl:flex' : 'hidden md:flex'}`}>
-                            <div onClick={handleExportJSON} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border cursor-pointer transition-all hover:shadow-sm ${backupStatus.color}`}>
+                            <button type="button" onClick={handleExportJSON} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all hover:shadow-sm ${backupStatus.color}`} title="下载备份" aria-label={`下载备份，当前状态：${backupStatus.label}`}>
                                 {backupStatus.icon} <span className="font-semibold">{backupStatus.label}</span>
-                            </div>
+                            </button>
                         </div>
 
                         {/* 恢复的排序按钮组 */}
@@ -1060,25 +1148,25 @@ const App = () => {
                             </button>
                         </div>
 
-                        <button onClick={() => {
+                        <button type="button" onClick={() => {
                             if (categories.length === 0) {
                                 toast.error("请先在左侧新建至少一个文件夹");
                                 return;
                             }
                             setEditingPaper(null);
                             setIsAddingPaper(true);
-                        }} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-[14px] font-bold shadow-lg shadow-slate-900/10 whitespace-nowrap transition-all active:scale-95"> <PlusCircle size={18} /> <span>新文献</span> </button>
+                        }} className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-3 sm:px-5 py-2.5 rounded-lg text-[14px] font-bold shadow-lg shadow-slate-900/10 whitespace-nowrap transition-all active:scale-95"> <PlusCircle size={18} /> <span>新文献</span> </button>
                     </div>
                 </div>
 
                 <div
                     ref={mainContentRef}
                     onScroll={(e) => setShowTopButton(e.target.scrollTop > 500)}
-                    className="flex-1 overflow-y-auto pl-12 pr-8 py-8 custom-scrollbar pb-32"
+                    className="flex-1 overflow-y-auto px-4 sm:px-6 lg:pl-12 lg:pr-8 py-5 sm:py-8 custom-scrollbar pb-32"
                 >
-                    <div className="mb-6 flex items-end justify-between group">
+                    <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 group">
                         <div>
-                            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+                            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight flex-wrap">
                                 {searchQuery ? <> <Search size={28} className="text-blue-600 dark:text-blue-400" /> 搜索: "{searchQuery}" </> :
                                     showFavoritesOnly ? <> <Heart size={28} className="text-rose-500 fill-rose-500" /> 我收藏的文献 </> :
                                         showAllPapers ? <> <ListFilter size={28} className="text-blue-600 dark:text-blue-400" /> 全部文献列表 </> :
@@ -1428,13 +1516,13 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                 </div>
             )}
 
-            <div className="px-6 pt-6 pb-5 cursor-pointer flex items-start gap-5 group" onClick={handleToggle}>
+            <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 cursor-pointer flex items-start gap-3 sm:gap-5 group" onClick={handleToggle}>
                 <div className={`mt-1.5 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-500 ease-out ${isExpanded ? 'bg-blue-100 text-blue-600 rotate-90' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
                     <ChevronRight size={16} strokeWidth={2.5} />
                 </div>
 
                 <div className="flex-1 min-w-0 pt-0.5">
-                    <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-start justify-between gap-3 sm:gap-6">
                         <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700 dark:text-blue-400 whitespace-normal break-words' : 'text-slate-800 dark:text-slate-200 truncate'}`}> {paper.title} </h3>
                         {!isExpanded && (
                             <div className="flex items-center gap-1.5 flex-shrink-0 mt-2 animate-in fade-in duration-500">
@@ -1468,9 +1556,9 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                     </div>
                 </div>
 
-                <div className={`flex items-start justify-end gap-1 flex-shrink-0 mt-1 transition-all duration-500 ${isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                <div className="flex items-start justify-end gap-1 flex-shrink-0 mt-1 opacity-100 transition-all duration-500">
                     {!isManageMode && (
-                        <button onClick={(e) => { e.stopPropagation(); onStarClick(); }} className={`p-2 rounded-lg hover:bg-rose-50 transition-colors ${paper.isStarred ? 'text-rose-500' : 'text-slate-300 hover:text-rose-500'}`} title="收藏">
+                        <button type="button" onClick={(e) => { e.stopPropagation(); onStarClick(); }} className={`p-2 rounded-lg hover:bg-rose-50 transition-colors ${paper.isStarred ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'}`} title="收藏" aria-label={paper.isStarred ? '取消收藏' : '收藏'}>
                             <Heart size={18} className={paper.isStarred ? "fill-rose-500" : ""} />
                         </button>
                     )}
@@ -1480,28 +1568,29 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                             target="_blank"
                             rel="noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="p-2 text-slate-300 hover:text-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
+                            className="p-2 text-slate-400 hover:text-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
                             title="打开链接"
+                            aria-label="打开链接"
                         >
                             <ExternalLink size={18} />
                         </a>
                     ) : (
-                        <div className="p-2 text-slate-200 cursor-not-allowed" title="暂无链接">
+                        <span className="p-2 text-slate-200 cursor-not-allowed" title="暂无链接" aria-label="暂无链接">
                             <ExternalLink size={18} />
-                        </div>
+                        </span>
                     )}
-                    <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-2 text-slate-300 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"><Edit3 size={18} /></button>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-2 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors" title="编辑" aria-label="编辑文献"><Edit3 size={18} /></button>
                     {isManageMode && (
                         <>
-                            <button onClick={(e) => { e.stopPropagation(); onMove(); }} className="p-2 text-blue-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 bg-blue-50/30"> <FolderInput size={18} /> </button>
-                            <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-2 text-rose-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 bg-rose-50/30 ml-1"> <Trash2 size={18} /> </button>
+                            <button type="button" onClick={(e) => { e.stopPropagation(); onMove(); }} className="p-2 text-blue-500 hover:text-blue-600 rounded-lg hover:bg-blue-50 bg-blue-50/30" title="移动" aria-label="移动文献"> <FolderInput size={18} /> </button>
+                            <button type="button" onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-2 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 bg-rose-50/30 ml-1" title="删除" aria-label="删除文献"> <Trash2 size={18} /> </button>
                         </>
                     )}
                 </div>
             </div>
 
             {isExpanded && (
-                <div className="px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-500">
+                <div className="px-4 sm:px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-500">
                     <div className="grid grid-cols-1 gap-4 pl-0 border-t border-slate-100 dark:border-slate-800/40 pt-5 mt-1">
                         <CompactSection icon={<Target size={16} />} title="论文概览" color="rose" content={paper.problem} />
                         <CompactSection icon={<Zap size={16} />} title="核心方法" color="blue" content={paper.method} />
@@ -1623,7 +1712,7 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
     const defaultState = { title: '', venue: '', year: new Date().getFullYear().toString(), link: '', problem: '', method: '', results: '', thoughts: '', status: 'todo', starNote: '', isStarred: false, rating: 0, ratedDate: null, tags: [] };
     const [d, setD] = useState({ ...defaultState, ...(paper || {}) });
     const initialData = useRef(JSON.stringify({ ...defaultState, ...(paper || {}) }));
-    const hasChanges = () => JSON.stringify(d) !== initialData.current;
+    const hasChanges = useCallback(() => JSON.stringify(d) !== initialData.current, [d]);
     const titleRef = useRef(null);
     const [tagInput, setTagInput] = useState('');
 
@@ -1643,7 +1732,7 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
         ).slice(0, 5); // 限制显示5个建议
     }, [tagInput, allExistingTags, d.tags]);
 
-    const handleSafeClose = () => {
+    const handleSafeClose = useCallback(() => {
         if (hasChanges()) {
             toast((t) => (
                 <div className="flex flex-col gap-3">
@@ -1659,32 +1748,41 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
             onClose();
             toast.dismiss('close-confirm');
         }
-    };
+    }, [hasChanges, onClose]);
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') handleSafeClose();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [handleSafeClose]);
+
     const handleRating = (score) => { const newRating = d.rating === score ? 0 : score; setD({ ...d, rating: newRating, ratedDate: newRating > 0 ? new Date().toISOString() : null }); };
 
     return (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800">
-                <div className="px-10 py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900/50 shrink-0">
-                    <div className="flex items-center gap-6">
-                        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2"><FileText size={24} className="text-blue-600 dark:text-blue-400" /> {paper ? '编辑笔记' : '录入新文献'}</h2>
-                        <button onClick={() => setD({ ...d, isStarred: !d.isStarred })} className={`p-2 rounded-full transition-colors ${d.isStarred ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`} title="切换收藏"> <Heart size={20} fill={d.isStarred ? "currentColor" : "none"} /> </button>
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-0 sm:p-6">
+            <div className="bg-white dark:bg-slate-900 w-full max-w-5xl rounded-none sm:rounded-2xl shadow-2xl flex flex-col h-[100dvh] sm:h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800" role="dialog" aria-modal="true" aria-labelledby="paper-editor-title">
+                <div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900/50 shrink-0">
+                    <div className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-6">
+                        <h2 id="paper-editor-title" className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2"><FileText size={24} className="text-blue-600 dark:text-blue-400" /> {paper ? '编辑笔记' : '录入新文献'}</h2>
+                        <button type="button" onClick={() => setD({ ...d, isStarred: !d.isStarred })} className={`p-2 rounded-full transition-colors ${d.isStarred ? 'bg-rose-100 dark:bg-rose-900/30 text-rose-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`} title="切换收藏" aria-label="切换收藏"> <Heart size={20} fill={d.isStarred ? "currentColor" : "none"} /> </button>
                         <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                             {['todo', 'reading', 'read'].map(s => (
-                                <button key={s} onClick={() => setD({ ...d, status: s })} className={`px-5 py-2 rounded-md text-xs font-bold uppercase transition-all ${d.status === s ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}>{s}</button>
+                                <button type="button" key={s} onClick={() => setD({ ...d, status: s })} className={`px-3 sm:px-5 py-2 rounded-md text-xs font-bold uppercase transition-all ${d.status === s ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`} aria-pressed={d.status === s}>{s}</button>
                             ))}
                         </div>
                     </div>
-                    <button onClick={handleSafeClose} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X size={26} className="text-slate-400 dark:text-slate-500" /></button>
+                    <button type="button" onClick={handleSafeClose} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="关闭编辑弹窗"><X size={26} className="text-slate-400 dark:text-slate-500" /></button>
                 </div>
-                <div className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-10 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-4 sm:p-6 lg:p-10 custom-scrollbar">
                     <div className="max-w-4xl mx-auto space-y-8">
-                        <div className="bg-white dark:bg-slate-800/60 p-8 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm space-y-6">
-                            <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-700/40 p-4 rounded-lg border border-slate-100 dark:border-slate-600/40 mb-2">
+                        <div className="bg-white dark:bg-slate-800/60 p-4 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm space-y-6">
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-slate-50 dark:bg-slate-700/40 p-4 rounded-lg border border-slate-100 dark:border-slate-600/40 mb-2">
                                 <div className="flex items-center gap-2"> <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">个人评分</span> {d.rating > 0 && d.ratedDate && <span className="text-xs font-medium text-slate-400 dark:text-slate-500"> • {new Date(d.ratedDate).toLocaleDateString()}</span>} </div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex flex-wrap items-center gap-1">
                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
-                                        <button key={star} onClick={() => handleRating(star)} className={`p-1 transition-all hover:scale-110 ${star <= d.rating ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700 hover:text-amber-200'}`}> <Star size={24} fill={star <= d.rating ? "currentColor" : "none"} /> </button>
+                                        <button type="button" key={star} onClick={() => handleRating(star)} className={`p-1 transition-all hover:scale-110 ${star <= d.rating ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700 hover:text-amber-200'}`} aria-label={`评分 ${star} 分`} aria-pressed={star <= d.rating}> <Star size={24} fill={star <= d.rating ? "currentColor" : "none"} /> </button>
                                     ))}
                                     <span className="ml-3 w-8 text-center font-bold text-2xl text-slate-700 dark:text-slate-200">{d.rating > 0 ? d.rating : '-'}</span>
                                 </div>
@@ -1711,11 +1809,12 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                                     {(d.tags || []).map(tag => (
                                         <span key={tag} className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-[13px] font-bold rounded-lg border border-blue-100 dark:border-blue-800/50 group">
                                             {tag}
-                                            <button onClick={() => setD({ ...d, tags: d.tags.filter(t => t !== tag) })} className="text-blue-400 dark:text-blue-500 hover:text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full p-0.5 transition-colors" title="移除标签"><X size={14} /></button>
+                                            <button type="button" onClick={() => setD({ ...d, tags: d.tags.filter(t => t !== tag) })} className="text-blue-400 dark:text-blue-500 hover:text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-full p-0.5 transition-colors" title="移除标签" aria-label={`移除标签 ${tag}`}><X size={14} /></button>
                                         </span>
                                     ))}
                                     <input
                                         type="text"
+                                        aria-label="输入文献标签"
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
                                         onKeyDown={(e) => {
@@ -1742,6 +1841,7 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                                             <div className="p-2 flex flex-wrap gap-2">
                                                 {tagSuggestions.map(tag => (
                                                     <button
+                                                        type="button"
                                                         key={tag}
                                                         onClick={() => {
                                                             setD({ ...d, tags: [...(d.tags || []), tag] });
@@ -1771,9 +1871,9 @@ const ExpertPaperModal = ({ paper, onClose, onSave, allExistingTags = [] }) => {
                         </div>
                     </div>
                 </div>
-                <div className="p-6 border-t border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-900 flex justify-end gap-3 shrink-0 z-20">
-                    <button onClick={handleSafeClose} className="px-6 py-2.5 rounded-lg text-[15px] font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">取消</button>
-                    <button onClick={() => onSave(d)} className="px-8 py-2.5 bg-slate-900 dark:bg-blue-600 text-white rounded-lg text-[15px] font-bold hover:bg-black dark:hover:bg-blue-500 shadow-lg shadow-slate-200 flex items-center gap-2 transition-transform active:scale-95"><Save size={18} /> 保存笔记</button>
+                <div className="p-4 sm:p-6 border-t border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-900 flex justify-end gap-3 shrink-0 z-20">
+                    <button type="button" onClick={handleSafeClose} className="px-5 sm:px-6 py-2.5 rounded-lg text-[15px] font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">取消</button>
+                    <button type="button" onClick={() => onSave(d)} className="px-6 sm:px-8 py-2.5 bg-slate-900 dark:bg-blue-600 text-white rounded-lg text-[15px] font-bold hover:bg-black dark:hover:bg-blue-500 shadow-lg shadow-slate-200 flex items-center gap-2 transition-transform active:scale-95"><Save size={18} /> 保存笔记</button>
                 </div>
             </div>
         </div>
