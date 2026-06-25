@@ -36,6 +36,7 @@ export default defineConfig({
 
       // ─── Markdown + 数学公式 生态 ───
       'react-markdown',
+      'remark-gfm',
       'remark-math',
       'rehype-katex',
       'katex',

@@ -293,23 +293,24 @@ const App = () => {
     const defaultPapers = useMemo(() => [
         {
             id: 'p1',
+            sampleVersion: 3,
             categoryId: '3',
             title: 'Attention Is All You Need',
             venue: 'NeurIPS',
             link: 'https://arxiv.org/abs/1706.03762',
             year: '2017',
 
-            problem: `传统 \`RNN/LSTM\` 存在**难以并行计算**与**长距离依赖易丢失**两大缺陷。Transformer 提出完全摒弃循环与卷积，仅基于注意力机制进行全局建模，天然支持大规模并行训练。\n\n> **Scaled Dot-Product Attention**\n> $$Attention(Q, K, V) = softmax(\\frac{QK^T}{\\sqrt{d_k}})V$$`,
+            problem: `\`Attention Is All You Need\` 的核心问题很清楚：在机器翻译等序列到序列任务中，循环网络难以并行训练，卷积网络又需要多层堆叠才能建立远距离依赖。Transformer 直接用注意力机制完成 token 间的信息路由。\n\n> **关键判断**：序列建模不一定需要循环结构，注意力机制本身可以承担全局依赖建模。\n\nScaled Dot-Product Attention 公式如下[^reading-note]：\n\n$$Attention(Q, K, V) = \\operatorname{softmax}(\\frac{QK^T}{\\sqrt{d_k}})V$$\n\n[^reading-note]: 这是一个脚注示例：可以把补充说明、复现实验细节或出处放在这里。`,
 
-            method: `模型主体由 **编码器 (Encoder)** 与 **解码器 (Decoder)** 堆叠而成，核心为多头注意力与前馈网络，并辅以残差连接及 \`LayerNorm\`。\n\n- **Multi-Head Attention**：将 \`Q/K/V\` 投影至多个低维子空间并行计算，以捕获不同表示子空间的语义特征。\n- **Positional Encoding**：引入正弦与余弦位置编码，为模型注入绝对与相对位置信息：\n  $$PE_{(pos, 2i)} = \\sin(pos / 10000^{2i/d_{model}})$$`,
+            method: `模型采用 **Encoder-Decoder** 架构。每层都包含注意力子层、前馈网络、残差连接与 \`LayerNorm\`，整体设计比 RNN 更适合 GPU/TPU 并行化。\n\n| 模块 | 作用 | 笔记 |\n| :-- | :-- | :-- |\n| Multi-Head Attention | 在多个子空间并行建模关系 | 论文中 base 模型使用 \`h=8\` |\n| Scaled Dot-Product | 用缩放点积计算注意力权重 | 除以 \`\\sqrt{d_k}\` 稳定 softmax |\n| Positional Encoding | 给无循环结构注入顺序信息 | 正弦/余弦位置编码 |\n| Feed-Forward Network | 对每个位置做非线性变换 | 两层 MLP，共享参数形式一致 |\n\n- [x] 移除循环结构，提高训练并行度\n- [x] 保留自回归解码，适配生成任务\n- [ ] 自注意力的 \`O(n^2)\` 长序列成本仍需后续工作\n\n\`\`\`python\nscores = (Q @ K.T) / sqrt(d_k)\nattn = softmax(scores)\noutput = attn @ V\n\`\`\``,
 
-            results: `- **WMT'14 英德翻译**：BLEU 28.4 (SOTA)，训练耗时仅 3.5 天 (8 P100 GPU)\n- **WMT'14 英法翻译**：BLEU 41.0 (SOTA)\n \n---\n \n> **核心突破**\n> 将序列特征交互的路径长度降至 \`O(1)\`，在显著提升精度的同时大幅降低了计算成本。`,
+            results: `论文报告的结果应同时看任务、指标、模型规模和训练成本，避免只记一个 SOTA 数字。\n\n| 数据集 | 指标 | Transformer Base | Transformer Big |\n| :-- | --: | --: | --: |\n| WMT 2014 EN-DE | BLEU | 27.3 | 28.4 |\n| WMT 2014 EN-FR | BLEU | 38.1 | 41.8 |\n\n1. Big 模型在 WMT 2014 EN-DE 上达到 **28.4 BLEU**。\n2. 在 WMT 2014 EN-FR 上达到 **41.8 BLEU**。\n3. 更准确的说法不是“计算复杂度总是更低”，而是：训练可以高度并行化；但 self-attention 对序列长度仍是 \`O(n^2)\`。\n\n---\n\n> **核心突破**\n> Transformer 把序列内任意两个位置的信息交互路径缩短到常数级，使深层模型更容易学习长距离依赖。`,
 
-            thoughts: `大语言模型 (LLM) 时代的奠基之作，\`BERT\`、\`GPT\` 家族及 \`LLaMA\` 等主流架构的底层核心。\n\n- **💡 核心洞见**：显式的注意力机制足以独立完成强大的序列建模，让位于计算的规模化。\n- **🚀 复杂度挑战**：自注意力 \`O(n²)\` 的复杂度催生了 \`FlashAttention\` 等长文本加速方案。\n- **⏳ 位置编码**：固定编码的外推局限性，推动了 \`RoPE\` (旋转位置编码) 等动态时序技术的发展。`,
+            thoughts: `这篇论文的长期影响不只是“把 RNN 换成 Attention”，而是把序列建模重新表述为一种可并行的、数据依赖的内容寻址问题。\n\n- **可复用洞见**：attention 可以看成 data-dependent routing。\n- **局限性**：~~长文本问题已经彻底解决~~ 长序列成本仍然是后续研究主题。\n- **延伸方向**：[FlashAttention](https://arxiv.org/abs/2205.14135)、RoPE、Sparse Attention、Long-context Transformers。\n\n后续阅读清单：\n\n- [x] BERT: bidirectional pre-training\n- [x] GPT: decoder-only autoregressive modeling\n- [ ] FlashAttention: IO-aware attention acceleration\n- [ ] RoPE / ALiBi: positional extrapolation`,
 
             status: 'read',
             isStarred: true,
-            starNote: '必读经典，LLM 时代的架构起点',
+            starNote: '必读经典：Transformer 架构起点，也适合作为 Markdown 功能展示样例。',
             rating: 10,
             ratedDate: new Date().toISOString(),
             tags: ['Transformer', 'Attention', 'NLP', 'LLM']
@@ -342,6 +343,28 @@ const App = () => {
     useEffect(() => {
         const initData = async () => {
             try {
+                const normalizeStoredPapers = (storedPapers) => {
+                    if (!Array.isArray(storedPapers) || storedPapers.length === 0) return defaultPapers;
+
+                    const [firstPaper] = storedPapers;
+                    const isLegacyDefaultPaper =
+                        storedPapers.length === 1 &&
+                        firstPaper?.id === 'p1' &&
+                        firstPaper?.title === 'Attention Is All You Need' &&
+                        firstPaper?.link === 'https://arxiv.org/abs/1706.03762' &&
+                        firstPaper?.starNote === '必读经典，LLM 时代的架构起点' &&
+                        firstPaper?.problem?.includes('传统 `RNN/LSTM`') &&
+                        firstPaper?.method?.includes('模型主体由 **编码器');
+                    const isPreviousDefaultPaper =
+                        storedPapers.length === 1 &&
+                        firstPaper?.id === 'p1' &&
+                        firstPaper?.title === defaultPapers[0]?.title &&
+                        firstPaper?.starNote === '必读经典：Transformer 架构起点，也适合作为 Markdown 功能展示样例。' &&
+                        Number(firstPaper?.sampleVersion || 0) < Number(defaultPapers[0]?.sampleVersion || 0);
+
+                    return isLegacyDefaultPaper || isPreviousDefaultPaper ? defaultPapers : storedPapers;
+                };
+
                 // 性能优化：并行读取所有数据
                 const [dbCats, dbPapers, dbHistory, dbBackupTime] = await Promise.all([
                     localforage.getItem('research_categories'),
@@ -352,7 +375,7 @@ const App = () => {
 
                 if (dbCats && Array.isArray(dbCats)) {
                     setCategories(dbCats);
-                    const loadedPapers = dbPapers && Array.isArray(dbPapers) && dbPapers.length > 0 ? dbPapers : defaultPapers;
+                    const loadedPapers = normalizeStoredPapers(dbPapers);
                     setPapers(loadedPapers);
                     if (dbHistory) setReadingHistory(dbHistory);
                     if (dbBackupTime) setLastBackupTime(parseInt(dbBackupTime));
@@ -362,11 +385,12 @@ const App = () => {
                     if (oldCats) {
                         const parsedCats = JSON.parse(oldCats);
                         const parsedPapers = oldPapers ? JSON.parse(oldPapers) : [];
+                        const normalizedPapers = normalizeStoredPapers(parsedPapers);
                         setCategories(parsedCats);
-                        setPapers(parsedPapers);
+                        setPapers(normalizedPapers);
                         await Promise.all([
                             localforage.setItem('research_categories', parsedCats),
-                            localforage.setItem('research_papers', parsedPapers)
+                            localforage.setItem('research_papers', normalizedPapers)
                         ]);
                     } else {
                         setCategories(defaultCategories);
@@ -1378,7 +1402,7 @@ const WelcomeModal = ({ onClose }) => {
             icon: <FileText size={22} strokeWidth={2} />,
             iconBg: 'bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400',
             title: '如何录入与编辑笔记',
-            description: '点击右上角「新文献」按钮即可创建。笔记内容支持 Markdown 语法与 LaTeX 数学公式（如 $E=mc^2$）。在普通视图下，将鼠标悬停在卡片上，会显示编辑、移动和删除图标。'
+            description: '点击右上角「新文献」按钮即可创建。笔记内容支持 Markdown、GFM 表格、任务列表、代码块、引用、链接、脚注与 LaTeX 数学公式（如 $E=mc^2$）。在普通视图下，将鼠标悬停在卡片上，会显示编辑、移动和删除图标。'
         },
         {
             icon: <Search size={22} strokeWidth={2} />,
