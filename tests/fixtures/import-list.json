@@ -1,0 +1,9 @@
+{
+  "papers": [
+    { "title": "批量导入测试甲", "year": 2026, "categoryPath": ["功能验证", "方向甲"], "tags": ["导入测试"], "thoughts": "仅用于本地功能验证。" },
+    { "title": "批量导入测试乙", "categoryPath": ["功能验证", "方向乙"] },
+    { "title": "批量导入测试甲", "categoryPath": ["不应创建的重复分类"] },
+    { "title": "Attention Is All You Need", "link": "https://arxiv.org/pdf/1706.03762v7" },
+    { "title": "", "categoryPath": ["不应创建的无效分类"] }
+  ]
+}

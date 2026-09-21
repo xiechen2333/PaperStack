@@ -10,6 +10,8 @@ import {
     FileText, Moon, Sun
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import PaperImportModal from './components/PaperImportModal';
+import { categoryPathLabel, getAddedTime, planPaperImport, recentPapers } from './lib/paperImport';
 
 // --- 懒加载 Markdown 组件 ---
 const MarkdownView = React.lazy(() => import('./components/MarkdownView'));
@@ -251,6 +253,9 @@ const App = () => {
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [showAllPapers, setShowAllPapers] = useState(false);
+    const [showRecentPapers, setShowRecentPapers] = useState(false);
+    const [recentDays, setRecentDays] = useState('30');
+    const [isImportingPapers, setIsImportingPapers] = useState(false);
     const [activeTags, setActiveTags] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -337,14 +342,15 @@ const App = () => {
             // 使用 behavior: 'auto' 可以瞬间跳回顶部，觉得突兀可以改成 'smooth'
             mainContentRef.current.scrollTo({ top: 0, behavior: 'auto' });
         }
-    }, [activeCategoryId, showFavoritesOnly, showAllPapers, searchQuery, activeTags]);
+    }, [activeCategoryId, showFavoritesOnly, showAllPapers, showRecentPapers, recentDays, searchQuery, activeTags]);
 
     // 初始化数据加载 - 优化为并行加载 (Promise.all)
     useEffect(() => {
         const initData = async () => {
             try {
                 const normalizeStoredPapers = (storedPapers) => {
-                    if (!Array.isArray(storedPapers) || storedPapers.length === 0) return defaultPapers;
+                    if (!Array.isArray(storedPapers)) return defaultPapers;
+                    if (storedPapers.length === 0) return [];
 
                     const [firstPaper] = storedPapers;
                     const isLegacyDefaultPaper =
@@ -565,6 +571,7 @@ const App = () => {
                             // 重置所有查看状态，防止UI崩溃
                             setActiveCategoryId(null);
                             setShowAllPapers(true);
+                            setShowRecentPapers(false);
                             setShowFavoritesOnly(false);
                             setExpandedFolders([]);
                             setExpandedPaperIds([]);
@@ -630,6 +637,7 @@ const App = () => {
 
     // 左侧聊天栏点击文件夹
     const handleCategorySelect = useCallback((id) => {
+        setShowRecentPapers(false);
         setShowFavoritesOnly(false);
         setShowAllPapers(false);
         setExpandedPaperIds([]);
@@ -654,6 +662,7 @@ const App = () => {
     }, [categories, closeSidebarOnMobile]);
 
     const handleHistoryClick = (paperId) => {
+        setShowRecentPapers(false);
         const paper = papers.find(p => p.id === paperId);
         if (!paper) {
             setReadingHistory(prev => prev.filter(id => id !== paperId));
@@ -794,7 +803,7 @@ const App = () => {
 
     // --- 过滤与排序 ---
     const filteredFlatPapers = useMemo(() => {
-        let res = papers;
+        let res = showRecentPapers ? recentPapers(papers, recentDays, now) : papers;
         // 1. 过滤
         if (showFavoritesOnly) res = res.filter(p => p.isStarred);
         if (activeTags.length > 0) res = res.filter(p => p.tags && activeTags.every(t => p.tags.includes(t)));
@@ -804,11 +813,38 @@ const App = () => {
         }
         if (deferredSearchQuery) {
             const q = deferredSearchQuery.toLowerCase();
-            res = res.filter(p => p.title.toLowerCase().includes(q) || p.venue.toLowerCase().includes(q) || p.starNote?.toLowerCase().includes(q) || (p.tags && p.tags.some(t => t.toLowerCase().includes(q))));
+            res = res.filter(p => p.title.toLowerCase().includes(q) || (p.venue || '').toLowerCase().includes(q) || p.starNote?.toLowerCase().includes(q) || (p.tags && p.tags.some(t => t.toLowerCase().includes(q))));
         }
         // 2. 排序
-        return sortPapers(res);
-    }, [papers, showFavoritesOnly, activeTags, activeCategoryId, deferredSearchQuery, sortPapers, getAllDescendantIds]);
+        return showRecentPapers ? res : sortPapers(res);
+    }, [papers, showRecentPapers, recentDays, now, showFavoritesOnly, activeTags, activeCategoryId, deferredSearchQuery, sortPapers, getAllDescendantIds]);
+
+    const openRecentPapers = () => {
+        setShowRecentPapers(true);
+        setShowAllPapers(false);
+        setShowFavoritesOnly(false);
+        setActiveCategoryId(null);
+        setActiveTags([]);
+        setSearchQuery('');
+        setExpandedPaperIds([]);
+        setDisplayLimit(20);
+        setNow(Date.now());
+        closeSidebarOnMobile();
+    };
+
+    const handleMergePapers = (rows, fallbackId, filename, options) => {
+        const plan = planPaperImport(rows, papers, categories, fallbackId, options);
+        if (!plan.additions.length) { toast.error('没有可合并的新文献'); return; }
+        const createdAt = new Date().toISOString();
+        const batchId = crypto.randomUUID();
+        const added = plan.additions.map(paper => ({ ...paper, id: crypto.randomUUID(), createdAt, addedVia: 'import', importBatchId: batchId, importFilename: filename }));
+        setCategories(prev => [...prev, ...plan.newCategories]);
+        setPapers(prev => [...added, ...prev]);
+        setIsImportingPapers(false);
+        setRecentDays('30');
+        openRecentPapers();
+        toast.success(`已合并 ${added.length} 篇新文献，跳过 ${plan.results.length - added.length} 项`);
+    };
 
     // --- 说明导览状态 ---
     const [showWelcome, setShowWelcome] = useState(false);
@@ -1025,11 +1061,15 @@ const App = () => {
                 <div className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar min-w-0">
                     {!isManageMode && (
                         <>
-                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showAllPapers}>
+                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showAllPapers ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`} onClick={() => { setShowRecentPapers(false); setShowAllPapers(true); setShowFavoritesOnly(false); setActiveCategoryId(null); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showAllPapers}>
                                 <Globe size={18} className={`mr-3 ${showAllPapers ? 'text-slate-300' : 'text-slate-400 dark:text-slate-500'}`} /> 全部文献 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showAllPapers ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{papers.length}</span>
                             </button>
-                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showFavoritesOnly}>
+                            <button type="button" className={`w-full flex items-center px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showFavoritesOnly ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 ring-1 ring-rose-200/50 dark:ring-rose-800' : 'text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-700 dark:hover:text-rose-100'}`} onClick={() => { setShowRecentPapers(false); setActiveCategoryId(null); setShowFavoritesOnly(true); setShowAllPapers(false); setActiveTags([]); setSearchQuery(''); setExpandedPaperIds([]); setDisplayLimit(20); closeSidebarOnMobile(); }} aria-pressed={showFavoritesOnly}>
                                 <Heart size={18} className={`mr-3 ${showFavoritesOnly ? 'text-rose-500 fill-rose-500' : 'text-slate-400 dark:text-slate-500'}`} /> 我的收藏 <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${showFavoritesOnly ? 'bg-rose-100/50 dark:bg-rose-900/50 text-rose-800 dark:text-rose-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>{starredCount}</span>
+                            </button>
+
+                            <button type="button" onClick={openRecentPapers} aria-pressed={showRecentPapers} className={`w-full flex items-center gap-3 px-3 py-2.5 mb-2 rounded-lg text-[14px] font-medium transition-colors ${showRecentPapers ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 ring-1 ring-blue-200 dark:ring-blue-800' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                                <Clock size={18} /> 近期新增
                             </button>
 
                             {readingHistory.length > 0 && (
@@ -1087,6 +1127,7 @@ const App = () => {
                                                         setActiveTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
                                                         setShowAllPapers(false);
                                                         setShowFavoritesOnly(false);
+                                                        setShowRecentPapers(false);
                                                         // 不再清除 activeCategoryId，允许带标签浏览文件夹
                                                         setDisplayLimit(20);
                                                     }}
@@ -1134,8 +1175,8 @@ const App = () => {
 
             {/* 主内容区域 */}
             <div className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 relative">
-                <div className="min-h-16 sm:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex flex-wrap sm:flex-nowrap items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-0 shrink-0 z-10 gap-3 sm:gap-5 sticky top-0">
-                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                <div className="min-h-16 lg:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex flex-wrap lg:flex-nowrap items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-0 shrink-0 z-10 gap-3 sm:gap-5 sticky top-0">
+                    <div className="flex items-center gap-3 sm:gap-4 w-full lg:w-auto lg:flex-1 min-w-0">
                         <button type="button" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors mr-1" aria-label={isSidebarOpen ? '关闭侧边栏' : '打开侧边栏'} aria-expanded={isSidebarOpen}>
                             {isSidebarOpen ? <PanelLeftClose size={22} /> : <PanelLeftOpen size={22} />}
                         </button>
@@ -1144,7 +1185,7 @@ const App = () => {
                             <input className="w-full pl-10 pr-4 py-2.5 bg-slate-100/50 dark:bg-slate-800/50 border-transparent dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 border dark:border-slate-700/50 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 rounded-lg outline-none text-[15px] transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500" placeholder="搜索文献..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setDisplayLimit(20); /* 搜索时重置分页 */ }} />
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                         <div className={`flex items-center text-xs font-medium mr-1 whitespace-nowrap transition-all ${isSidebarOpen ? 'hidden xl:flex' : 'hidden md:flex'}`}>
                             <button type="button" onClick={handleExportJSON} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all hover:shadow-sm ${backupStatus.color}`} title="下载备份" aria-label={`下载备份，当前状态：${backupStatus.label}`}>
                                 {backupStatus.icon} <span className="font-semibold">{backupStatus.label}</span>
@@ -1152,7 +1193,7 @@ const App = () => {
                         </div>
 
                         {/* 恢复的排序按钮组 */}
-                        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                        <div className={`${showRecentPapers ? 'hidden' : 'flex'} items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg`}>
                             <button
                                 onClick={() => handleSortChange('year')}
                                 className={`p-2 rounded-md transition-all flex items-center gap-1 ${sortConfig.key === 'year' ? 'bg-white dark:bg-slate-700 shadow text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
@@ -1172,6 +1213,7 @@ const App = () => {
                             </button>
                         </div>
 
+                        <button type="button" onClick={() => setIsImportingPapers(true)} className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-400 text-slate-700 dark:text-slate-200 px-3 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap"><Upload size={17} />批量导入</button>
                         <button type="button" onClick={() => {
                             if (categories.length === 0) {
                                 toast.error("请先在左侧新建至少一个文件夹");
@@ -1192,6 +1234,7 @@ const App = () => {
                         <div>
                             <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3 tracking-tight flex-wrap">
                                 {searchQuery ? <> <Search size={28} className="text-blue-600 dark:text-blue-400" /> 搜索: "{searchQuery}" </> :
+                                    showRecentPapers ? <> <Clock size={28} className="text-blue-600 dark:text-blue-400" /> 近期新增 </> :
                                     showFavoritesOnly ? <> <Heart size={28} className="text-rose-500 fill-rose-500" /> 我收藏的文献 </> :
                                         showAllPapers ? <> <ListFilter size={28} className="text-blue-600 dark:text-blue-400" /> 全部文献列表 </> :
                                             activeTags.length > 0 ? (
@@ -1215,7 +1258,7 @@ const App = () => {
                                                     <> <Globe size={28} className="text-slate-700 dark:text-slate-200" /> 知识库概览 </>}
                             </h2>
                             <p className="text-slate-500 dark:text-slate-400 text-[15px] mt-2.5 ml-1 font-medium tracking-wide">
-                                {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0
+                                {searchQuery || showFavoritesOnly || showAllPapers || showRecentPapers || activeTags.length > 0
                                     ? `共 ${filteredFlatPapers.length} 篇`
                                     : activeCategoryId
                                         ? (categories.find(c => c.id === activeCategoryId)?.description || null)
@@ -1228,12 +1271,22 @@ const App = () => {
                         {isManageMode && activeCategoryId && <ManagementToolbar onManageAction={handleManageAction} categoryId={activeCategoryId} isPageTitle={true} />}
                     </div>
 
-                    {searchQuery || showFavoritesOnly || showAllPapers || activeTags.length > 0 ? (
+                    {showRecentPapers && (
+                        <div className="mb-6 space-y-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                                {[['7', '近 7 天'], ['30', '近 30 天'], ['90', '近 90 天'], ['all', '全部新增记录']].map(([value, label]) => <button type="button" key={value} aria-pressed={recentDays === value} onClick={() => { setRecentDays(value); setDisplayLimit(20); setNow(Date.now()); }} className={`px-3 py-2 rounded-lg text-sm ${recentDays === value ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'}`}>{label}</button>)}
+                            </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">跨所有分类，按加入时间从新到旧排列。编辑笔记不会改变加入时间。{papers.some(p => getAddedTime(p) === null) ? '历史文献未记录加入时间，仍可在「全部文献」中查看。' : ''}</p>
+                        </div>
+                    )}
+
+                    {searchQuery || showFavoritesOnly || showAllPapers || showRecentPapers || activeTags.length > 0 ? (
                         <div className="grid grid-cols-1 gap-5">
+                            {filteredFlatPapers.length === 0 && <div className="text-center py-16 text-slate-400 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl">{showRecentPapers ? '此时间范围内没有匹配的新增文献。可上传清单或点击「新文献」录入。' : '没有匹配的文献'}</div>}
                             {/* 性能优化核心：只渲染前 displayLimit 个元素 (Virtualization/Pagination) */}
                             {filteredFlatPapers.slice(0, displayLimit).map(p => (
                                 <CompactPaperCard
-                                    key={p.id} paper={p} isManageMode={isManageMode} isExpanded={expandedPaperIds.includes(p.id)} onToggle={() => togglePaper(p.id)}
+                                    key={p.id} paper={p} addedContext={showRecentPapers ? { category: categoryPathLabel(p.categoryId, categories), onCategory: () => { setSearchQuery(''); handleCategorySelect(p.categoryId); } } : null} isManageMode={isManageMode} isExpanded={expandedPaperIds.includes(p.id)} onToggle={() => togglePaper(p.id)}
                                     onStarClick={() => handleStarClick(p.id, p.isStarred)} onEdit={() => { updateHistory(p.id); setEditingPaper(p); setIsAddingPaper(true); }} onDelete={() => { setDeleteModal({ isOpen: true, type: 'paper', id: p.id, title: p.title }); setDeleteCountdown(1); }} onMove={() => setMoveModal({ isOpen: true, paperId: p.id })}
                                 />
                             ))}
@@ -1360,17 +1413,21 @@ const App = () => {
                 </div>
             )}
 
+            {isImportingPapers && <PaperImportModal papers={papers} categories={categories} defaultCategoryId={activeCategoryId} onClose={() => setIsImportingPapers(false)} onMerge={handleMergePapers} />}
+
             {/* 论文编辑全屏 Modal */}
             {isAddingPaper && (
                 <ExpertPaperModal
                     paper={editingPaper}
                     onClose={() => { setIsAddingPaper(false); setEditingPaper(null); }}
                     onSave={(d) => {
+                        if (!d.title.trim()) { toast.error('请填写文献标题'); return; }
                         if (editingPaper) {
-                            setPapers(p => p.map(x => x.id === editingPaper.id ? { ...d, id: x.id } : x));
+                            setPapers(p => p.map(x => x.id === editingPaper.id ? { ...x, ...d, id: x.id, createdAt: x.createdAt, addedVia: x.addedVia, importBatchId: x.importBatchId, importFilename: x.importFilename } : x));
                         } else {
                             // 修改为：新数据在前，旧数据在后 (...p)
-                            setPapers(p => [{ ...d, id: Date.now().toString(), categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
+                            setPapers(p => [{ ...d, id: crypto.randomUUID(), createdAt: new Date().toISOString(), addedVia: 'manual', categoryId: activeCategoryId || categories[0]?.id || '' }, ...p]);
+                            setNow(Date.now());
                             // 仅在新建卡片时滚动到顶部，确保用户看到新添加的项目
                             if (mainContentRef.current) mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
                         }
@@ -1474,7 +1531,7 @@ const WelcomeModal = ({ onClose }) => {
 };
 
 // --- 组件: CompactPaperCard (交互终极版 - 性能优化) ---
-const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle, onStarClick, onEdit, onDelete, onMove }) => {
+const CompactPaperCard = React.memo(({ paper, addedContext, isManageMode, isExpanded, onToggle, onStarClick, onEdit, onDelete, onMove }) => {
     const [isCollapsing, setIsCollapsing] = React.useState(false);
     const cardRef = React.useRef(null);
     // 曾经展开过才触发收起时的自动对齐，避免首次渲染的误触发
@@ -1534,13 +1591,20 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                 }
         `}
         >
+            {addedContext && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 sm:px-6 py-3 border-b border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+                    <span>{new Date(paper.createdAt).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })} 加入</span>
+                    <span className="break-all" title={paper.importFilename || undefined}>{paper.addedVia === 'import' ? `批量导入 · ${paper.importFilename || '文献清单'}` : paper.addedVia === 'manual' ? '手动录入' : '已有记录'}</span>
+                    <button type="button" onClick={addedContext.onCategory} className="flex items-center gap-1 text-blue-600 dark:text-blue-400 text-left break-words"><Folder size={13} className="shrink-0" />{addedContext.category}</button>
+                </div>
+            )}
             {paper.isStarred && paper.starNote && (
                 <div className="bg-rose-50/60 border-b border-rose-100 px-6 py-2.5 flex items-center gap-2 text-[13px] font-medium text-rose-800 rounded-t-xl">
                     <Heart size={14} className="fill-rose-500 text-rose-500" /> <span className="font-bold">备注:</span> {paper.starNote}
                 </div>
             )}
 
-            <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 cursor-pointer flex items-start gap-3 sm:gap-5 group" onClick={handleToggle}>
+            <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 cursor-pointer flex flex-wrap sm:flex-nowrap items-start gap-3 sm:gap-5 group" onClick={handleToggle}>
                 <div className={`mt-1.5 w-7 h-7 flex items-center justify-center rounded-full transition-all duration-500 ease-out ${isExpanded ? 'bg-blue-100 text-blue-600 rotate-90' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
                     <ChevronRight size={16} strokeWidth={2.5} />
                 </div>
@@ -1549,7 +1613,7 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                     <div className="flex items-start justify-between gap-3 sm:gap-6">
                         <h3 className={`text-[17px] font-bold leading-relaxed tracking-tight pr-2 transition-colors duration-500 ${isExpanded ? 'text-blue-700 dark:text-blue-400 whitespace-normal break-words' : 'text-slate-800 dark:text-slate-200 truncate'}`}> {paper.title} </h3>
                         {!isExpanded && (
-                            <div className="flex items-center gap-1.5 flex-shrink-0 mt-2 animate-in fade-in duration-500">
+                            <div className="hidden sm:flex items-center gap-1.5 flex-shrink-0 mt-2 animate-in fade-in duration-500">
                                 <StatusDot filled={hasContent(paper.problem)} color="bg-rose-400" />
                                 <StatusDot filled={hasContent(paper.method)} color="bg-blue-400" />
                                 <StatusDot filled={hasContent(paper.results)} color="bg-emerald-400" />
@@ -1580,7 +1644,7 @@ const CompactPaperCard = React.memo(({ paper, isManageMode, isExpanded, onToggle
                     </div>
                 </div>
 
-                <div className="flex items-start justify-end gap-1 flex-shrink-0 mt-1 opacity-100 transition-all duration-500">
+                <div className="flex w-full sm:w-auto items-start justify-end gap-1 flex-shrink-0 mt-1 opacity-100 transition-all duration-500">
                     {!isManageMode && (
                         <button type="button" onClick={(e) => { e.stopPropagation(); onStarClick(); }} className={`p-2 rounded-lg hover:bg-rose-50 transition-colors ${paper.isStarred ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'}`} title="收藏" aria-label={paper.isStarred ? '取消收藏' : '收藏'}>
                             <Heart size={18} className={paper.isStarred ? "fill-rose-500" : ""} />

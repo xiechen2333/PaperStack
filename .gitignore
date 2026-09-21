@@ -31,4 +31,5 @@ Desktop.ini
 
 # 忽略备份数据文件 (防止隐私上传)
 research_hub_backup_*.json
+paperstack_backup_*.json
 backupJSON/

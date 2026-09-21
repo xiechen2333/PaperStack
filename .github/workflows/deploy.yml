@@ -4,7 +4,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main 
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -17,15 +24,18 @@ jobs:
       - name: 安装 Node.js 环境 ⚙️
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # 使用 Node.js 18 版本（通常兼容绝大多数项目）
+          node-version: '22' # Vite 7 requires Node.js 20.19+ or 22.12+
+          cache: 'npm'
 
       - name: 安装依赖并打包代码 🔧
         run: |
-          npm install
+          npm ci
+          npm run lint
+          npm test
           npm run build
 
       - name: 自动部署到 gh-pages 分支 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist 
+          publish_dir: ./dist
